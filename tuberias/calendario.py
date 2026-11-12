@@ -105,7 +105,7 @@ def sincronizar(hoy=None):
     hoy = hoy or hoy_sv()
     r = requests.get(API, params={"lang": "es", "start": (hoy - dt.timedelta(days=60)).isoformat(),
                                   "end": (hoy + dt.timedelta(days=240)).isoformat()},
-                     headers={"User-Agent": AGENTE}, timeout=120)
+                     headers={"User-Agent": AGENTE}, timeout=(20, 120))
     r.raise_for_status()
     nuevos = r.json()
     if not isinstance(nuevos, list) or not nuevos or not all("start" in e and "title" in e for e in nuevos):

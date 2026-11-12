@@ -107,7 +107,7 @@ class Pagina:
                 time.sleep(espera)
             self.ultimo = time.monotonic()
             try:
-                r = self.s.request(metodo, url, timeout=300, **kw)
+                r = self.s.request(metodo, url, timeout=(20, 300), **kw)     # 20 s para conectar, 300 para la respuesta
                 if r.status_code == 200:
                     return r
                 falla = f"HTTP {r.status_code}"
