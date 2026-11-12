@@ -1,0 +1,544 @@
+serie,orden,variable_id,codigo,variable,ruta,unidad,frecuencia,desde,hasta,observaciones
+pib_anual,1,16765,1,Enfoque de la producción,Enfoque de la producción,Millones de US$,A,,,0
+pib_anual,2,16766,1.1,"A. Agricultura, ganadería, silvicultura y pesca","Enfoque de la producción › A. Agricultura, ganadería, silvicultura y pesca",Millones de US$,A,2005,2025,21
+pib_anual,3,16767,1.2,B. Explotación de minas y canteras,Enfoque de la producción › B. Explotación de minas y canteras,Millones de US$,A,2005,2025,21
+pib_anual,4,16768,1.3,C. Industrias manufactureras,Enfoque de la producción › C. Industrias manufactureras,Millones de US$,A,2005,2025,21
+pib_anual,5,16769,1.4,"D. Suministro de electricidad, gas, vapor y aire acondicionado","Enfoque de la producción › D. Suministro de electricidad, gas, vapor y aire acondicionado",Millones de US$,A,2005,2025,21
+pib_anual,6,16770,1.5,"E. Suministro de agua, alcantarillados y gestión de desechos","Enfoque de la producción › E. Suministro de agua, alcantarillados y gestión de desechos",Millones de US$,A,2005,2025,21
+pib_anual,7,16771,1.6,F. Construcción,Enfoque de la producción › F. Construcción,Millones de US$,A,2005,2025,21
+pib_anual,8,16772,1.7,"G. Comercio, reparación de vehículos automotores y motocicletas","Enfoque de la producción › G. Comercio, reparación de vehículos automotores y motocicletas",Millones de US$,A,2005,2025,21
+pib_anual,9,16773,1.8,H. Transporte y almacenamiento,Enfoque de la producción › H. Transporte y almacenamiento,Millones de US$,A,2005,2025,21
+pib_anual,10,16774,1.9,I. Actividades de alojamiento y de servicio de comidas,Enfoque de la producción › I. Actividades de alojamiento y de servicio de comidas,Millones de US$,A,2005,2025,21
+pib_anual,11,16775,1.10,J. Información y comunicaciones,Enfoque de la producción › J. Información y comunicaciones,Millones de US$,A,2005,2025,21
+pib_anual,12,16776,1.11,K. Actividades financieras y de seguros,Enfoque de la producción › K. Actividades financieras y de seguros,Millones de US$,A,2005,2025,21
+pib_anual,13,16777,1.12,L. Actividades inmobiliarias,Enfoque de la producción › L. Actividades inmobiliarias,Millones de US$,A,2005,2025,21
+pib_anual,14,16778,1.13,"M. Actividades profesionales, científicas y técnicas","Enfoque de la producción › M. Actividades profesionales, científicas y técnicas",Millones de US$,A,2005,2025,21
+pib_anual,15,16779,1.14,N. Actividades de servicios administrativos y de apoyo,Enfoque de la producción › N. Actividades de servicios administrativos y de apoyo,Millones de US$,A,2005,2025,21
+pib_anual,16,16780,1.15,"O. Administración pública y defensa, planes de seguridad social y de afiliación obligatoria","Enfoque de la producción › O. Administración pública y defensa, planes de seguridad social y de afiliación obligatoria",Millones de US$,A,2005,2025,21
+pib_anual,17,16781,1.16,P. Enseñanza,Enfoque de la producción › P. Enseñanza,Millones de US$,A,2005,2025,21
+pib_anual,18,16782,1.17,Q. Actividades de atención de la salud humana y de asistencia social,Enfoque de la producción › Q. Actividades de atención de la salud humana y de asistencia social,Millones de US$,A,2005,2025,21
+pib_anual,19,16783,1.18,"R. Actividades artísticas, de entretenimiento y recreativas","Enfoque de la producción › R. Actividades artísticas, de entretenimiento y recreativas",Millones de US$,A,2005,2025,21
+pib_anual,20,16784,1.19,S. Otras actividades de servicios,Enfoque de la producción › S. Otras actividades de servicios,Millones de US$,A,2005,2025,21
+pib_anual,21,16785,1.20,T. Actividades de los hogares como empleadores 1/,Enfoque de la producción › T. Actividades de los hogares como empleadores 1/,Millones de US$,A,2005,2023,19
+pib_anual,22,16786,1.21,Valor Agregado Bruto,Enfoque de la producción › Valor Agregado Bruto,Millones de US$,A,2005,2025,21
+pib_anual,23,16787,1.21.1,Más,Enfoque de la producción › Valor Agregado Bruto › Más,Millones de US$,A,,,0
+pib_anual,24,16788,1.22,Impuestos netos de subvenciones,Enfoque de la producción › Impuestos netos de subvenciones,Millones de US$,A,2005,2025,21
+pib_anual,25,16789,1.23,Producto Interno Bruto por enfoque de la producción,Enfoque de la producción › Producto Interno Bruto por enfoque de la producción,Millones de US$,A,2005,2025,21
+pib_anual,26,16790,2,Enfoque del gasto,Enfoque del gasto,Millones de US$,A,,,0
+pib_anual,27,16791,2.1,Gasto de consumo final,Enfoque del gasto › Gasto de consumo final,Millones de US$,A,2005,2025,21
+pib_anual,28,16792,2.1.1,Hogares,Enfoque del gasto › Gasto de consumo final › Hogares,Millones de US$,A,2005,2025,21
+pib_anual,29,16793,2.1.2,Instituciones Sin Fines de Lucro que Sirven a los Hogares ISFLSH 2/,Enfoque del gasto › Gasto de consumo final › Instituciones Sin Fines de Lucro que Sirven a los Hogares ISFLSH 2/,Millones de US$,A,2005,2023,19
+pib_anual,30,16794,2.1.3,Gobierno General,Enfoque del gasto › Gasto de consumo final › Gobierno General,Millones de US$,A,2005,2025,21
+pib_anual,31,16795,2.2,Formación Bruta de Capital,Enfoque del gasto › Formación Bruta de Capital,Millones de US$,A,2005,2025,21
+pib_anual,32,16796,2.2.1,Formación Bruta de Capital fijo,Enfoque del gasto › Formación Bruta de Capital › Formación Bruta de Capital fijo,Millones de US$,A,2005,2025,21
+pib_anual,33,16797,2.2.1.1,Privado,Enfoque del gasto › Formación Bruta de Capital › Formación Bruta de Capital fijo › Privado,Millones de US$,A,2005,2025,21
+pib_anual,34,16798,2.2.1.2,Público,Enfoque del gasto › Formación Bruta de Capital › Formación Bruta de Capital fijo › Público,Millones de US$,A,2005,2025,21
+pib_anual,35,16799,2.2.2,Variación de existencias,Enfoque del gasto › Formación Bruta de Capital › Variación de existencias,Millones de US$,A,2005,2025,21
+pib_anual,36,16800,2.3,Exportación de bienes y servicios 3/,Enfoque del gasto › Exportación de bienes y servicios 3/,Millones de US$,A,2005,2025,21
+pib_anual,37,16801,2.4,Importación de bienes y servicios 3/,Enfoque del gasto › Importación de bienes y servicios 3/,Millones de US$,A,2005,2025,21
+pib_anual,38,16802,2.5,Producto Interno Bruto por enfoque del gasto,Enfoque del gasto › Producto Interno Bruto por enfoque del gasto,Millones de US$,A,2005,2025,21
+pib_anual,39,16803,3,Enfoque del ingreso,Enfoque del ingreso,Millones de US$,A,,,0
+pib_anual,40,16804,3.1,Remuneraciones,Enfoque del ingreso › Remuneraciones,Millones de US$,A,2005,2025,21
+pib_anual,41,16805,3.2,Impuestos,Enfoque del ingreso › Impuestos,Millones de US$,A,2005,2025,21
+pib_anual,42,16806,3.3,Subvenciones 4/,Enfoque del ingreso › Subvenciones 4/,Millones de US$,A,2005,2023,19
+pib_anual,43,16807,3.4,Excedente de explotación bruto,Enfoque del ingreso › Excedente de explotación bruto,Millones de US$,A,2005,2025,21
+pib_anual,44,16808,3.5,Ingreso mixto bruto,Enfoque del ingreso › Ingreso mixto bruto,Millones de US$,A,2005,2025,21
+pib_anual,45,16809,3.6,Producto Interno Bruto por enfoque del ingreso,Enfoque del ingreso › Producto Interno Bruto por enfoque del ingreso,Millones de US$,A,2005,2025,21
+pib_anual_volumen,1,17168,1,Enfoque de la producción,Enfoque de la producción,Índice,A,,,0
+pib_anual_volumen,2,17169,1.1,"A Agricultura, ganadería, silvicultura y pesca","Enfoque de la producción › A Agricultura, ganadería, silvicultura y pesca",Índice,A,2005,2025,21
+pib_anual_volumen,3,17170,1.2,B Explotación de minas y canteras,Enfoque de la producción › B Explotación de minas y canteras,Índice,A,2005,2025,21
+pib_anual_volumen,4,17171,1.3,C Industrias manufactureras,Enfoque de la producción › C Industrias manufactureras,Índice,A,2005,2025,21
+pib_anual_volumen,5,17172,1.4,"D Suministro de electricidad, gas, vapor y aire acondicionado","Enfoque de la producción › D Suministro de electricidad, gas, vapor y aire acondicionado",Índice,A,2005,2025,21
+pib_anual_volumen,6,17173,1.5,"E Suministro de agua, alcantarillados y gestión de desechos","Enfoque de la producción › E Suministro de agua, alcantarillados y gestión de desechos",Índice,A,2005,2025,21
+pib_anual_volumen,7,17174,1.6,F Construcción,Enfoque de la producción › F Construcción,Índice,A,2005,2025,21
+pib_anual_volumen,8,17175,1.7,"G Comercio, reparación de vehículos automotores y motocicletas","Enfoque de la producción › G Comercio, reparación de vehículos automotores y motocicletas",Índice,A,2005,2025,21
+pib_anual_volumen,9,17176,1.8,H Transporte y almacenamiento,Enfoque de la producción › H Transporte y almacenamiento,Índice,A,2005,2025,21
+pib_anual_volumen,10,17177,1.9,I Actividades de alojamiento y de servicio de comidas,Enfoque de la producción › I Actividades de alojamiento y de servicio de comidas,Índice,A,2005,2025,21
+pib_anual_volumen,11,17178,1.10,J Información y comunicaciones,Enfoque de la producción › J Información y comunicaciones,Índice,A,2005,2025,21
+pib_anual_volumen,12,17179,1.11,K Actividades financieras y de seguros,Enfoque de la producción › K Actividades financieras y de seguros,Índice,A,2005,2025,21
+pib_anual_volumen,13,17180,1.12,L Actividades inmobiliarias,Enfoque de la producción › L Actividades inmobiliarias,Índice,A,2005,2025,21
+pib_anual_volumen,14,17181,1.13,"M Actividades profesionales, científicas y técnicas","Enfoque de la producción › M Actividades profesionales, científicas y técnicas",Índice,A,2005,2025,21
+pib_anual_volumen,15,17182,1.14,N Actividades de servicios administrativos y de apoyo,Enfoque de la producción › N Actividades de servicios administrativos y de apoyo,Índice,A,2005,2025,21
+pib_anual_volumen,16,17183,1.15,"O Administración pública y defensa, planes de seguridad social y de afiliación obligatoria","Enfoque de la producción › O Administración pública y defensa, planes de seguridad social y de afiliación obligatoria",Índice,A,2005,2025,21
+pib_anual_volumen,17,17184,1.16,P Enseñanza,Enfoque de la producción › P Enseñanza,Índice,A,2005,2025,21
+pib_anual_volumen,18,17185,1.17,Q Actividades de atención de la salud humana y de asistencia social,Enfoque de la producción › Q Actividades de atención de la salud humana y de asistencia social,Índice,A,2005,2025,21
+pib_anual_volumen,19,17186,1.18,"R Actividades Artísticas, de entretenimiento y recreativas","Enfoque de la producción › R Actividades Artísticas, de entretenimiento y recreativas",Índice,A,2005,2025,21
+pib_anual_volumen,20,17187,1.19,S Otras actividades de servicios,Enfoque de la producción › S Otras actividades de servicios,Índice,A,2005,2025,21
+pib_anual_volumen,21,17188,1.20,T Actividades de los hogares como empleadores 1/,Enfoque de la producción › T Actividades de los hogares como empleadores 1/,Índice,A,2005,2023,19
+pib_anual_volumen,22,17189,1.21,Valor Agregado Bruto,Enfoque de la producción › Valor Agregado Bruto,Índice,A,,,0
+pib_anual_volumen,23,17190,1.22,Más,Enfoque de la producción › Más,Índice,A,,,0
+pib_anual_volumen,24,17191,1.23,Impuestos netos de subvenciones,Enfoque de la producción › Impuestos netos de subvenciones,Índice,A,,,0
+pib_anual_volumen,25,17192,1.24,Producto Interno Bruto por enfoque de la producción,Enfoque de la producción › Producto Interno Bruto por enfoque de la producción,Índice,A,2005,2025,21
+pib_anual_volumen,26,17193,2,Enfoque del gasto,Enfoque del gasto,Índice,A,,,0
+pib_anual_volumen,27,17194,2.1,Gasto de Consumo Final,Enfoque del gasto › Gasto de Consumo Final,Índice,A,2005,2025,21
+pib_anual_volumen,28,17195,2.1.1,Hogares,Enfoque del gasto › Gasto de Consumo Final › Hogares,Índice,A,2005,2025,21
+pib_anual_volumen,29,17196,2.1.2,Instituciones sin Fines de Lucro que Sirven a los Hogares ISFLSH 2/,Enfoque del gasto › Gasto de Consumo Final › Instituciones sin Fines de Lucro que Sirven a los Hogares ISFLSH 2/,Índice,A,2005,2023,19
+pib_anual_volumen,30,17197,2.1.3,Gobierno General,Enfoque del gasto › Gasto de Consumo Final › Gobierno General,Índice,A,2005,2025,21
+pib_anual_volumen,31,17198,2.2,Formación Bruta de Capital,Enfoque del gasto › Formación Bruta de Capital,Índice,A,2005,2025,21
+pib_anual_volumen,32,17199,2.2.1,Formación Bruta de Capital Fijo,Enfoque del gasto › Formación Bruta de Capital › Formación Bruta de Capital Fijo,Índice,A,2005,2025,21
+pib_anual_volumen,33,17200,2.2.1.1,Privado,Enfoque del gasto › Formación Bruta de Capital › Formación Bruta de Capital Fijo › Privado,Índice,A,2005,2025,21
+pib_anual_volumen,34,17201,2.2.1.2,Público,Enfoque del gasto › Formación Bruta de Capital › Formación Bruta de Capital Fijo › Público,Índice,A,2005,2025,21
+pib_anual_volumen,35,17202,2.2.2,Variación de existencias,Enfoque del gasto › Formación Bruta de Capital › Variación de existencias,Índice,A,2005,2025,21
+pib_anual_volumen,36,17203,2.3,Exportación de bienes y servicios,Enfoque del gasto › Exportación de bienes y servicios,Índice,A,2005,2025,21
+pib_anual_volumen,37,17204,2.4,Importación de bienes y servicios,Enfoque del gasto › Importación de bienes y servicios,Índice,A,2005,2025,21
+pib_anual_volumen,38,17205,2.5,Producto Interno Bruto por enfoque del gasto,Enfoque del gasto › Producto Interno Bruto por enfoque del gasto,Índice,A,2005,2025,21
+pib_trimestral,1,17300,1,Enfoque de la producción,Enfoque de la producción,Millones de US$,T,,,0
+pib_trimestral,2,17301,2,"A. Agricultura, ganadería, silvicultura y pesca","A. Agricultura, ganadería, silvicultura y pesca",Millones de US$,T,2005-T1,2026-T2,86
+pib_trimestral,3,17302,3,B. Explotación de minas y canteras,B. Explotación de minas y canteras,Millones de US$,T,2005-T1,2026-T2,86
+pib_trimestral,4,17303,4,C. Industrias manufactureras,C. Industrias manufactureras,Millones de US$,T,2005-T1,2026-T2,86
+pib_trimestral,5,17304,5,"D. Suministro de electricidad, gas, vapor y aire acondicionado","D. Suministro de electricidad, gas, vapor y aire acondicionado",Millones de US$,T,2005-T1,2026-T2,86
+pib_trimestral,6,17305,6,"E. Suministro de agua, alcantarillados y gestión de desechos","E. Suministro de agua, alcantarillados y gestión de desechos",Millones de US$,T,2005-T1,2026-T2,86
+pib_trimestral,7,17306,7,F. Construcción,F. Construcción,Millones de US$,T,2005-T1,2026-T2,86
+pib_trimestral,8,17307,8,"G. Comercio, reparación de vehículos automotores y motocicletas","G. Comercio, reparación de vehículos automotores y motocicletas",Millones de US$,T,2005-T1,2026-T2,86
+pib_trimestral,9,17308,9,H. Transporte y almacenamiento,H. Transporte y almacenamiento,Millones de US$,T,2005-T1,2026-T2,86
+pib_trimestral,10,17309,10,I. Actividades de alojamiento y de servicio de comidas,I. Actividades de alojamiento y de servicio de comidas,Millones de US$,T,2005-T1,2026-T2,86
+pib_trimestral,11,17310,11,J. Información y comunicaciones,J. Información y comunicaciones,Millones de US$,T,2005-T1,2026-T2,86
+pib_trimestral,12,17311,12,K. Actividades financieras y de seguros,K. Actividades financieras y de seguros,Millones de US$,T,2005-T1,2026-T2,86
+pib_trimestral,13,17312,13,L. Actividades inmobiliarias,L. Actividades inmobiliarias,Millones de US$,T,2005-T1,2026-T2,86
+pib_trimestral,14,17313,14,"M. Actividades profesionales, científicas y técnicas","M. Actividades profesionales, científicas y técnicas",Millones de US$,T,2005-T1,2026-T2,86
+pib_trimestral,15,17314,15,N. Actividades de servicios administrativos y de apoyo,N. Actividades de servicios administrativos y de apoyo,Millones de US$,T,2005-T1,2026-T2,86
+pib_trimestral,16,17315,16,"O. Administración pública y defensa, planes de seguridad social y de afiliación obligatoria","O. Administración pública y defensa, planes de seguridad social y de afiliación obligatoria",Millones de US$,T,2005-T1,2026-T2,86
+pib_trimestral,17,17316,17,P. Enseñanza,P. Enseñanza,Millones de US$,T,2005-T1,2026-T2,86
+pib_trimestral,18,17317,18,Q. Actividades de atención de la salud humana y de asistencia social,Q. Actividades de atención de la salud humana y de asistencia social,Millones de US$,T,2005-T1,2026-T2,86
+pib_trimestral,19,17318,19,"R. Actividades artísticas, de entretenimiento y recreativas","R. Actividades artísticas, de entretenimiento y recreativas",Millones de US$,T,2005-T1,2026-T2,86
+pib_trimestral,20,17319,20,S. Otras actividades de servicios 1/,S. Otras actividades de servicios 1/,Millones de US$,T,2005-T1,2026-T2,86
+pib_trimestral,21,17320,21,Valor Agregado Bruto,Valor Agregado Bruto,Millones de US$,T,2005-T1,2026-T2,86
+pib_trimestral,22,17321,22,Impuestos netos,Impuestos netos,Millones de US$,T,2005-T1,2026-T2,86
+pib_trimestral,23,17322,23,Producto Interno Bruto trimestral por el enfoque de la producción,Producto Interno Bruto trimestral por el enfoque de la producción,Millones de US$,T,2005-T1,2026-T2,86
+pib_trimestral,24,17323,24,Enfoque del gasto,Enfoque del gasto,Millones de US$,T,,,0
+pib_trimestral,25,17324,25,Gasto de consumo final,Gasto de consumo final,Millones de US$,T,2005-T1,2026-T2,86
+pib_trimestral,26,17325,25.1,Consumo privado,Gasto de consumo final › Consumo privado,Millones de US$,T,2005-T1,2026-T2,86
+pib_trimestral,27,17326,25.2,Consumo público,Gasto de consumo final › Consumo público,Millones de US$,T,2005-T1,2026-T2,86
+pib_trimestral,28,17327,26,Formación bruta de capital 2/,Formación bruta de capital 2/,Millones de US$,T,2005-T1,2026-T2,86
+pib_trimestral,29,17328,26.1,Formación Bruta de Capital Fijo,Formación bruta de capital 2/ › Formación Bruta de Capital Fijo,Millones de US$,T,2005-T1,2026-T2,86
+pib_trimestral,30,17329,27,Exportaciones de bienes y servicios,Exportaciones de bienes y servicios,Millones de US$,T,2005-T1,2026-T2,86
+pib_trimestral,31,17330,28,Importaciones de bienes y servicios,Importaciones de bienes y servicios,Millones de US$,T,2005-T1,2026-T2,86
+pib_trimestral,32,18965,29,Producto Interno Bruto trimestral por el enfoque del gasto,Producto Interno Bruto trimestral por el enfoque del gasto,Millones de US$,T,2005-T1,2026-T2,86
+pib_trimestral_volumen,1,17269,1,Enfoque de la producción,Enfoque de la producción,Índice,T,,,0
+pib_trimestral_volumen,2,17270,2,"A. Agricultura, ganadería, silvicultura y pesca","A. Agricultura, ganadería, silvicultura y pesca",Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen,3,17271,3,B. Explotación de minas y canteras,B. Explotación de minas y canteras,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen,4,17272,4,C. Industrias manufactureras,C. Industrias manufactureras,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen,5,17273,5,"D. Suministro de electricidad, gas, vapor y aire acondicionado","D. Suministro de electricidad, gas, vapor y aire acondicionado",Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen,6,17274,6,"E. Suministro de agua, alcantarillados y gestión de desechos","E. Suministro de agua, alcantarillados y gestión de desechos",Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen,7,17275,7,F. Construcción,F. Construcción,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen,8,17276,8,"G. Comercio, reparación de vehículos automotores y motocicletas","G. Comercio, reparación de vehículos automotores y motocicletas",Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen,9,17277,9,H. Transporte y almacenamiento,H. Transporte y almacenamiento,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen,10,17278,10,I. Actividades de alojamiento y de servicio de comidas,I. Actividades de alojamiento y de servicio de comidas,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen,11,17279,11,J. Información y comunicaciones,J. Información y comunicaciones,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen,12,17280,12,K. Actividades financieras y de seguros,K. Actividades financieras y de seguros,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen,13,17281,13,L. Actividades inmobiliarias,L. Actividades inmobiliarias,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen,14,17282,14,"M. Actividades profesionales, científicas y técnicas","M. Actividades profesionales, científicas y técnicas",Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen,15,17283,15,N. Actividades de servicios administrativos y de apoyo,N. Actividades de servicios administrativos y de apoyo,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen,16,17284,16,"O. Administración pública y defensa, planes de seguridad social y de afiliación obligatoria","O. Administración pública y defensa, planes de seguridad social y de afiliación obligatoria",Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen,17,17285,17,P. Enseñanza,P. Enseñanza,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen,18,17286,18,Q. Actividades de atención de la salud humana y de asistencia social,Q. Actividades de atención de la salud humana y de asistencia social,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen,19,17287,19,"R. Actividades artísticas, de entretenimiento y recreativas","R. Actividades artísticas, de entretenimiento y recreativas",Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen,20,17288,20,S. Otras actividades de servicios 1/,S. Otras actividades de servicios 1/,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen,21,17289,21,Valor Agregado Bruto,Valor Agregado Bruto,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen,22,17290,22,Impuestos netos,Impuestos netos,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen,23,17291,23,Producto Interno Bruto trimestral por el enfoque de la producción,Producto Interno Bruto trimestral por el enfoque de la producción,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen,24,17292,24,Enfoque del gasto,Enfoque del gasto,Índice,T,,,0
+pib_trimestral_volumen,25,17293,25,Gasto de consumo final,Gasto de consumo final,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen,26,17294,25.1,Consumo privado,Gasto de consumo final › Consumo privado,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen,27,17295,25.2,Consumo público,Gasto de consumo final › Consumo público,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen,28,17296,26,Formación bruta de capital fijo 2/,Formación bruta de capital fijo 2/,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen,29,17297,27,Exportaciones de bienes y servicios,Exportaciones de bienes y servicios,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen,30,17298,28,Importaciones de bienes y servicios,Importaciones de bienes y servicios,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen,31,17299,29,Producto Interno Bruto trimestral por el enfoque del gasto,Producto Interno Bruto trimestral por el enfoque del gasto,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen_sa,1,17137,1,Enfoque de la producción,Enfoque de la producción,Índice,T,,,0
+pib_trimestral_volumen_sa,2,17138,2,"A. Agricultura, ganadería, silvicultura y pesca","A. Agricultura, ganadería, silvicultura y pesca",Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen_sa,3,17139,3,B. Explotación de minas y canteras,B. Explotación de minas y canteras,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen_sa,4,17140,4,C. Industrias manufactureras,C. Industrias manufactureras,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen_sa,5,17141,5,"D. Suministro de electricidad, gas, vapor y aire acondicionado","D. Suministro de electricidad, gas, vapor y aire acondicionado",Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen_sa,6,17142,6,"E. Suministro de agua, alcantarillados y gestión de desechos","E. Suministro de agua, alcantarillados y gestión de desechos",Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen_sa,7,17143,7,F. Construcción,F. Construcción,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen_sa,8,17144,8,"G. Comercio, reparación de vehículos automotores y motocicletas","G. Comercio, reparación de vehículos automotores y motocicletas",Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen_sa,9,17145,9,H. Transporte y almacenamiento,H. Transporte y almacenamiento,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen_sa,10,17146,10,I. Actividades de alojamiento y de servicio de comidas,I. Actividades de alojamiento y de servicio de comidas,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen_sa,11,17147,11,J. Información y comunicaciones,J. Información y comunicaciones,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen_sa,12,17148,12,K. Actividades financieras y de seguros,K. Actividades financieras y de seguros,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen_sa,13,17149,13,L. Actividades inmobiliarias,L. Actividades inmobiliarias,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen_sa,14,17150,14,"M. Actividades profesionales, científicas y técnicas","M. Actividades profesionales, científicas y técnicas",Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen_sa,15,17151,15,N. Actividades de servicios administrativos y de apoyo,N. Actividades de servicios administrativos y de apoyo,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen_sa,16,17152,16,"O. Administración pública y defensa, planes de seguridad social y de afiliación obligatoria","O. Administración pública y defensa, planes de seguridad social y de afiliación obligatoria",Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen_sa,17,17153,17,P. Enseñanza,P. Enseñanza,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen_sa,18,17154,18,Q. Actividades de atención de la salud humana y de asistencia social,Q. Actividades de atención de la salud humana y de asistencia social,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen_sa,19,17155,19,"R. Actividades artísticas, de entretenimiento y recreativas","R. Actividades artísticas, de entretenimiento y recreativas",Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen_sa,20,17156,20,S. Otras actividades de servicios 1/,S. Otras actividades de servicios 1/,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen_sa,21,17157,21,Valor Agregado Bruto,Valor Agregado Bruto,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen_sa,22,17158,22,Impuestos netos,Impuestos netos,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen_sa,23,17159,23,Producto Interno Bruto trimestral por el enfoque de la producción,Producto Interno Bruto trimestral por el enfoque de la producción,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen_sa,24,17160,24,Enfoque del gasto,Enfoque del gasto,Índice,T,,,0
+pib_trimestral_volumen_sa,25,17161,25,Gasto de consumo final,Gasto de consumo final,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen_sa,26,17162,25.1,Consumo privado,Gasto de consumo final › Consumo privado,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen_sa,27,17163,25.2,Consumo público,Gasto de consumo final › Consumo público,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen_sa,28,17164,26,Formación bruta de capital fijo 2/,Formación bruta de capital fijo 2/,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen_sa,29,17165,27,Exportaciones de bienes y servicios,Exportaciones de bienes y servicios,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen_sa,30,17166,28,Importaciones de bienes y servicios,Importaciones de bienes y servicios,Índice,T,2005-T1,2026-T2,86
+pib_trimestral_volumen_sa,31,17167,29,Producto Interno Bruto trimestral por el enfoque del gasto,Producto Interno Bruto trimestral por el enfoque del gasto,Índice,T,2005-T1,2026-T2,86
+ivae,1,16456,1,IVAE,IVAE,Índice,M,2005-01,2026-08,260
+ivae,2,16457,2,"Agricultura, ganadería, silvicultura y pesca","Agricultura, ganadería, silvicultura y pesca",Índice,M,2005-01,2026-08,260
+ivae,3,16458,3,"Índice de Producción Industrial (IPI): industrias manufactureras, explotación de minas y canteras y otras actividades industriales","Índice de Producción Industrial (IPI): industrias manufactureras, explotación de minas y canteras y otras actividades industriales",Índice,M,2005-01,2026-08,260
+ivae,4,16459,4,Construcción,Construcción,Índice,M,2005-01,2026-08,260
+ivae,5,16460,5,"Comercio, transporte y almacenamiento, actividades de alojamiento y de servicio de comidas","Comercio, transporte y almacenamiento, actividades de alojamiento y de servicio de comidas",Índice,M,2005-01,2026-08,260
+ivae,6,16461,6,Información y comunicaciones,Información y comunicaciones,Índice,M,2005-01,2026-08,260
+ivae,7,16462,7,Actividades financieras y de seguros,Actividades financieras y de seguros,Índice,M,2005-01,2026-08,260
+ivae,8,16463,8,Actividades inmobiliarias,Actividades inmobiliarias,Índice,M,2005-01,2026-08,260
+ivae,9,16464,9,"Actividades profesionales, científicas, técnicas, administrativas, de apoyo y otros servicios","Actividades profesionales, científicas, técnicas, administrativas, de apoyo y otros servicios",Índice,M,2005-01,2026-08,260
+ivae,10,16465,10,"Actividades de administración pública y defensa, enseñanza, salud y asistencia social","Actividades de administración pública y defensa, enseñanza, salud y asistencia social",Índice,M,2005-01,2026-08,260
+ivae_sa,1,16401,1,IVAE,IVAE,Índice,M,2005-01,2026-08,260
+ivae_sa,2,16402,2,"Agricultura, ganadería, silvicultura y pesca","Agricultura, ganadería, silvicultura y pesca",Índice,M,2005-01,2026-08,260
+ivae_sa,3,16403,3,"Índice de Producción Industrial (IPI): industrias manufactureras, explotación de minas y canteras y otras actividades industriales","Índice de Producción Industrial (IPI): industrias manufactureras, explotación de minas y canteras y otras actividades industriales",Índice,M,2005-01,2026-08,260
+ivae_sa,4,16404,4,Construcción,Construcción,Índice,M,2005-01,2026-08,260
+ivae_sa,5,16405,5,"Comercio, transporte y almacenamiento, actividades de alojamiento y de servicio de comidas","Comercio, transporte y almacenamiento, actividades de alojamiento y de servicio de comidas",Índice,M,2005-01,2026-08,260
+ivae_sa,6,16406,6,Información y comunicaciones,Información y comunicaciones,Índice,M,2005-01,2026-08,260
+ivae_sa,7,16407,7,Actividades financieras y de seguros,Actividades financieras y de seguros,Índice,M,2005-01,2026-08,260
+ivae_sa,8,16408,8,Actividades inmobiliarias,Actividades inmobiliarias,Índice,M,2005-01,2026-08,260
+ivae_sa,9,16409,9,"Actividades profesionales, científicas, técnicas, administrativas, de apoyo y otros servicios","Actividades profesionales, científicas, técnicas, administrativas, de apoyo y otros servicios",Índice,M,2005-01,2026-08,260
+ivae_sa,10,16410,10,"Actividades de administración pública y defensa, enseñanza, salud y asistencia social","Actividades de administración pública y defensa, enseñanza, salud y asistencia social",Índice,M,2005-01,2026-08,260
+otros_indicadores,1,16669,1,Producción y consumo de energía eléctrica (en miles de kWh) /1,Producción y consumo de energía eléctrica (en miles de kWh) /1,Miles de KW/hora | Miles de bolsas de 42.5 kgrs | Miles de Kgs | Miles de T.M. | Número de personas,M,,,0
+otros_indicadores,2,16670,1.1,Producción,Producción y consumo de energía eléctrica (en miles de kWh) /1 › Producción,Miles de KW/hora | Miles de bolsas de 42.5 kgrs | Miles de Kgs | Miles de T.M. | Número de personas,M,2005-01,2026-08,260
+otros_indicadores,3,16671,1.2,Consumo /2,Producción y consumo de energía eléctrica (en miles de kWh) /1 › Consumo /2,Miles de KW/hora | Miles de bolsas de 42.5 kgrs | Miles de Kgs | Miles de T.M. | Número de personas,M,2005-01,2026-08,260
+otros_indicadores,4,16672,2,Consumo aparente de cemento (miles de bolsas de 42.5 kg) /3,Consumo aparente de cemento (miles de bolsas de 42.5 kg) /3,Miles de KW/hora | Miles de bolsas de 42.5 kgrs | Miles de Kgs | Miles de T.M. | Número de personas,M,,,0
+otros_indicadores,5,16673,2.1,Consumo /5,Consumo aparente de cemento (miles de bolsas de 42.5 kg) /3 › Consumo /5,Miles de KW/hora | Miles de bolsas de 42.5 kgrs | Miles de Kgs | Miles de T.M. | Número de personas,M,2005-01,2026-08,260
+otros_indicadores,6,16674,3,Transporte de carga aérea (miles de kg) /4/6,Transporte de carga aérea (miles de kg) /4/6,Miles de KW/hora | Miles de bolsas de 42.5 kgrs | Miles de Kgs | Miles de T.M. | Número de personas,M,2005-01,2026-08,260
+otros_indicadores,7,16675,4,Transporte de carga marítima (miles de toneladas métricas) /4,Transporte de carga marítima (miles de toneladas métricas) /4,Miles de KW/hora | Miles de bolsas de 42.5 kgrs | Miles de Kgs | Miles de T.M. | Número de personas,M,2005-01,2026-08,260
+otros_indicadores,8,16676,5,Entrada y salida de pasajeros (número de personas),Entrada y salida de pasajeros (número de personas),Miles de KW/hora | Miles de bolsas de 42.5 kgrs | Miles de Kgs | Miles de T.M. | Número de personas,M,,,0
+otros_indicadores,9,16677,5.1,Entrada,Entrada y salida de pasajeros (número de personas) › Entrada,Miles de KW/hora | Miles de bolsas de 42.5 kgrs | Miles de Kgs | Miles de T.M. | Número de personas,M,2005-01,2026-08,260
+otros_indicadores,10,16678,5.2,Salida,Entrada y salida de pasajeros (número de personas) › Salida,Miles de KW/hora | Miles de bolsas de 42.5 kgrs | Miles de Kgs | Miles de T.M. | Número de personas,M,2005-01,2026-08,260
+ipc,1,7358,1,Índice general,Índice general,Indice Diciembre 2009=100,M,2009-12,2026-10,203
+ipc,2,7359,1.1,Alimentos y bebidas no alcohólicas,Índice general › Alimentos y bebidas no alcohólicas,Indice Diciembre 2009=100,M,2009-12,2026-10,203
+ipc,3,7360,1.2,"Bebidas alcohólicas, tabaco","Índice general › Bebidas alcohólicas, tabaco",Indice Diciembre 2009=100,M,2009-12,2026-10,203
+ipc,4,7361,1.3,Prendas de vestir y calzado,Índice general › Prendas de vestir y calzado,Indice Diciembre 2009=100,M,2009-12,2026-10,203
+ipc,5,7362,1.4,"Alojamiento, agua, electricidad, gas y otros combustibles","Índice general › Alojamiento, agua, electricidad, gas y otros combustibles",Indice Diciembre 2009=100,M,2009-12,2026-10,203
+ipc,6,7363,1.5,"Muebles, artículos para el hogar y para la conservación ordinaria del hogar","Índice general › Muebles, artículos para el hogar y para la conservación ordinaria del hogar",Indice Diciembre 2009=100,M,2009-12,2026-10,203
+ipc,7,7364,1.6,Salud,Índice general › Salud,Indice Diciembre 2009=100,M,2009-12,2026-10,203
+ipc,8,7365,1.7,Transporte,Índice general › Transporte,Indice Diciembre 2009=100,M,2009-12,2026-10,203
+ipc,9,7366,1.8,Comunicaciones,Índice general › Comunicaciones,Indice Diciembre 2009=100,M,2009-12,2026-10,203
+ipc,10,7367,1.9,Recreación y cultura,Índice general › Recreación y cultura,Indice Diciembre 2009=100,M,2009-12,2026-10,203
+ipc,11,7368,1.10,Educación,Índice general › Educación,Indice Diciembre 2009=100,M,2009-12,2026-10,203
+ipc,12,7369,1.11,Restaurantes y hoteles,Índice general › Restaurantes y hoteles,Indice Diciembre 2009=100,M,2009-12,2026-10,203
+ipc,13,7370,1.12,Bienes y servicios diversos,Índice general › Bienes y servicios diversos,Indice Diciembre 2009=100,M,2009-12,2026-10,203
+isi,1,17698,1,Índice Subyacente de Inflación,Índice Subyacente de Inflación,Índice,M,2012-01,2026-10,178
+ipp,1,7371,,Índice general,Índice general,Indice Diciembre 2009=100,M,2009-12,2026-10,203
+ipp,2,7372,,Industrias manufactureras,Industrias manufactureras,Indice Diciembre 2009=100,M,2009-12,2026-10,203
+ipp,3,7373,,"Suministros de electricidad, gas, vapor y aire acondicionado","Suministros de electricidad, gas, vapor y aire acondicionado",Indice Diciembre 2009=100,M,2009-12,2026-10,203
+ipp,4,7374,,"Suministro de agua, alcantarillado, gestión de desechos y actividades de saneamiento","Suministro de agua, alcantarillado, gestión de desechos y actividades de saneamiento",Indice Diciembre 2009=100,M,2009-12,2026-10,203
+ipp,5,7375,,Transporte y almacenamiento,Transporte y almacenamiento,Indice Diciembre 2009=100,M,2009-12,2026-10,203
+ipp,6,7376,,Actividades de alojamiento y servicios de comidas,Actividades de alojamiento y servicios de comidas,Indice Diciembre 2009=100,M,2009-12,2026-10,203
+ipp,7,7377,,Información y telecomunicaciones,Información y telecomunicaciones,Indice Diciembre 2009=100,M,2009-12,2026-10,203
+ipp,8,7378,,Actividades inmobiliarias,Actividades inmobiliarias,Indice Diciembre 2009=100,M,2009-12,2026-10,203
+ipp,9,7379,,"Actividades profesionales, científicas y técnicas","Actividades profesionales, científicas y técnicas",Indice Diciembre 2009=100,M,2009-12,2026-10,203
+ipp,10,7380,,Actividades de servicios administrativos y de apoyo,Actividades de servicios administrativos y de apoyo,Indice Diciembre 2009=100,M,2009-12,2026-10,203
+ipp,11,7381,,Enseñanza,Enseñanza,Indice Diciembre 2009=100,M,2009-12,2026-10,203
+ipp,12,7382,,Actividades de atención a la salud humana y de asistencia social,Actividades de atención a la salud humana y de asistencia social,Indice Diciembre 2009=100,M,2009-12,2026-10,203
+ipp,13,7383,,"Actividades artísticas, de entretenimiento y recreativas","Actividades artísticas, de entretenimiento y recreativas",Indice Diciembre 2009=100,M,2009-12,2026-10,203
+ipp,14,7384,,Otras actividades de servicio,Otras actividades de servicio,Indice Diciembre 2009=100,M,2009-12,2026-10,203
+remesas,1,7607,,Ingresos mensuales de remesas familiares,Ingresos mensuales de remesas familiares,Millones de US$,M,1991-01,2026-09,429
+balanza_comercial,1,8618,1,Exportaciones (FOB),Exportaciones (FOB),Millones de US$,M,1994-01,2026-09,393
+balanza_comercial,2,8628,2,Importaciones (CIF),Importaciones (CIF),Millones de US$,M,1994-01,2026-09,393
+balanza_comercial,3,8632,3,Balanza Comercial,Balanza Comercial,Millones de US$,M,1994-01,2026-09,393
+reservas,1,18089,1,Reservas Internacionales Netas,Reservas Internacionales Netas,Millones de US$,M,1997-12,2026-10,347
+reservas,2,18090,1.1,Activos de Reserva,Reservas Internacionales Netas › Activos de Reserva,Millones de US$,M,1997-12,2026-10,347
+reservas,3,18091,1.1.1,Reservas en moneda extranjera,Reservas Internacionales Netas › Activos de Reserva › Reservas en moneda extranjera,Millones de US$,M,1997-12,2026-10,347
+reservas,4,18092,1.1.2,Posición de Reserva en el FMI,Reservas Internacionales Netas › Activos de Reserva › Posición de Reserva en el FMI,Millones de US$,M,1997-12,2026-10,347
+reservas,5,18093,1.1.3,Tenencias de DEG 3/,Reservas Internacionales Netas › Activos de Reserva › Tenencias de DEG 3/,Millones de US$,M,1997-12,2026-10,347
+reservas,6,18094,1.1.4,Oro 1/ 2/ 3/,Reservas Internacionales Netas › Activos de Reserva › Oro 1/ 2/ 3/,Millones de US$,M,1997-12,2026-10,347
+reservas,7,18095,1.1.5,Valores en tránsito e Intereses devengados por Activos Externos,Reservas Internacionales Netas › Activos de Reserva › Valores en tránsito e Intereses devengados por Activos Externos,Millones de US$,M,1997-12,2026-10,347
+reservas,8,18096,1.2,PASIVOS EXTERNOS DE CORTO PLAZO,Reservas Internacionales Netas › PASIVOS EXTERNOS DE CORTO PLAZO,Millones de US$,M,1997-12,2026-10,347
+reservas,9,18097,1.2.1,Intereses por Pagar por Pasivos Externos,Reservas Internacionales Netas › PASIVOS EXTERNOS DE CORTO PLAZO › Intereses por Pagar por Pasivos Externos,Millones de US$,M,1997-12,2026-10,347
+reservas,10,18098,1.2.2,Intereses por pagar a No Residentes,Reservas Internacionales Netas › PASIVOS EXTERNOS DE CORTO PLAZO › Intereses por pagar a No Residentes,Millones de US$,M,1997-12,2026-10,347
+reservas,11,18099,1.2.3,Otros Pasivos de Corto Plazo,Reservas Internacionales Netas › PASIVOS EXTERNOS DE CORTO PLAZO › Otros Pasivos de Corto Plazo,Millones de US$,M,1997-12,2026-10,347
+balanza_pagos,1,15167,1,Cuenta corriente,Cuenta corriente,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,2,15168,,Crédito,Cuenta corriente › Crédito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,3,15169,,Débito,Cuenta corriente › Débito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,4,15170,1.1,Bienes y servicios,Cuenta corriente › Bienes y servicios,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,5,15171,,Crédito,Cuenta corriente › Bienes y servicios › Crédito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,6,15172,,Débito,Cuenta corriente › Bienes y servicios › Débito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,7,15173,1.1.1,Bienes,Cuenta corriente › Bienes y servicios › Bienes,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,8,15174,,Crédito,Cuenta corriente › Bienes y servicios › Bienes › Crédito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,9,15175,,Débito,Cuenta corriente › Bienes y servicios › Bienes › Débito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,10,15176,1.1.1.1,Mercancías generales según BP,Cuenta corriente › Bienes y servicios › Bienes › Mercancías generales según BP,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,11,15177,,Crédito,Cuenta corriente › Bienes y servicios › Bienes › Mercancías generales según BP › Crédito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,12,15178,,Débito,Cuenta corriente › Bienes y servicios › Bienes › Mercancías generales según BP › Débito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,13,15179,1.1.1.2,Oro no monetario,Cuenta corriente › Bienes y servicios › Bienes › Oro no monetario,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,14,15180,,Crédito,Cuenta corriente › Bienes y servicios › Bienes › Oro no monetario › Crédito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,15,15181,,Débito,Cuenta corriente › Bienes y servicios › Bienes › Oro no monetario › Débito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,16,15182,1.1.2,Servicios,Cuenta corriente › Bienes y servicios › Servicios,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,17,15183,,Crédito,Cuenta corriente › Bienes y servicios › Servicios › Crédito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,18,15184,,Débito,Cuenta corriente › Bienes y servicios › Servicios › Débito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,19,15185,1.1.2.1,Servicios de manufactura sobre insumos físicos pertenecientes a otros,Cuenta corriente › Bienes y servicios › Servicios › Servicios de manufactura sobre insumos físicos pertenecientes a otros,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,20,15186,,Crédito,Cuenta corriente › Bienes y servicios › Servicios › Servicios de manufactura sobre insumos físicos pertenecientes a otros › Crédito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,21,15187,,Débito,Cuenta corriente › Bienes y servicios › Servicios › Servicios de manufactura sobre insumos físicos pertenecientes a otros › Débito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,22,15188,1.1.2.2,Mantenimiento y reparaciones,Cuenta corriente › Bienes y servicios › Servicios › Mantenimiento y reparaciones,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,23,15189,,Crédito,Cuenta corriente › Bienes y servicios › Servicios › Mantenimiento y reparaciones › Crédito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,24,15190,,Débito,Cuenta corriente › Bienes y servicios › Servicios › Mantenimiento y reparaciones › Débito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,25,15191,1.1.2.3,Transporte,Cuenta corriente › Bienes y servicios › Servicios › Transporte,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,26,15192,,Crédito,Cuenta corriente › Bienes y servicios › Servicios › Transporte › Crédito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,27,15193,,Débito,Cuenta corriente › Bienes y servicios › Servicios › Transporte › Débito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,28,15194,1.1.2.4,Viajes,Cuenta corriente › Bienes y servicios › Servicios › Viajes,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,29,15195,,Crédito,Cuenta corriente › Bienes y servicios › Servicios › Viajes › Crédito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,30,15196,,Débito,Cuenta corriente › Bienes y servicios › Servicios › Viajes › Débito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,31,15197,1.1.2.5,Construcción,Cuenta corriente › Bienes y servicios › Servicios › Construcción,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,32,15198,,Crédito,Cuenta corriente › Bienes y servicios › Servicios › Construcción › Crédito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,33,15199,,Débito,Cuenta corriente › Bienes y servicios › Servicios › Construcción › Débito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,34,15200,1.1.2.6,Servicios de seguros y pensiones,Cuenta corriente › Bienes y servicios › Servicios › Servicios de seguros y pensiones,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,35,15201,,Crédito,Cuenta corriente › Bienes y servicios › Servicios › Servicios de seguros y pensiones › Crédito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,36,15202,,Débito,Cuenta corriente › Bienes y servicios › Servicios › Servicios de seguros y pensiones › Débito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,37,15203,1.1.2.7,Servicios financieros,Cuenta corriente › Bienes y servicios › Servicios › Servicios financieros,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,38,15204,,Crédito,Cuenta corriente › Bienes y servicios › Servicios › Servicios financieros › Crédito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,39,15205,,Débito,Cuenta corriente › Bienes y servicios › Servicios › Servicios financieros › Débito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,40,15206,1.1.2.8,Cargos por el uso de la propiedad intelectual,Cuenta corriente › Bienes y servicios › Servicios › Cargos por el uso de la propiedad intelectual,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,41,15207,,Crédito,Cuenta corriente › Bienes y servicios › Servicios › Cargos por el uso de la propiedad intelectual › Crédito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,42,15208,,Débito,Cuenta corriente › Bienes y servicios › Servicios › Cargos por el uso de la propiedad intelectual › Débito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,43,15209,1.1.2.9,"Servicios de telecomunicaciones, informática e información","Cuenta corriente › Bienes y servicios › Servicios › Servicios de telecomunicaciones, informática e información",Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,44,15210,,Crédito,"Cuenta corriente › Bienes y servicios › Servicios › Servicios de telecomunicaciones, informática e información › Crédito",Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,45,15211,,Débito,"Cuenta corriente › Bienes y servicios › Servicios › Servicios de telecomunicaciones, informática e información › Débito",Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,46,15212,1.1.2.10,Otros servicios empresariales,Cuenta corriente › Bienes y servicios › Servicios › Otros servicios empresariales,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,47,15213,,Crédito,Cuenta corriente › Bienes y servicios › Servicios › Otros servicios empresariales › Crédito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,48,15214,,Débito,Cuenta corriente › Bienes y servicios › Servicios › Otros servicios empresariales › Débito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,49,15215,1.1.2.11,"Servicios personales, culturales y recreativos","Cuenta corriente › Bienes y servicios › Servicios › Servicios personales, culturales y recreativos",Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,50,15216,,Crédito,"Cuenta corriente › Bienes y servicios › Servicios › Servicios personales, culturales y recreativos › Crédito",Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,51,15217,,Débito,"Cuenta corriente › Bienes y servicios › Servicios › Servicios personales, culturales y recreativos › Débito",Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,52,15218,1.1.2.12,Bienes y servicios del gobierno,Cuenta corriente › Bienes y servicios › Servicios › Bienes y servicios del gobierno,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,53,15219,,Crédito,Cuenta corriente › Bienes y servicios › Servicios › Bienes y servicios del gobierno › Crédito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,54,15220,,Débito,Cuenta corriente › Bienes y servicios › Servicios › Bienes y servicios del gobierno › Débito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,55,15221,1.2,Ingreso primario,Cuenta corriente › Ingreso primario,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,56,15222,,Crédito,Cuenta corriente › Ingreso primario › Crédito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,57,15223,,Débito,Cuenta corriente › Ingreso primario › Débito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,58,15224,1.2.1,Remuneración de empleados,Cuenta corriente › Ingreso primario › Remuneración de empleados,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,59,15225,,Crédito,Cuenta corriente › Ingreso primario › Remuneración de empleados › Crédito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,60,15226,,Débito,Cuenta corriente › Ingreso primario › Remuneración de empleados › Débito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,61,15227,1.2.2,Renta de la inversión,Cuenta corriente › Ingreso primario › Renta de la inversión,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,62,15228,,Crédito,Cuenta corriente › Ingreso primario › Renta de la inversión › Crédito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,63,15229,,Débito,Cuenta corriente › Ingreso primario › Renta de la inversión › Débito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,64,15230,1.2.2.1,Inversión directa,Cuenta corriente › Ingreso primario › Renta de la inversión › Inversión directa,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,65,15231,,Crédito,Cuenta corriente › Ingreso primario › Renta de la inversión › Inversión directa › Crédito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,66,15232,,Débito,Cuenta corriente › Ingreso primario › Renta de la inversión › Inversión directa › Débito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,67,15233,1.2.2.2,Inversión de cartera,Cuenta corriente › Ingreso primario › Renta de la inversión › Inversión de cartera,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,68,15234,,Crédito,Cuenta corriente › Ingreso primario › Renta de la inversión › Inversión de cartera › Crédito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,69,15235,,Débito,Cuenta corriente › Ingreso primario › Renta de la inversión › Inversión de cartera › Débito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,70,15236,1.2.2.3,Otra inversión,Cuenta corriente › Ingreso primario › Renta de la inversión › Otra inversión,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,71,15237,,Crédito,Cuenta corriente › Ingreso primario › Renta de la inversión › Otra inversión › Crédito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,72,15238,,Débito,Cuenta corriente › Ingreso primario › Renta de la inversión › Otra inversión › Débito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,73,15239,1.2.2.4,Activos de reserva,Cuenta corriente › Ingreso primario › Renta de la inversión › Activos de reserva,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,74,15240,,Crédito,Cuenta corriente › Ingreso primario › Renta de la inversión › Activos de reserva › Crédito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,75,15241,1.3,Ingreso secundario,Cuenta corriente › Ingreso secundario,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,76,15242,,Crédito,Cuenta corriente › Ingreso secundario › Crédito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,77,15243,,Débito,Cuenta corriente › Ingreso secundario › Débito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,78,15244,1.3.1,Gobierno general,Cuenta corriente › Ingreso secundario › Gobierno general,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,79,15245,,Crédito,Cuenta corriente › Ingreso secundario › Gobierno general › Crédito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,80,15246,,Débito,Cuenta corriente › Ingreso secundario › Gobierno general › Débito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,81,15247,1.3.2,"Sociedades financieras, sociedades no financieras, hogares e ISFLSH","Cuenta corriente › Ingreso secundario › Sociedades financieras, sociedades no financieras, hogares e ISFLSH",Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,82,15248,,Crédito,"Cuenta corriente › Ingreso secundario › Sociedades financieras, sociedades no financieras, hogares e ISFLSH › Crédito",Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,83,15249,,Débito,"Cuenta corriente › Ingreso secundario › Sociedades financieras, sociedades no financieras, hogares e ISFLSH › Débito",Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,84,15250,1.3.2.1,Transferencias personales,"Cuenta corriente › Ingreso secundario › Sociedades financieras, sociedades no financieras, hogares e ISFLSH › Transferencias personales",Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,85,15251,,Crédito,"Cuenta corriente › Ingreso secundario › Sociedades financieras, sociedades no financieras, hogares e ISFLSH › Transferencias personales › Crédito",Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,86,15252,,Débito,"Cuenta corriente › Ingreso secundario › Sociedades financieras, sociedades no financieras, hogares e ISFLSH › Transferencias personales › Débito",Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,87,15253,1.3.2.1.1,de los cuales: remesas de trabajadores,"Cuenta corriente › Ingreso secundario › Sociedades financieras, sociedades no financieras, hogares e ISFLSH › Transferencias personales › de los cuales: remesas de trabajadores",Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,88,15254,,Crédito,"Cuenta corriente › Ingreso secundario › Sociedades financieras, sociedades no financieras, hogares e ISFLSH › Transferencias personales › de los cuales: remesas de trabajadores › Crédito",Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,89,15255,,Débito,"Cuenta corriente › Ingreso secundario › Sociedades financieras, sociedades no financieras, hogares e ISFLSH › Transferencias personales › de los cuales: remesas de trabajadores › Débito",Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,90,15256,1.3.2.2,Otras transferencias corrientes,"Cuenta corriente › Ingreso secundario › Sociedades financieras, sociedades no financieras, hogares e ISFLSH › Otras transferencias corrientes",Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,91,15257,,Crédito,"Cuenta corriente › Ingreso secundario › Sociedades financieras, sociedades no financieras, hogares e ISFLSH › Otras transferencias corrientes › Crédito",Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,92,15258,,Débito,"Cuenta corriente › Ingreso secundario › Sociedades financieras, sociedades no financieras, hogares e ISFLSH › Otras transferencias corrientes › Débito",Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,93,15259,2,Cuenta de capital,Cuenta de capital,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,94,15260,,Crédito,Cuenta de capital › Crédito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,95,15261,,Débito,Cuenta de capital › Débito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,96,15262,2.1,Transferencias de capital,Cuenta de capital › Transferencias de capital,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,97,15263,,Crédito,Cuenta de capital › Transferencias de capital › Crédito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,98,15264,,Débito,Cuenta de capital › Transferencias de capital › Débito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,99,15265,2.1.1,Gobierno general,Cuenta de capital › Transferencias de capital › Gobierno general,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,100,15266,,Crédito,Cuenta de capital › Transferencias de capital › Gobierno general › Crédito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,101,15267,,Débito,Cuenta de capital › Transferencias de capital › Gobierno general › Débito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,102,15268,2.1.2,"Sociedades financieras, sociedades no financieras, hogares e ISFLSH","Cuenta de capital › Transferencias de capital › Sociedades financieras, sociedades no financieras, hogares e ISFLSH",Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,103,15269,,Crédito,"Cuenta de capital › Transferencias de capital › Sociedades financieras, sociedades no financieras, hogares e ISFLSH › Crédito",Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,104,15270,,Débito,"Cuenta de capital › Transferencias de capital › Sociedades financieras, sociedades no financieras, hogares e ISFLSH › Débito",Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,105,15271,3,Préstamo neto (+)/endeudamiento neto (-) saldo de las cuentas corriente y de capital,Préstamo neto (+)/endeudamiento neto (-) saldo de las cuentas corriente y de capital,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,106,15272,4,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)),Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)),Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,107,15273,,Adquisición neta de activos financieros,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Adquisición neta de activos financieros,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,108,15274,,Pasivos netos incurridos,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Pasivos netos incurridos,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,109,15275,4.1,Inversión directa,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Inversión directa,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,110,15276,,Adquisición neta de activos financieros,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Inversión directa › Adquisición neta de activos financieros,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,111,15277,,Pasivos netos incurridos,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Inversión directa › Pasivos netos incurridos,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,112,15278,4.1.1,Participaciones de capital y participaciones en fondos de inversión,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Inversión directa › Participaciones de capital y participaciones en fondos de inversión,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,113,15279,,Adquisición neta de activos financieros,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Inversión directa › Participaciones de capital y participaciones en fondos de inversión › Adquisición neta de activos financieros,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,114,15280,,Pasivos netos incurridos,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Inversión directa › Participaciones de capital y participaciones en fondos de inversión › Pasivos netos incurridos,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,115,15281,4.1.2,Instrumentos de deuda,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Inversión directa › Instrumentos de deuda,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,116,15282,,Adquisición neta de activos financieros,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Inversión directa › Instrumentos de deuda › Adquisición neta de activos financieros,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,117,15283,,Pasivos netos incurridos,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Inversión directa › Instrumentos de deuda › Pasivos netos incurridos,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,118,15284,4.2,Inversión de cartera,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Inversión de cartera,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,119,15285,,Adquisición neta de activos financieros,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Inversión de cartera › Adquisición neta de activos financieros,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,120,15286,,Pasivos netos incurridos,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Inversión de cartera › Pasivos netos incurridos,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,121,15287,4.2.1,Participaciones de capital y participaciones en fondos de inversión,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Inversión de cartera › Participaciones de capital y participaciones en fondos de inversión,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,122,15288,,Adquisición neta de activos financieros,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Inversión de cartera › Participaciones de capital y participaciones en fondos de inversión › Adquisición neta de activos financieros,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,123,15289,,Pasivos netos incurridos,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Inversión de cartera › Participaciones de capital y participaciones en fondos de inversión › Pasivos netos incurridos,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,124,15290,4.2.2,Títulos de deuda,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Inversión de cartera › Títulos de deuda,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,125,15291,,Adquisición neta de activos financieros,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Inversión de cartera › Títulos de deuda › Adquisición neta de activos financieros,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,126,15292,,Pasivos netos incurridos,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Inversión de cartera › Títulos de deuda › Pasivos netos incurridos,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,127,15293,4.3,Derivados financieros,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Derivados financieros,Millones de US$,T,2020-T1,2026-T2,26
+balanza_pagos,128,15294,,Adquisición neta de activos financieros,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Derivados financieros › Adquisición neta de activos financieros,Millones de US$,T,2020-T1,2026-T2,26
+balanza_pagos,129,15295,,Pasivos netos incurridos,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Derivados financieros › Pasivos netos incurridos,Millones de US$,T,2020-T1,2026-T2,26
+balanza_pagos,130,15296,4.4,Otra inversión,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Otra inversión,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,131,15297,,Adquisición neta de activos financieros,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Otra inversión › Adquisición neta de activos financieros,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,132,15298,,Pasivos netos incurridos,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Otra inversión › Pasivos netos incurridos,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,133,15299,4.4.1,Otras participaciones de capital,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Otra inversión › Otras participaciones de capital,Millones de US$,T,2018-T1,2026-T2,34
+balanza_pagos,134,15300,,Adquisición neta de activos financieros,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Otra inversión › Otras participaciones de capital › Adquisición neta de activos financieros,Millones de US$,T,2018-T1,2026-T2,34
+balanza_pagos,135,15301,,Pasivos netos incurridos,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Otra inversión › Otras participaciones de capital › Pasivos netos incurridos,Millones de US$,T,2020-T1,2026-T2,26
+balanza_pagos,136,15302,4.4.2,Moneda y depósitos,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Otra inversión › Moneda y depósitos,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,137,15303,,Adquisición neta de activos financieros,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Otra inversión › Moneda y depósitos › Adquisición neta de activos financieros,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,138,15304,,Pasivos netos incurridos,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Otra inversión › Moneda y depósitos › Pasivos netos incurridos,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,139,15305,4.4.3,Préstamos,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Otra inversión › Préstamos,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,140,15306,,Adquisición neta de activos financieros,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Otra inversión › Préstamos › Adquisición neta de activos financieros,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,141,15307,,Pasivos netos incurridos,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Otra inversión › Préstamos › Pasivos netos incurridos,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,142,15308,4.4.4,"Seguros, pensiones y mecanismos normalizados de garantía","Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Otra inversión › Seguros, pensiones y mecanismos normalizados de garantía",Millones de US$,T,2020-T1,2026-T2,26
+balanza_pagos,143,15309,,Adquisición neta de activos financieros,"Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Otra inversión › Seguros, pensiones y mecanismos normalizados de garantía › Adquisición neta de activos financieros",Millones de US$,T,2020-T1,2026-T2,26
+balanza_pagos,144,15310,,Pasivos netos incurridos,"Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Otra inversión › Seguros, pensiones y mecanismos normalizados de garantía › Pasivos netos incurridos",Millones de US$,T,2020-T1,2026-T2,26
+balanza_pagos,145,15311,4.4.5,Créditos y anticipos comerciales,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Otra inversión › Créditos y anticipos comerciales,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,146,15312,,Adquisición neta de activos financieros,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Otra inversión › Créditos y anticipos comerciales › Adquisición neta de activos financieros,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,147,15313,,Pasivos netos incurridos,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Otra inversión › Créditos y anticipos comerciales › Pasivos netos incurridos,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,148,15314,4.4.6,Otras cuentas por cobrar/pagar,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Otra inversión › Otras cuentas por cobrar/pagar,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,149,15315,,Adquisición neta de activos financieros,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Otra inversión › Otras cuentas por cobrar/pagar › Adquisición neta de activos financieros,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,150,15316,,Pasivos netos incurridos,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Otra inversión › Otras cuentas por cobrar/pagar › Pasivos netos incurridos,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,151,15317,4.4.7,Derechos especiales de giro,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Otra inversión › Derechos especiales de giro,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,152,15318,,Pasivos netos incurridos,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Otra inversión › Derechos especiales de giro › Pasivos netos incurridos,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,153,15319,4.5,Activos de reserva,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Activos de reserva,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,154,15320,,Adquisición neta de activos financieros,Cuenta financiera (Préstamo Neto (+)/endeudamiento Neto (-)) › Activos de reserva › Adquisición neta de activos financieros,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,155,15321,5,Errores y omisiones netos,Errores y omisiones netos,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,156,15322,,Crédito,Errores y omisiones netos › Crédito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,157,15323,,Débito,Errores y omisiones netos › Débito,Millones de US$,T,1999-T1,2026-T2,110
+balanza_pagos,158,15324,,Partida informativa: Inversión Extranjera Directa en El Salvador (Neta),Errores y omisiones netos › Partida informativa: Inversión Extranjera Directa en El Salvador (Neta),Millones de US$,T,1999-T1,2026-T2,110
+pii,1,8763,1,Posición de Inversión Internacional Neta,Posición de Inversión Internacional Neta,Millones de US$,T,2002-T1,2026-T2,98
+pii,2,8764,1.1,Activos,Posición de Inversión Internacional Neta › Activos,Millones de US$,T,2002-T1,2026-T2,98
+pii,3,8765,1.1.1,Inversión Directa,Posición de Inversión Internacional Neta › Activos › Inversión Directa,Millones de US$,T,2002-T1,2026-T2,98
+pii,4,8766,1.1.1.1,Participación de capital y participaciones en fondos de inversión,Posición de Inversión Internacional Neta › Activos › Inversión Directa › Participación de capital y participaciones en fondos de inversión,Millones de US$,T,2002-T1,2026-T2,98
+pii,5,8767,1.1.1.2,Instrumentos de deuda,Posición de Inversión Internacional Neta › Activos › Inversión Directa › Instrumentos de deuda,Millones de US$,T,2002-T1,2026-T2,98
+pii,6,8768,1.1.2,Inversión de Cartera,Posición de Inversión Internacional Neta › Activos › Inversión de Cartera,Millones de US$,T,2002-T1,2026-T2,98
+pii,7,8769,1.1.2.1,Participación de capital y participaciones en fondos de inversión,Posición de Inversión Internacional Neta › Activos › Inversión de Cartera › Participación de capital y participaciones en fondos de inversión,Millones de US$,T,2002-T1,2026-T2,98
+pii,8,8770,1.1.2.2,Títulos de deuda,Posición de Inversión Internacional Neta › Activos › Inversión de Cartera › Títulos de deuda,Millones de US$,T,2002-T1,2026-T2,98
+pii,9,8771,1.1.3,Derivados Financieros,Posición de Inversión Internacional Neta › Activos › Derivados Financieros,Millones de US$,T,2020-T1,2026-T2,26
+pii,10,8772,1.1.4,Otra Inversión,Posición de Inversión Internacional Neta › Activos › Otra Inversión,Millones de US$,T,2002-T1,2026-T2,98
+pii,11,8773,1.1.4.1,Otras participaciones de capital,Posición de Inversión Internacional Neta › Activos › Otra Inversión › Otras participaciones de capital,Millones de US$,T,2018-T1,2026-T2,34
+pii,12,8774,1.1.4.2,Moneda y depósitos,Posición de Inversión Internacional Neta › Activos › Otra Inversión › Moneda y depósitos,Millones de US$,T,2002-T1,2026-T2,98
+pii,13,8775,1.1.4.3,Préstamos,Posición de Inversión Internacional Neta › Activos › Otra Inversión › Préstamos,Millones de US$,T,2002-T1,2026-T2,98
+pii,14,8776,1.1.4.4,"Seguros, pensiones y mecanismos normalizados de garantía","Posición de Inversión Internacional Neta › Activos › Otra Inversión › Seguros, pensiones y mecanismos normalizados de garantía",Millones de US$,T,2002-T1,2026-T2,98
+pii,15,8777,1.1.4.5,Créditos y anticipos comerciales,Posición de Inversión Internacional Neta › Activos › Otra Inversión › Créditos y anticipos comerciales,Millones de US$,T,2002-T1,2026-T2,98
+pii,16,8778,1.1.4.6,Otras cuentas por cobrar,Posición de Inversión Internacional Neta › Activos › Otra Inversión › Otras cuentas por cobrar,Millones de US$,T,2002-T1,2026-T2,98
+pii,17,8779,1.1.5,Activos de Reserva,Posición de Inversión Internacional Neta › Activos › Activos de Reserva,Millones de US$,T,2002-T1,2026-T2,98
+pii,18,8780,1.1.5.1,Oro Monetario,Posición de Inversión Internacional Neta › Activos › Activos de Reserva › Oro Monetario,Millones de US$,T,2002-T1,2026-T2,98
+pii,19,8781,1.1.5.2,Derechos Especiales de Giro,Posición de Inversión Internacional Neta › Activos › Activos de Reserva › Derechos Especiales de Giro,Millones de US$,T,2002-T1,2026-T2,98
+pii,20,8782,1.1.5.3,Posición de reserva en el FMI,Posición de Inversión Internacional Neta › Activos › Activos de Reserva › Posición de reserva en el FMI,Millones de US$,T,2002-T1,2026-T2,98
+pii,21,8783,1.1.5.4,Otros activos de reserva,Posición de Inversión Internacional Neta › Activos › Activos de Reserva › Otros activos de reserva,Millones de US$,T,2002-T1,2026-T2,98
+pii,22,8784,1.2,Pasivos,Posición de Inversión Internacional Neta › Pasivos,Millones de US$,T,2002-T1,2026-T2,98
+pii,23,8785,1.2.1,Inversión Directa,Posición de Inversión Internacional Neta › Pasivos › Inversión Directa,Millones de US$,T,2002-T1,2026-T2,98
+pii,24,8786,1.2.1.1,Participaciones de capital y participaciones en fondos de inversión,Posición de Inversión Internacional Neta › Pasivos › Inversión Directa › Participaciones de capital y participaciones en fondos de inversión,Millones de US$,T,2002-T1,2026-T2,98
+pii,25,8787,1.2.1.2,Instrumentos de deuda,Posición de Inversión Internacional Neta › Pasivos › Inversión Directa › Instrumentos de deuda,Millones de US$,T,2002-T1,2026-T2,98
+pii,26,8788,1.2.2,Inversión de Cartera,Posición de Inversión Internacional Neta › Pasivos › Inversión de Cartera,Millones de US$,T,2002-T1,2026-T2,98
+pii,27,8789,1.2.2.1,Participaciones de capital y participaciones en fondos de inversión,Posición de Inversión Internacional Neta › Pasivos › Inversión de Cartera › Participaciones de capital y participaciones en fondos de inversión,Millones de US$,T,2002-T1,2026-T2,98
+pii,28,8790,1.2.2.2,Títulos de deuda,Posición de Inversión Internacional Neta › Pasivos › Inversión de Cartera › Títulos de deuda,Millones de US$,T,2002-T1,2026-T2,98
+pii,29,8791,1.2.3,Derivados Financieros,Posición de Inversión Internacional Neta › Pasivos › Derivados Financieros,Millones de US$,T,2020-T1,2026-T2,26
+pii,30,8792,1.2.4,Otra Inversión,Posición de Inversión Internacional Neta › Pasivos › Otra Inversión,Millones de US$,T,2002-T1,2026-T2,98
+pii,31,8793,1.2.4.1,Otras participaciones de capital,Posición de Inversión Internacional Neta › Pasivos › Otra Inversión › Otras participaciones de capital,Millones de US$,T,2020-T1,2026-T2,26
+pii,32,8794,1.2.4.2,Moneda y depósitos,Posición de Inversión Internacional Neta › Pasivos › Otra Inversión › Moneda y depósitos,Millones de US$,T,2002-T1,2026-T2,98
+pii,33,8795,1.2.4.3,Préstamos,Posición de Inversión Internacional Neta › Pasivos › Otra Inversión › Préstamos,Millones de US$,T,2002-T1,2026-T2,98
+pii,34,8796,1.2.4.4,"Seguros, pensiones y mecanismos normalizados de garantía","Posición de Inversión Internacional Neta › Pasivos › Otra Inversión › Seguros, pensiones y mecanismos normalizados de garantía",Millones de US$,T,2020-T1,2026-T2,26
+pii,35,8797,1.2.4.5,Créditos y anticipos comerciales,Posición de Inversión Internacional Neta › Pasivos › Otra Inversión › Créditos y anticipos comerciales,Millones de US$,T,2002-T1,2026-T2,98
+pii,36,8798,1.2.4.6,Otras cuentas por pagar,Posición de Inversión Internacional Neta › Pasivos › Otra Inversión › Otras cuentas por pagar,Millones de US$,T,2002-T1,2026-T2,98
+pii,37,8799,1.2.4.7,Derechos Especiales de Giro,Posición de Inversión Internacional Neta › Pasivos › Otra Inversión › Derechos Especiales de Giro,Millones de US$,T,2002-T1,2026-T2,98
+ied,1,15336,,Agropecuario,Agropecuario,Millones de US$,T,2010-T1,2026-T2,42
+ied,2,15337,,Minería,Minería,Millones de US$,T,2010-T1,2026-T2,13
+ied,3,15338,,Industria,Industria,Millones de US$,T,2010-T1,2026-T2,66
+ied,4,15339,,Electricidad,Electricidad,Millones de US$,T,2010-T1,2026-T2,66
+ied,5,15340,,Construcción,Construcción,Millones de US$,T,2010-T1,2026-T2,13
+ied,6,15341,,Comercio,Comercio,Millones de US$,T,2010-T1,2026-T2,66
+ied,7,15342,,Transporte,Transporte,Millones de US$,T,2010-T1,2026-T2,66
+ied,8,15343,,Información y Comunicaciones,Información y Comunicaciones,Millones de US$,T,2010-T1,2026-T2,66
+ied,9,15344,,Actividades Financieras y de Seguros,Actividades Financieras y de Seguros,Millones de US$,T,2010-T1,2026-T2,66
+ied,10,15345,,Otros Servicios,Otros Servicios,Millones de US$,T,2010-T1,2026-T2,66
+ied,11,15346,,Total,Total,Millones de US$,T,2010-T1,2026-T2,66
+ied_ciiu,1,15464,1,"Actividades Bibliotecas, Archivos, Museos y Otras Actividades Culturales","Actividades Bibliotecas, Archivos, Museos y Otras Actividades Culturales",Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,2,15465,2,Actividad de Los Hogares En Calidad de Empleadores de Personal Domestico,Actividad de Los Hogares En Calidad de Empleadores de Personal Domestico,Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,3,15466,3,Actividades Administrativas y de Apoyo de Oficinas y Otras Actividades de Apoyo A Las Empresas,Actividades Administrativas y de Apoyo de Oficinas y Otras Actividades de Apoyo A Las Empresas,Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,4,15467,4,Actividades de Servicios A Edificios y Paisajismo,Actividades de Servicios A Edificios y Paisajismo,Millones de US$,T,,,0
+ied_ciiu,5,15468,5,Actividades Auxiliares de Las Actividades de Servicios Financieros,Actividades Auxiliares de Las Actividades de Servicios Financieros,Millones de US$,T,2012-T1,2026-T2,39
+ied_ciiu,6,15469,6,Actividades Creativas Artísticas y de Esparcimiento,Actividades Creativas Artísticas y de Esparcimiento,Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,7,15470,7,"Actividades de Agencias de Viajes, Operadores Turísticos y Otros Servicios de Reserva y Actividades Conexas","Actividades de Agencias de Viajes, Operadores Turísticos y Otros Servicios de Reserva y Actividades Conexas",Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,8,15471,8,Actividades de Alojamiento,Actividades de Alojamiento,Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,9,15472,9,Actividades de Alquiler y Arrendamiento,Actividades de Alquiler y Arrendamiento,Millones de US$,T,2021-T1,2021-T1,1
+ied_ciiu,10,15473,10,Actividades de Arquitectura E Ingeniería; Ensayos y Análisis Técnicos,Actividades de Arquitectura E Ingeniería; Ensayos y Análisis Técnicos,Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,11,15474,11,Actividades de Asistencia Social Sin Alojamiento,Actividades de Asistencia Social Sin Alojamiento,Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,12,15475,12,Actividades de Asociaciones,Actividades de Asociaciones,Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,13,15476,13,Actividades de Atención de Enfermería En Instituciones,Actividades de Atención de Enfermería En Instituciones,Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,14,15477,14,Actividades de Atención de La Salud Humana,Actividades de Atención de La Salud Humana,Millones de US$,T,2020-T1,2026-T2,26
+ied_ciiu,15,15478,15,Actividades de Edición,Actividades de Edición,Millones de US$,T,,,0
+ied_ciiu,16,15479,16,Actividades de Empleo,Actividades de Empleo,Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,17,15480,17,Actividades de Investigación y Seguridad,Actividades de Investigación y Seguridad,Millones de US$,T,2014-T3,2025-T1,33
+ied_ciiu,18,15481,18,Actividades de Juegos de Azar y Apuestas,Actividades de Juegos de Azar y Apuestas,Millones de US$,T,,,0
+ied_ciiu,19,15482,19,Actividades de Oficinas Centrales; Actividades de Consultoria En Gestión Empresarial,Actividades de Oficinas Centrales; Actividades de Consultoria En Gestión Empresarial,Millones de US$,T,2019-T1,2026-T2,30
+ied_ciiu,20,15483,20,"Actividades de Producción de Películas Cinematográficas, Videos y Programas de Televisión, Grabación de Sonido y Edición de Música","Actividades de Producción de Películas Cinematográficas, Videos y Programas de Televisión, Grabación de Sonido y Edición de Música",Millones de US$,T,,,0
+ied_ciiu,21,15484,21,Actividades de Programación y Transmisión,Actividades de Programación y Transmisión,Millones de US$,T,,,0
+ied_ciiu,22,15485,22,Actividades de Saneamiento y Otros Servicios de Gestión de Desechos,Actividades de Saneamiento y Otros Servicios de Gestión de Desechos,Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,23,15486,23,Actividades de Servicio de Comidas y Bebidas,Actividades de Servicio de Comidas y Bebidas,Millones de US$,T,2021-T1,2026-T2,22
+ied_ciiu,24,15487,24,Actividades de Servicios de Apoyo A La Explotación de Minas y Canteras,Actividades de Servicios de Apoyo A La Explotación de Minas y Canteras,Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,25,15488,25,Actividades de Servicios de Información,Actividades de Servicios de Información,Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,26,15489,26,Actividades de Servicios Financieros Excepto Las de Seguros y Fondos de Pensiones,Actividades de Servicios Financieros Excepto Las de Seguros y Fondos de Pensiones,Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,27,15490,27,"Actividades Deportivas, de Esparcimiento y Recreativas","Actividades Deportivas, de Esparcimiento y Recreativas",Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,28,15491,28,Actividades Especializadas de Construcción,Actividades Especializadas de Construcción,Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,29,15492,29,Actividades Indiferenciadas de Producción de Bienes y Servicios de Los Hogares Para Uso Propio,Actividades Indiferenciadas de Producción de Bienes y Servicios de Los Hogares Para Uso Propio,Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,30,15493,30,Actividades Inmobiliarias,Actividades Inmobiliarias,Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,31,15494,31,Actividades Jurídicas y Contables,Actividades Jurídicas y Contables,Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,32,15495,32,Actividades Postales y de Mensajería,Actividades Postales y de Mensajería,Millones de US$,T,,,0
+ied_ciiu,33,15496,33,Actividades Veterinarias,Actividades Veterinarias,Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,34,15497,34,Almacenamiento y Actividades de Apoyo al Transporte,Almacenamiento y Actividades de Apoyo al Transporte,Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,35,15498,35,"Captación, Tratamiento y Suministro de Agua","Captación, Tratamiento y Suministro de Agua",Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,36,15499,36,Comercio al Por Mayor y al Por Menor y Reparación de Vehículos Automotores y Motocicletas,Comercio al Por Mayor y al Por Menor y Reparación de Vehículos Automotores y Motocicletas,Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,37,15500,37,"Comercio al Por Mayor, Excepto El Comercio de Vehículos Automotores y Motocicletas","Comercio al Por Mayor, Excepto El Comercio de Vehículos Automotores y Motocicletas",Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,38,15501,38,"Comercio al Por Menor, Excepto de Vehículos Automotores y Motocicletas","Comercio al Por Menor, Excepto de Vehículos Automotores y Motocicletas",Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,39,15502,39,Construcción de Edificios,Construcción de Edificios,Millones de US$,T,2025-T2,2026-T2,5
+ied_ciiu,40,15503,40,Elaboración de Bebidas,Elaboración de Bebidas,Millones de US$,T,2012-T1,2014-T4,12
+ied_ciiu,41,15504,41,Elaboración de Productos Alimenticios,Elaboración de Productos Alimenticios,Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,42,15505,42,Elaboración de Productos de Tabaco,Elaboración de Productos de Tabaco,Millones de US$,T,2018-T2,2026-T2,33
+ied_ciiu,43,15506,43,Enseñanza,Enseñanza,Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,44,15507,44,Evacuación de Aguas Residuales (Alcantarillado),Evacuación de Aguas Residuales (Alcantarillado),Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,45,15508,45,Explotación de Otras Minas y Canteras,Explotación de Otras Minas y Canteras,Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,46,15509,46,Extracción Carbón de Piedra y Lignito,Extracción Carbón de Piedra y Lignito,Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,47,15510,47,Extracción de Minerales Metalíferos,Extracción de Minerales Metalíferos,Millones de US$,T,2025-T4,2026-T2,3
+ied_ciiu,48,15511,48,Extracción de Petróleo Crudo y Gas Natural,Extracción de Petróleo Crudo y Gas Natural,Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,49,15512,49,Fabricación de Productos Minerales No Metálicos,Fabricación de Productos Minerales No Metálicos,Millones de US$,T,,,0
+ied_ciiu,50,15513,50,Fabricación de Coque y de Productos de La Refinación de Petróleo,Fabricación de Coque y de Productos de La Refinación de Petróleo,Millones de US$,T,,,0
+ied_ciiu,51,15514,51,Fabricación de Cueros y Productos Conexos,Fabricación de Cueros y Productos Conexos,Millones de US$,T,,,0
+ied_ciiu,52,15515,52,Fabricación de Equipo Eléctrico,Fabricación de Equipo Eléctrico,Millones de US$,T,2012-T3,2026-T2,56
+ied_ciiu,53,15516,53,Fabricación de Maquinaria y Equipo Ncp,Fabricación de Maquinaria y Equipo Ncp,Millones de US$,T,2012-T1,2018-T2,26
+ied_ciiu,54,15517,54,Fabricación de Metales Comunes,Fabricación de Metales Comunes,Millones de US$,T,,,0
+ied_ciiu,55,15518,55,Fabricación de Muebles,Fabricación de Muebles,Millones de US$,T,2015-T1,2026-T2,29
+ied_ciiu,56,15519,56,Fabricación de Otros Tipos de Equipo de Transporte,Fabricación de Otros Tipos de Equipo de Transporte,Millones de US$,T,2015-T1,2026-T2,46
+ied_ciiu,57,15520,57,Fabricación de Papel y de Productos de Papel,Fabricación de Papel y de Productos de Papel,Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,58,15521,58,Fabricación de Prendas de Vestir,Fabricación de Prendas de Vestir,Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,59,15522,59,Fabricación de Productos de Caucho y Plástico,Fabricación de Productos de Caucho y Plástico,Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,60,15523,60,"Fabricación de Productos de Informática, Electrónica y Óptica","Fabricación de Productos de Informática, Electrónica y Óptica",Millones de US$,T,,,0
+ied_ciiu,61,15524,61,"Fabricación de Productos Derivados de Metal, Excepto Maquinaria y Equipo","Fabricación de Productos Derivados de Metal, Excepto Maquinaria y Equipo",Millones de US$,T,2012-T1,2025-T4,34
+ied_ciiu,62,15525,62,"Fabricación de Productos Farmacéuticos, Sustancias Químicas Medicinales y Productos Botánicos de Uso Farmacéutico","Fabricación de Productos Farmacéuticos, Sustancias Químicas Medicinales y Productos Botánicos de Uso Farmacéutico",Millones de US$,T,2013-T1,2026-T2,54
+ied_ciiu,63,15526,63,Fabricación de Productos Textiles,Fabricación de Productos Textiles,Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,64,15527,64,Fabricación de Sustancias y Productos Químicos,Fabricación de Sustancias y Productos Químicos,Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,65,15528,65,"Fabricación de Vehículos Automotores, Remolques y Semirremolques","Fabricación de Vehículos Automotores, Remolques y Semirremolques",Millones de US$,T,,,0
+ied_ciiu,66,15529,66,Impresión y Reproducción de Grabaciones,Impresión y Reproducción de Grabaciones,Millones de US$,T,,,0
+ied_ciiu,67,15530,67,Investigación Científica y Desarrollo,Investigación Científica y Desarrollo,Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,68,15531,68,Obras de Ingeniería Civil,Obras de Ingeniería Civil,Millones de US$,T,2012-T1,2025-T1,37
+ied_ciiu,69,15532,69,Otras Actividades de Servicios Personales,Otras Actividades de Servicios Personales,Millones de US$,T,2012-T1,2022-T1,41
+ied_ciiu,70,15533,70,"Otras Actividades Profesionales, Científicas y Técnicas","Otras Actividades Profesionales, Científicas y Técnicas",Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,71,15534,71,Otras Industrias Manufactureras,Otras Industrias Manufactureras,Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,72,15535,72,Pesca y Acuicultura,Pesca y Acuicultura,Millones de US$,T,2012-T1,2018-T2,26
+ied_ciiu,73,15536,73,"Producción Agrícola, Pecuaria, Caza y Actividades de Servicios Conexas","Producción Agrícola, Pecuaria, Caza y Actividades de Servicios Conexas",Millones de US$,T,2017-T3,2021-T1,3
+ied_ciiu,74,15537,74,Producción de Madera y Fabricación de Productos de Madera y Corcho Excepto Muebles; Fabricación de Artículos de Paja y de Materiales Trenzables,Producción de Madera y Fabricación de Productos de Madera y Corcho Excepto Muebles; Fabricación de Artículos de Paja y de Materiales Trenzables,Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,75,15538,75,"Programación Informática, Consultoría Informática y Actividades Conexas","Programación Informática, Consultoría Informática y Actividades Conexas",Millones de US$,T,2019-T1,2026-T2,30
+ied_ciiu,76,15539,76,Publicidad y Estudios de Mercado,Publicidad y Estudios de Mercado,Millones de US$,T,2012-T1,2019-T4,32
+ied_ciiu,77,15540,77,"Recolección, Tratamiento y Eliminación de Desechos; Reciclaje","Recolección, Tratamiento y Eliminación de Desechos; Reciclaje",Millones de US$,T,2020-T1,2026-T2,26
+ied_ciiu,78,15541,78,Reparación de Computadoras y de Efectos Personales y Enseres Domésticos,Reparación de Computadoras y de Efectos Personales y Enseres Domésticos,Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,79,15542,79,Reparación E Instalación de Maquinaria y Equipo,Reparación E Instalación de Maquinaria y Equipo,Millones de US$,T,,,0
+ied_ciiu,80,15543,80,"Seguros, Reaseguros y Fondos de Pensiones, Excepto Planes de Seguridad Social de Afiliación Obligatoria.","Seguros, Reaseguros y Fondos de Pensiones, Excepto Planes de Seguridad Social de Afiliación Obligatoria.",Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,81,15544,81,Silvicultura y Extracción de Madera,Silvicultura y Extracción de Madera,Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,82,15545,82,"Suministros de Electricidad, Gas, Vapor y Aire Acondicionado","Suministros de Electricidad, Gas, Vapor y Aire Acondicionado",Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,83,15546,83,Telecomunicaciones,Telecomunicaciones,Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,84,15547,84,Transporte Por Vía Acuática,Transporte Por Vía Acuática,Millones de US$,T,2012-T1,2022-T2,42
+ied_ciiu,85,15548,85,Transporte Por Vía Aérea,Transporte Por Vía Aérea,Millones de US$,T,,,0
+ied_ciiu,86,15549,86,Transporte Por Vía Terrestre y Transporte Por Tuberías,Transporte Por Vía Terrestre y Transporte Por Tuberías,Millones de US$,T,2012-T1,2026-T2,58
+ied_ciiu,87,15550,87,Total,Total,Millones de US$,T,2012-T1,2026-T2,58
