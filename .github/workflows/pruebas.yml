@@ -1,0 +1,30 @@
+# En cada cambio: las pruebas sin red y la compuerta sobre el lago que está en el repositorio.
+name: Pruebas
+
+on:
+  push:
+    branches-ignore: [gh-pages]
+    paths-ignore: ["lago/plata/noticias.csv", "lago/oro/noticias/**"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  pruebas:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Pruebas sin red
+        run: python -m unittest discover -s pruebas -v
+      - name: Compuerta
+        run: python tuberias/verificar.py
+      - name: El sitio se arma y su JavaScript es válido
+        run: |
+          python tuberias/sitio.py
+          node --check sitio/app.js

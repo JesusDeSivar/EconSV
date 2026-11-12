@@ -1,0 +1,48 @@
+# El resumen de noticias de cada mañana. GitHub puede arrancar un cron con algunos minutos de atraso.
+name: Noticias
+
+on:
+  schedule:
+    - cron: "15 13 * * *"        # 7:15 AM en El Salvador (UTC−6, sin horario de verano), todos los días
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: lago
+  cancel-in-progress: false
+
+jobs:
+  noticias:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Leer los feeds y repartir en categorías
+        run: python tuberias/noticias.py
+      - name: Compuerta
+        run: python tuberias/verificar.py
+      - name: Guardar en el repositorio
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lago/plata/noticias.csv lago/oro/noticias
+          if git diff --cached --quiet; then
+            echo "Nada nuevo."
+          else
+            git commit -m "Noticias: edición del $(TZ=America/El_Salvador date +%F)"
+            git pull --rebase --autostash
+            git push
+          fi
+
+  sitio:
+    needs: noticias
+    uses: ./.github/workflows/pages.yml

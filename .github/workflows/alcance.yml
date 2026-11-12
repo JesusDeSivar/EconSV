@@ -1,0 +1,32 @@
+# ¿Alcanza el runner de GitHub al portal del BCR y a los feeds? No escribe nada en el repositorio.
+# Se corre a mano; también sale sola cuando cambia este archivo.
+name: Alcance
+
+on:
+  workflow_dispatch:
+  push:
+    paths: [".github/workflows/alcance.yml"]
+
+permissions:
+  contents: read
+
+jobs:
+  alcance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Calendario de divulgación del BCR
+        if: always()
+        run: python tuberias/traer.py calendario
+      - name: Tres series del BCR, una de cada forma (sin escribir)
+        if: always()
+        run: python tuberias/traer.py bcr --seco --solo reservas,ipc,pib_trimestral
+      - name: Feeds de noticias (sin escribir)
+        if: always()
+        run: python tuberias/noticias.py --seco
