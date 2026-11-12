@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EconSV · Signos vitales de la economía salvadoreña</title>
+<meta name="description" content="Indicadores de la economía de El Salvador con datos públicos del Banco Central de Reserva: PIB, IVAE, inflación, remesas, comercio, inversión extranjera, reservas, turismo y construcción. Con calendario de publicación y resumen diario de noticias.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231c5cab'/%3E%3Cpath d='M4 17h6l3-8 5 15 3-9 2 2h5' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+<a class="salto" href="#vista">Ir al contenido</a>
+<header class="cab">
+  <div class="cab-in">
+    <a class="marca" href="#/inicio" aria-label="EconSV, inicio">
+      <svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><rect width="32" height="32" rx="7"/><path d="M4 17h6l3-8 5 15 3-9 2 2h5"/></svg>
+      <span>EconSV</span>
+    </a>
+    <nav id="nav" aria-label="Secciones"></nav>
+  </div>
+</header>
+<main id="vista" tabindex="-1"></main>
+<footer class="pie">
+  <div class="pie-in">
+    <p><strong>Fuente de las cifras:</strong> Banco Central de Reserva de El Salvador, <a href="https://estadisticas.bcr.gob.sv" rel="noopener">estadisticas.bcr.gob.sv</a>. Las variaciones, sumas anuales y porcentajes del PIB los calcula EconSV sobre esas cifras. EconSV no es un sitio oficial.</p>
+    <p><strong>Noticias:</strong> solo titular, extracto y enlace, tal como cada medio los publica en su feed. Son contexto, no la fuente de ninguna cifra.</p>
+    <p>Código y datos: <a href="https://github.com/JesusDeSivar/EconSV" rel="noopener">github.com/JesusDeSivar/EconSV</a> · <span id="generado"></span></p>
+  </div>
+</footer>
+<div id="tip" class="tip" role="status" aria-live="polite" hidden></div>
+<noscript><p style="padding:24px">Este sitio necesita JavaScript para dibujar las gráficas. Los datos están en la carpeta <code>lago/</code> del repositorio.</p></noscript>
+<script src="datos/datos.js"></script>
+<script src="datos/noticias.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
