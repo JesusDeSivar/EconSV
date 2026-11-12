@@ -4,6 +4,7 @@
     python tuberias/traer.py bcr                      todas las series de catalogo/series.toml
     python tuberias/traer.py bcr --solo reservas,ipc  algunas
     python tuberias/traer.py bcr --seco               las pide y las contrasta, sin escribir
+    python tuberias/traer.py bcr --aceptar-menos      deja que una serie llegue con menos cifras que antes
     python tuberias/traer.py calendario               el calendario de divulgación del BCR
     python tuberias/traer.py noticias                 los feeds de catalogo/noticias_fuentes.toml
     python tuberias/traer.py verificar                sin red: cada archivo de bronce contra su sha256
@@ -75,6 +76,13 @@ def traer_bcr(args):
         destino = rutas.BRONCE_BCR / f"{clave}.json"
         igual = destino.exists() and destino.read_bytes() == texto
         previo = lock["series"].get(clave, {})
+        # una serie que llega con menos cifras que antes no reemplaza a la que está: o el portal
+        # sirvió a medias o el BCR rehízo el cuadro, y eso lo decide una persona
+        if previo and res["observaciones"] < previo["observaciones"] and not args.aceptar_menos:
+            fallas.append(clave)
+            print(f"  NO SE ESCRIBE {clave}: trae {res['observaciones']} cifras y el lago tiene "
+                  f"{previo['observaciones']} (--aceptar-menos si el BCR rehízo el cuadro)")
+            continue
         print(f"  {clave}: {res['modo']}, {res['variables']} variables, {res['desde']} a {res['hasta']}, "
               f"{res['observaciones']} cifras, testigo {res['testigo']}"
               f"{', ambiguos ' + str(res['ambiguos']) if res['ambiguos'] else ''}; {'igual' if igual else 'cambia'}")
@@ -120,6 +128,7 @@ def main():
     b = sub.add_parser("bcr")
     b.add_argument("--solo", type=lambda x: [y for y in x.split(",") if y])
     b.add_argument("--seco", action="store_true")
+    b.add_argument("--aceptar-menos", action="store_true")
     sub.add_parser("calendario")
     n = sub.add_parser("noticias")
     n.add_argument("--seco", action="store_true")

@@ -4,17 +4,22 @@
 #   clave        el nombre de la serie en el lago: lago/bronce/bcr/<clave>.json, lago/plata/bcr_<clave>.csv
 #   slug         la dirección de la serie en el portal
 #   frecuencia   M mensual · T trimestral · A anual (se contrasta con lo que declara el portal)
-#   calendario   el título con que el BCR la anuncia en su calendario de divulgación
-#                (https://estadisticas.bcr.gob.sv/calendario-de-divulgacion); vacío si no la anuncia
-#   rezago_dias  días entre el fin del período y la publicación, para cuando el calendario no la trae
-#   tramo        años por pedido; las series muy anchas se piden por tramos y se unen
+#   calendario   el título con que el BCR anuncia su publicación en el calendario de divulgación
+#                (https://estadisticas.bcr.gob.sv/calendario-de-divulgacion). El BCR anuncia un título
+#                por familia de cuadros: los del PIB trimestral salen con su serie desestacionalizada,
+#                el IVAE original y «otros indicadores» con el IVAE desestacionalizado, y la IED por
+#                CIIU con la IED por sector. Una serie anual que apunta a un título trimestral se
+#                espera con el cuarto trimestre de su año (el PIB anual sale con el PIB T del T4).
+#   rezago_dias  días entre el fin del período y la publicación; se usa cuando el calendario del BCR
+#                todavía no anuncia el período que sigue
+#   tramo        (opcional) años por pedido; por defecto 4 en mensuales y 10 en trimestrales
 
 [[serie]]
 clave = "pib_anual"
 nombre = "PIB anual: producción, gasto e ingreso, a precios corrientes"
 slug = "producto-interno-bruto-produccion-gasto-e-ingreso-a-precios-corrientes"
 frecuencia = "A"
-calendario = "Producto Interno Bruto: Producción, Gasto e Ingreso. A precios corrientes"
+calendario = "PIB T. Producción y gasto. Índices de volumen encadenados. Serie desestacionalizada (referencia 2014)"
 rezago_dias = 90
 
 [[serie]]
@@ -22,7 +27,7 @@ clave = "pib_anual_volumen"
 nombre = "PIB anual: producción y gasto, índices de volumen encadenados (referencia 2014)"
 slug = "produccion-y-gasto-indices-de-volumen-encadenados-ano-de-referencia-2014"
 frecuencia = "A"
-calendario = "PIB: Producción y gasto. Índices de volumen encadenados (año de referencia 2014)"
+calendario = "PIB T. Producción y gasto. Índices de volumen encadenados. Serie desestacionalizada (referencia 2014)"
 rezago_dias = 90
 
 [[serie]]
@@ -30,7 +35,7 @@ clave = "pib_trimestral"
 nombre = "PIB trimestral: producción y gasto, a precios corrientes"
 slug = "producto-interno-bruto-trimestral-pib-t-produccion-y-gasto-a-precios-corrientes-en-millones-de-us"
 frecuencia = "T"
-calendario = "Producto Interno Bruto Trimestral (PIB T). Producción y gasto a precios corrientes"
+calendario = "PIB T. Producción y gasto. Índices de volumen encadenados. Serie desestacionalizada (referencia 2014)"
 rezago_dias = 85
 
 [[serie]]
@@ -38,7 +43,7 @@ clave = "pib_trimestral_volumen"
 nombre = "PIB trimestral: índices de volumen encadenados, serie original"
 slug = "pib-t-produccion-y-gasto-indices-de-volumen-encadenados-serie-original-referencia-2014-indices-de-volumen-encadenados"
 frecuencia = "T"
-calendario = "PIB T. Producción y gasto. Índices de volumen encadenados. Serie original (referencia 2014)"
+calendario = "PIB T. Producción y gasto. Índices de volumen encadenados. Serie desestacionalizada (referencia 2014)"
 rezago_dias = 85
 
 [[serie]]
@@ -54,7 +59,7 @@ clave = "ivae"
 nombre = "IVAE, serie original"
 slug = "indice-de-volumen-de-la-actividad-economica-ivae-serie-original"
 frecuencia = "M"
-calendario = "Índice de Volumen de la Actividad Económica (IVAE). Serie original"
+calendario = "Índice de Volumen de la Actividad Económica (IVAE). Serie desestacionalizada"
 rezago_dias = 55
 
 [[serie]]
@@ -70,7 +75,7 @@ clave = "otros_indicadores"
 nombre = "Otros indicadores de producción: energía, cemento, carga y pasajeros"
 slug = "otros-indicadores-de-produccion"
 frecuencia = "M"
-calendario = "Otros indicadores de producción"
+calendario = "Índice de Volumen de la Actividad Económica (IVAE). Serie desestacionalizada"
 rezago_dias = 55
 
 [[serie]]
@@ -150,5 +155,5 @@ clave = "ied_ciiu"
 nombre = "IED: flujo neto según CIIU Rev. 4 a dos dígitos"
 slug = "ii-6-1-a-4-cuadro-de-ampliacion-de-flujos-netos-de-ied-por-sector-economico-receptor-segun-ciiu-rev-4-a-dos-digitos-desde-2012"
 frecuencia = "T"
-calendario = "IED: Flujo neto según CIIU Rev. 4 a dos dígitos. Desde trimestre I 2012"
+calendario = "IED: Flujo neto. Desde trimestre I 2010"
 rezago_dias = 85

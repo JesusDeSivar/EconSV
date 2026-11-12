@@ -1,0 +1,67 @@
+serie,nombre,frecuencia,periodo,fecha_esperada,origen,en_lago
+pib_anual,"PIB anual: producción, gasto e ingreso, a precios corrientes",A,2026,2027-03-31,rezago,no
+pib_anual_volumen,"PIB anual: producción y gasto, índices de volumen encadenados (referencia 2014)",A,2026,2027-03-31,rezago,no
+pib_trimestral,"PIB trimestral: producción y gasto, a precios corrientes",T,2026-T2,2026-09-30,bcr,si
+pib_trimestral,"PIB trimestral: producción y gasto, a precios corrientes",T,2026-T3,2026-12-23,bcr,no
+pib_trimestral_volumen,"PIB trimestral: índices de volumen encadenados, serie original",T,2026-T2,2026-09-30,bcr,si
+pib_trimestral_volumen,"PIB trimestral: índices de volumen encadenados, serie original",T,2026-T3,2026-12-23,bcr,no
+pib_trimestral_volumen_sa,"PIB trimestral: índices de volumen encadenados, serie desestacionalizada",T,2026-T2,2026-09-30,bcr,si
+pib_trimestral_volumen_sa,"PIB trimestral: índices de volumen encadenados, serie desestacionalizada",T,2026-T3,2026-12-23,bcr,no
+ivae,"IVAE, serie original",M,2026-07,2026-09-30,bcr,si
+ivae,"IVAE, serie original",M,2026-08,2026-10-30,bcr,si
+ivae,"IVAE, serie original",M,2026-09,2026-11-30,bcr,no
+ivae,"IVAE, serie original",M,2026-10,2026-12-23,bcr,no
+ivae,"IVAE, serie original",M,2026-11,2027-01-29,bcr,no
+ivae,"IVAE, serie original",M,2026-12,2027-02-26,bcr,no
+ivae_sa,"IVAE, serie desestacionalizada",M,2026-07,2026-09-30,bcr,si
+ivae_sa,"IVAE, serie desestacionalizada",M,2026-08,2026-10-30,bcr,si
+ivae_sa,"IVAE, serie desestacionalizada",M,2026-09,2026-11-30,bcr,no
+ivae_sa,"IVAE, serie desestacionalizada",M,2026-10,2026-12-23,bcr,no
+ivae_sa,"IVAE, serie desestacionalizada",M,2026-11,2027-01-29,bcr,no
+ivae_sa,"IVAE, serie desestacionalizada",M,2026-12,2027-02-26,bcr,no
+otros_indicadores,"Otros indicadores de producción: energía, cemento, carga y pasajeros",M,2026-07,2026-09-30,bcr,si
+otros_indicadores,"Otros indicadores de producción: energía, cemento, carga y pasajeros",M,2026-08,2026-10-30,bcr,si
+otros_indicadores,"Otros indicadores de producción: energía, cemento, carga y pasajeros",M,2026-09,2026-11-30,bcr,no
+otros_indicadores,"Otros indicadores de producción: energía, cemento, carga y pasajeros",M,2026-10,2026-12-23,bcr,no
+otros_indicadores,"Otros indicadores de producción: energía, cemento, carga y pasajeros",M,2026-11,2027-01-29,bcr,no
+otros_indicadores,"Otros indicadores de producción: energía, cemento, carga y pasajeros",M,2026-12,2027-02-26,bcr,no
+ipc,Índice de Precios al Consumidor (IPC),M,2026-09,2026-10-07,bcr,si
+ipc,Índice de Precios al Consumidor (IPC),M,2026-10,2026-11-09,bcr,si
+ipc,Índice de Precios al Consumidor (IPC),M,2026-11,2026-12-07,bcr,no
+ipc,Índice de Precios al Consumidor (IPC),M,2026-12,2027-01-08,bcr,no
+ipc,Índice de Precios al Consumidor (IPC),M,2027-01,2027-02-05,bcr,no
+isi,Índice Subyacente de Inflación (ISI),M,2026-09,2026-10-09,bcr,si
+isi,Índice Subyacente de Inflación (ISI),M,2026-10,2026-11-11,bcr,si
+isi,Índice Subyacente de Inflación (ISI),M,2026-11,2026-12-09,bcr,no
+isi,Índice Subyacente de Inflación (ISI),M,2026-12,2027-01-13,bcr,no
+isi,Índice Subyacente de Inflación (ISI),M,2027-01,2027-02-10,bcr,no
+ipp,Índice de Precios al Productor (IPP),M,2026-09,2026-10-09,bcr,si
+ipp,Índice de Precios al Productor (IPP),M,2026-10,2026-11-11,bcr,si
+ipp,Índice de Precios al Productor (IPP),M,2026-11,2026-12-09,bcr,no
+ipp,Índice de Precios al Productor (IPP),M,2026-12,2027-01-12,bcr,no
+ipp,Índice de Precios al Productor (IPP),M,2027-01,2027-02-09,bcr,no
+remesas,Ingresos mensuales de remesas familiares,M,2026-08,2026-09-24,bcr,si
+remesas,Ingresos mensuales de remesas familiares,M,2026-09,2026-10-23,bcr,si
+remesas,Ingresos mensuales de remesas familiares,M,2026-10,2026-11-24,bcr,no
+remesas,Ingresos mensuales de remesas familiares,M,2026-11,2026-12-23,bcr,no
+remesas,Ingresos mensuales de remesas familiares,M,2026-12,2027-01-28,bcr,no
+remesas,Ingresos mensuales de remesas familiares,M,2027-01,2027-02-25,bcr,no
+balanza_comercial,"Balanza comercial de mercancías, valores",M,2026-08,2026-09-24,bcr,si
+balanza_comercial,"Balanza comercial de mercancías, valores",M,2026-09,2026-10-23,bcr,si
+balanza_comercial,"Balanza comercial de mercancías, valores",M,2026-10,2026-11-24,bcr,no
+balanza_comercial,"Balanza comercial de mercancías, valores",M,2026-11,2026-12-23,bcr,no
+balanza_comercial,"Balanza comercial de mercancías, valores",M,2026-12,2027-01-28,bcr,no
+balanza_comercial,"Balanza comercial de mercancías, valores",M,2027-01,2027-02-25,bcr,no
+reservas,Reservas internacionales netas del BCR,M,2026-09,2026-10-07,bcr,si
+reservas,Reservas internacionales netas del BCR,M,2026-10,2026-11-06,bcr,si
+reservas,Reservas internacionales netas del BCR,M,2026-11,2026-12-07,bcr,no
+reservas,Reservas internacionales netas del BCR,M,2026-12,2027-01-07,bcr,no
+reservas,Reservas internacionales netas del BCR,M,2027-01,2027-02-05,bcr,no
+balanza_pagos,Balanza de pagos trimestral,T,2026-T2,2026-09-30,bcr,si
+balanza_pagos,Balanza de pagos trimestral,T,2026-T3,2026-12-23,bcr,no
+pii,Posición de inversión internacional a fin de período,T,2026-T2,2026-09-30,bcr,si
+pii,Posición de inversión internacional a fin de período,T,2026-T3,2026-12-23,bcr,no
+ied,IED: flujo neto por sector económico receptor,T,2026-T2,2026-09-30,bcr,si
+ied,IED: flujo neto por sector económico receptor,T,2026-T3,2026-12-23,bcr,no
+ied_ciiu,IED: flujo neto según CIIU Rev. 4 a dos dígitos,T,2026-T2,2026-09-30,bcr,si
+ied_ciiu,IED: flujo neto según CIIU Rev. 4 a dos dígitos,T,2026-T3,2026-12-23,bcr,no
