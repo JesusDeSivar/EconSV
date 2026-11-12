@@ -1,0 +1,47 @@
+# ¿Alcanza el runner de GitHub al portal del BCR y a los feeds? No escribe nada en el repositorio.
+# Se corre a mano. Una corrida en rojo quiere decir «no alcanza»: el 2026-11-12 el portal del BCR
+# respondió 403 al calendario y a las series, y los feeds de noticias respondieron bien.
+name: Alcance
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  alcance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Diagnóstico de red (código HTTP, verificación TLS y tiempo de cada dirección)
+        run: |
+          for u in \
+            "https://estadisticas.bcr.gob.sv/api/calendario-api?lang=es" \
+            "https://estadisticas.bcr.gob.sv/serie/reservas-internacionales-netas-bcr" \
+            "https://www.bcr.gob.sv/category/noticias/feed/" \
+            "https://www.mh.gob.sv/category/noticias/feed/" \
+            "https://diarioelsalvador.com/wp-json/wp/v2/posts?per_page=1&_fields=id" \
+            "https://news.google.com/rss/search?q=%22El+Salvador%22&hl=es-419&gl=SV&ceid=SV:es-419"; do
+            echo "== $u"
+            curl -sS -o /dev/null -m 30 -A "Mozilla/5.0 (compatible; lector-de-estadisticas-publicas)" \
+              -w "http=%{http_code} tls=%{ssl_verify_result} conexion=%{time_connect}s total=%{time_total}s\n" "$u" || true
+          done
+          echo "== cadena de certificados de estadisticas.bcr.gob.sv"
+          echo | timeout 20 openssl s_client -connect estadisticas.bcr.gob.sv:443 -servername estadisticas.bcr.gob.sv 2>&1 \
+            | grep -E "^ ?[0-9] s:|^ +i:|Verify return code|verify error|errno|refused|timed out" | head -12 || true
+      - name: Calendario de divulgación del BCR
+        if: always()
+        run: python tuberias/traer.py calendario
+      - name: Tres series del BCR, una de cada forma (sin escribir)
+        if: always()
+        run: python tuberias/traer.py bcr --seco --solo reservas,ipc,pib_trimestral
+      - name: Feeds de noticias (sin escribir)
+        if: always()
+        run: python tuberias/noticias.py --seco

@@ -1,0 +1,604 @@
+# Lo que EconSV muestra: cada indicador es una gráfica del sitio, armada con una o más variables de
+# lago/plata/ (todas del BCR). tuberias/oro.py calcula sus vistas en lago/oro/indicadores.csv.
+#
+#   seccion      actividad · precios · externo · turismo · construccion
+#   naturaleza   flujo (se puede sumar en el año) · saldo (se mira a fin de período) · indice
+#   tipo         lineas (serie de tiempo; por defecto) · barras (serie de tiempo en barras)
+#                · ranking (el último dato de cada línea, ordenado)
+#   vistas       en el orden en que se ofrecen; la primera es la que abre
+#       nivel             la cifra como la publica el BCR
+#       var_anual         % contra el mismo período del año anterior
+#       var_periodo       % contra el período anterior
+#       suma_anual        suma de los últimos 12 meses o 4 trimestres (solo flujos)
+#       pct_pib           flujo: suma anual ÷ PIB nominal de los mismos 4 trimestres;
+#                         saldo: cifra de fin de trimestre ÷ PIB nominal de los últimos 4 trimestres
+#       meses_importacion saldo ÷ promedio mensual de importaciones de mercancías (CIF) de 12 meses
+#   portada      true si lleva tarjeta en la página de inicio
+#   linea        serie = clave de catalogo/series.toml; id = variable_id en el portal;
+#                rotulo = lo que ese id debe llamarse (la compuerta falla si el BCR lo renumera)
+
+# ---------------------------------------------------------------- actividad
+[[indicador]]
+clave = "pib_real_anual"
+seccion = "actividad"
+titulo = "PIB real anual"
+nota = "Índice de volumen encadenado, referencia 2014."
+frecuencia = "A"
+naturaleza = "indice"
+unidad = "Índice (2014 = 100)"
+tipo = "barras"
+vistas = ["var_anual", "nivel"]
+portada = true
+  [[indicador.linea]]
+  nombre = "PIB real"
+  serie = "pib_anual_volumen"
+  id = 17192
+  rotulo = "Producto Interno Bruto por enfoque de la producción"
+
+[[indicador]]
+clave = "pib_nominal_anual"
+seccion = "actividad"
+titulo = "PIB nominal anual"
+nota = "A precios corrientes."
+frecuencia = "A"
+naturaleza = "flujo"
+unidad = "Millones de US$"
+tipo = "barras"
+vistas = ["nivel", "var_anual"]
+  [[indicador.linea]]
+  nombre = "PIB nominal"
+  serie = "pib_anual"
+  id = 16789
+  rotulo = "Producto Interno Bruto por enfoque de la producción"
+
+[[indicador]]
+clave = "pib_real_trimestral"
+seccion = "actividad"
+titulo = "PIB real trimestral"
+nota = "Índices de volumen encadenados, referencia 2014. La variación anual compara la serie original; la trimestral, la desestacionalizada."
+frecuencia = "T"
+naturaleza = "indice"
+unidad = "Índice (2014 = 100)"
+vistas = ["var_anual", "var_periodo", "nivel"]
+portada = true
+  [[indicador.linea]]
+  nombre = "Serie original"
+  serie = "pib_trimestral_volumen"
+  id = 17291
+  rotulo = "Producto Interno Bruto trimestral por el enfoque de la producción"
+  vistas = ["var_anual", "nivel"]
+  [[indicador.linea]]
+  nombre = "Desestacionalizada"
+  serie = "pib_trimestral_volumen_sa"
+  id = 17159
+  rotulo = "Producto Interno Bruto trimestral por el enfoque de la producción"
+  vistas = ["var_periodo", "nivel"]
+
+[[indicador]]
+clave = "pib_nominal_trimestral"
+seccion = "actividad"
+titulo = "PIB nominal trimestral"
+nota = "A precios corrientes. La suma de cuatro trimestres es el denominador de todo «% del PIB» de este sitio."
+frecuencia = "T"
+naturaleza = "flujo"
+unidad = "Millones de US$"
+vistas = ["suma_anual", "nivel", "var_anual"]
+  [[indicador.linea]]
+  nombre = "PIB nominal"
+  serie = "pib_trimestral"
+  id = 17322
+  rotulo = "Producto Interno Bruto trimestral por el enfoque de la producción"
+
+[[indicador]]
+clave = "ivae"
+seccion = "actividad"
+titulo = "Índice de Volumen de la Actividad Económica (IVAE)"
+nota = "Indicador mensual de la producción. La variación anual compara la serie original; la mensual, la desestacionalizada."
+frecuencia = "M"
+naturaleza = "indice"
+unidad = "Índice"
+vistas = ["var_anual", "var_periodo", "nivel"]
+portada = true
+  [[indicador.linea]]
+  nombre = "Serie original"
+  serie = "ivae"
+  id = 16456
+  rotulo = "IVAE"
+  vistas = ["var_anual", "nivel"]
+  [[indicador.linea]]
+  nombre = "Desestacionalizada"
+  serie = "ivae_sa"
+  id = 16401
+  rotulo = "IVAE"
+  vistas = ["var_periodo", "nivel"]
+
+[[indicador]]
+clave = "ivae_sectores"
+seccion = "actividad"
+titulo = "IVAE por actividad"
+nota = "Variación anual del último mes publicado, serie original."
+frecuencia = "M"
+naturaleza = "indice"
+unidad = "Índice"
+tipo = "ranking"
+vistas = ["var_anual"]
+  [[indicador.linea]]
+  nombre = "Agricultura, ganadería y pesca"
+  serie = "ivae"
+  id = 16457
+  rotulo = "Agricultura, ganadería, silvicultura y pesca"
+  [[indicador.linea]]
+  nombre = "Producción industrial"
+  serie = "ivae"
+  id = 16458
+  rotulo = "Índice de Producción Industrial"
+  [[indicador.linea]]
+  nombre = "Construcción"
+  serie = "ivae"
+  id = 16459
+  rotulo = "Construcción"
+  [[indicador.linea]]
+  nombre = "Comercio, transporte, alojamiento y comidas"
+  serie = "ivae"
+  id = 16460
+  rotulo = "Comercio, transporte y almacenamiento"
+  [[indicador.linea]]
+  nombre = "Información y comunicaciones"
+  serie = "ivae"
+  id = 16461
+  rotulo = "Información y comunicaciones"
+  [[indicador.linea]]
+  nombre = "Actividades financieras y de seguros"
+  serie = "ivae"
+  id = 16462
+  rotulo = "Actividades financieras y de seguros"
+  [[indicador.linea]]
+  nombre = "Actividades inmobiliarias"
+  serie = "ivae"
+  id = 16463
+  rotulo = "Actividades inmobiliarias"
+  [[indicador.linea]]
+  nombre = "Servicios profesionales y administrativos"
+  serie = "ivae"
+  id = 16464
+  rotulo = "Actividades profesionales, científicas, técnicas"
+  [[indicador.linea]]
+  nombre = "Administración pública, enseñanza y salud"
+  serie = "ivae"
+  id = 16465
+  rotulo = "Actividades de administración pública y defensa"
+
+# ---------------------------------------------------------------- precios
+[[indicador]]
+clave = "inflacion"
+seccion = "precios"
+titulo = "Inflación al consumidor"
+nota = "IPC base diciembre 2009 = 100 e Índice Subyacente de Inflación (ISI)."
+frecuencia = "M"
+naturaleza = "indice"
+unidad = "Índice"
+vistas = ["var_anual", "var_periodo", "nivel"]
+portada = true
+  [[indicador.linea]]
+  nombre = "IPC general"
+  serie = "ipc"
+  id = 7358
+  rotulo = "Índice general"
+  [[indicador.linea]]
+  nombre = "Subyacente (ISI)"
+  serie = "isi"
+  id = 17698
+  rotulo = "Índice Subyacente de Inflación"
+
+[[indicador]]
+clave = "ipc_divisiones"
+seccion = "precios"
+titulo = "Inflación por división del IPC"
+nota = "Variación anual del último mes publicado."
+frecuencia = "M"
+naturaleza = "indice"
+unidad = "Índice"
+tipo = "ranking"
+vistas = ["var_anual"]
+  [[indicador.linea]]
+  nombre = "Alimentos y bebidas no alcohólicas"
+  serie = "ipc"
+  id = 7359
+  rotulo = "Alimentos y bebidas no alcohólicas"
+  [[indicador.linea]]
+  nombre = "Bebidas alcohólicas y tabaco"
+  serie = "ipc"
+  id = 7360
+  rotulo = "Bebidas alcohólicas, tabaco"
+  [[indicador.linea]]
+  nombre = "Prendas de vestir y calzado"
+  serie = "ipc"
+  id = 7361
+  rotulo = "Prendas de vestir y calzado"
+  [[indicador.linea]]
+  nombre = "Alojamiento, agua, electricidad y gas"
+  serie = "ipc"
+  id = 7362
+  rotulo = "Alojamiento, agua, electricidad, gas"
+  [[indicador.linea]]
+  nombre = "Muebles y artículos para el hogar"
+  serie = "ipc"
+  id = 7363
+  rotulo = "Muebles, artículos para el hogar"
+  [[indicador.linea]]
+  nombre = "Salud"
+  serie = "ipc"
+  id = 7364
+  rotulo = "Salud"
+  [[indicador.linea]]
+  nombre = "Transporte"
+  serie = "ipc"
+  id = 7365
+  rotulo = "Transporte"
+  [[indicador.linea]]
+  nombre = "Comunicaciones"
+  serie = "ipc"
+  id = 7366
+  rotulo = "Comunicaciones"
+  [[indicador.linea]]
+  nombre = "Recreación y cultura"
+  serie = "ipc"
+  id = 7367
+  rotulo = "Recreación y cultura"
+  [[indicador.linea]]
+  nombre = "Educación"
+  serie = "ipc"
+  id = 7368
+  rotulo = "Educación"
+  [[indicador.linea]]
+  nombre = "Restaurantes y hoteles"
+  serie = "ipc"
+  id = 7369
+  rotulo = "Restaurantes y hoteles"
+  [[indicador.linea]]
+  nombre = "Bienes y servicios diversos"
+  serie = "ipc"
+  id = 7370
+  rotulo = "Bienes y servicios diversos"
+
+[[indicador]]
+clave = "ipp"
+seccion = "precios"
+titulo = "Inflación al productor"
+nota = "Índice de Precios al Productor (IPP), base diciembre 2009 = 100."
+frecuencia = "M"
+naturaleza = "indice"
+unidad = "Índice"
+vistas = ["var_anual", "var_periodo", "nivel"]
+portada = true
+  [[indicador.linea]]
+  nombre = "IPP general"
+  serie = "ipp"
+  id = 7371
+  rotulo = "Índice general"
+  [[indicador.linea]]
+  nombre = "Industrias manufactureras"
+  serie = "ipp"
+  id = 7372
+  rotulo = "Industrias manufactureras"
+
+# ---------------------------------------------------------------- sector externo
+[[indicador]]
+clave = "remesas"
+seccion = "externo"
+titulo = "Remesas familiares"
+frecuencia = "M"
+naturaleza = "flujo"
+unidad = "Millones de US$"
+vistas = ["suma_anual", "nivel", "var_anual", "pct_pib"]
+portada = true
+  [[indicador.linea]]
+  nombre = "Remesas"
+  serie = "remesas"
+  id = 7607
+  rotulo = "Ingresos mensuales de remesas familiares"
+
+[[indicador]]
+clave = "comercio"
+seccion = "externo"
+titulo = "Exportaciones e importaciones de mercancías"
+nota = "Exportaciones FOB e importaciones CIF."
+frecuencia = "M"
+naturaleza = "flujo"
+unidad = "Millones de US$"
+vistas = ["suma_anual", "nivel", "var_anual"]
+  [[indicador.linea]]
+  nombre = "Exportaciones (FOB)"
+  serie = "balanza_comercial"
+  id = 8618
+  rotulo = "Exportaciones (FOB)"
+  [[indicador.linea]]
+  nombre = "Importaciones (CIF)"
+  serie = "balanza_comercial"
+  id = 8628
+  rotulo = "Importaciones (CIF)"
+
+[[indicador]]
+clave = "balanza_comercial"
+seccion = "externo"
+titulo = "Balanza comercial de mercancías"
+nota = "Exportaciones FOB menos importaciones CIF."
+frecuencia = "M"
+naturaleza = "flujo"
+unidad = "Millones de US$"
+vistas = ["suma_anual", "nivel", "pct_pib"]
+portada = true
+  [[indicador.linea]]
+  nombre = "Saldo comercial"
+  serie = "balanza_comercial"
+  id = 8632
+  rotulo = "Balanza Comercial"
+
+[[indicador]]
+clave = "cuenta_corriente"
+seccion = "externo"
+titulo = "Cuenta corriente de la balanza de pagos"
+frecuencia = "T"
+naturaleza = "flujo"
+unidad = "Millones de US$"
+vistas = ["pct_pib", "suma_anual", "nivel"]
+  [[indicador.linea]]
+  nombre = "Cuenta corriente"
+  serie = "balanza_pagos"
+  id = 15167
+  rotulo = "Cuenta corriente"
+
+[[indicador]]
+clave = "ied"
+seccion = "externo"
+titulo = "Inversión extranjera directa"
+nota = "Flujo neto. Un trimestre puede ser negativo."
+frecuencia = "T"
+naturaleza = "flujo"
+unidad = "Millones de US$"
+vistas = ["suma_anual", "nivel", "pct_pib"]
+portada = true
+  [[indicador.linea]]
+  nombre = "IED, flujo neto"
+  serie = "ied"
+  id = 15346
+  rotulo = "Total"
+
+[[indicador]]
+clave = "ied_sectores"
+seccion = "externo"
+titulo = "IED por sector receptor"
+nota = "Flujo neto de los últimos cuatro trimestres. Los sectores que el BCR marca como confidenciales en algún trimestre no aparecen."
+frecuencia = "T"
+naturaleza = "flujo"
+unidad = "Millones de US$"
+tipo = "ranking"
+vistas = ["suma_anual"]
+  [[indicador.linea]]
+  nombre = "Agropecuario"
+  serie = "ied"
+  id = 15336
+  rotulo = "Agropecuario"
+  [[indicador.linea]]
+  nombre = "Minería"
+  serie = "ied"
+  id = 15337
+  rotulo = "Minería"
+  [[indicador.linea]]
+  nombre = "Industria"
+  serie = "ied"
+  id = 15338
+  rotulo = "Industria"
+  [[indicador.linea]]
+  nombre = "Electricidad"
+  serie = "ied"
+  id = 15339
+  rotulo = "Electricidad"
+  [[indicador.linea]]
+  nombre = "Construcción"
+  serie = "ied"
+  id = 15340
+  rotulo = "Construcción"
+  [[indicador.linea]]
+  nombre = "Comercio"
+  serie = "ied"
+  id = 15341
+  rotulo = "Comercio"
+  [[indicador.linea]]
+  nombre = "Transporte"
+  serie = "ied"
+  id = 15342
+  rotulo = "Transporte"
+  [[indicador.linea]]
+  nombre = "Información y comunicaciones"
+  serie = "ied"
+  id = 15343
+  rotulo = "Información y Comunicaciones"
+  [[indicador.linea]]
+  nombre = "Actividades financieras y de seguros"
+  serie = "ied"
+  id = 15344
+  rotulo = "Actividades Financieras y de Seguros"
+  [[indicador.linea]]
+  nombre = "Otros servicios"
+  serie = "ied"
+  id = 15345
+  rotulo = "Otros Servicios"
+
+[[indicador]]
+clave = "pii"
+seccion = "externo"
+titulo = "Posición de inversión internacional neta"
+nota = "Activos externos menos pasivos externos, a fin de trimestre. Negativa: el país debe al resto del mundo más de lo que tiene fuera."
+frecuencia = "T"
+naturaleza = "saldo"
+unidad = "Millones de US$"
+vistas = ["pct_pib", "nivel"]
+portada = true
+  [[indicador.linea]]
+  nombre = "PII neta"
+  serie = "pii"
+  id = 8763
+  rotulo = "Posición de Inversión Internacional Neta"
+
+[[indicador]]
+clave = "pii_activos_pasivos"
+seccion = "externo"
+titulo = "Activos y pasivos externos"
+nota = "Las dos caras de la posición de inversión internacional."
+frecuencia = "T"
+naturaleza = "saldo"
+unidad = "Millones de US$"
+vistas = ["nivel", "pct_pib"]
+  [[indicador.linea]]
+  nombre = "Activos"
+  serie = "pii"
+  id = 8764
+  rotulo = "Activos"
+  [[indicador.linea]]
+  nombre = "Pasivos"
+  serie = "pii"
+  id = 8784
+  rotulo = "Pasivos"
+
+[[indicador]]
+clave = "reservas"
+seccion = "externo"
+titulo = "Reservas internacionales netas"
+nota = "Activos de reserva del BCR menos sus pasivos externos de corto plazo, a fin de mes."
+frecuencia = "M"
+naturaleza = "saldo"
+unidad = "Millones de US$"
+vistas = ["nivel", "meses_importacion", "var_anual"]
+portada = true
+  [[indicador.linea]]
+  nombre = "Reservas internacionales netas"
+  serie = "reservas"
+  id = 18089
+  rotulo = "Reservas Internacionales Netas"
+
+# ---------------------------------------------------------------- turismo
+[[indicador]]
+clave = "viajes"
+seccion = "turismo"
+titulo = "Ingresos y gastos por viajes"
+nota = "Balanza de pagos, servicios de viajes: el crédito es lo que gastan en el país los visitantes no residentes; el débito, lo que gastan fuera los residentes."
+frecuencia = "T"
+naturaleza = "flujo"
+unidad = "Millones de US$"
+vistas = ["suma_anual", "nivel", "var_anual", "pct_pib"]
+portada = true
+  [[indicador.linea]]
+  nombre = "Ingresos por viajes (crédito)"
+  serie = "balanza_pagos"
+  id = 15195
+  rotulo = "Crédito"
+  [[indicador.linea]]
+  nombre = "Gastos por viajes (débito)"
+  serie = "balanza_pagos"
+  id = 15196
+  rotulo = "Débito"
+
+[[indicador]]
+clave = "pasajeros"
+seccion = "turismo"
+titulo = "Entrada y salida de pasajeros"
+nota = "Número de personas, de «Otros indicadores de producción» del BCR. El aeropuerto estuvo cerrado a vuelos comerciales del 17 de marzo al 18 de septiembre de 2020."
+frecuencia = "M"
+naturaleza = "flujo"
+unidad = "Personas"
+vistas = ["suma_anual", "nivel", "var_anual"]
+  [[indicador.linea]]
+  nombre = "Entrada"
+  serie = "otros_indicadores"
+  id = 16677
+  rotulo = "Entrada"
+  [[indicador.linea]]
+  nombre = "Salida"
+  serie = "otros_indicadores"
+  id = 16678
+  rotulo = "Salida"
+
+[[indicador]]
+clave = "alojamiento"
+seccion = "turismo"
+titulo = "Alojamiento y servicios de comida"
+nota = "Valor agregado real de la actividad en el PIB trimestral (índice de volumen encadenado, serie original)."
+frecuencia = "T"
+naturaleza = "indice"
+unidad = "Índice (2014 = 100)"
+vistas = ["var_anual", "nivel"]
+  [[indicador.linea]]
+  nombre = "Alojamiento y servicios de comida"
+  serie = "pib_trimestral_volumen"
+  id = 17278
+  rotulo = "I. Actividades de alojamiento y de servicio de comidas"
+
+# ---------------------------------------------------------------- construcción
+[[indicador]]
+clave = "ivae_construccion"
+seccion = "construccion"
+titulo = "IVAE de la construcción"
+nota = "La variación anual compara la serie original; la mensual, la desestacionalizada."
+frecuencia = "M"
+naturaleza = "indice"
+unidad = "Índice"
+vistas = ["var_anual", "var_periodo", "nivel"]
+portada = true
+  [[indicador.linea]]
+  nombre = "Serie original"
+  serie = "ivae"
+  id = 16459
+  rotulo = "Construcción"
+  vistas = ["var_anual", "nivel"]
+  [[indicador.linea]]
+  nombre = "Desestacionalizada"
+  serie = "ivae_sa"
+  id = 16404
+  rotulo = "Construcción"
+  vistas = ["var_periodo", "nivel"]
+
+[[indicador]]
+clave = "pib_construccion"
+seccion = "construccion"
+titulo = "Valor agregado de la construcción"
+nota = "Del PIB trimestral a precios corrientes."
+frecuencia = "T"
+naturaleza = "flujo"
+unidad = "Millones de US$"
+vistas = ["pct_pib", "suma_anual", "nivel", "var_anual"]
+  [[indicador.linea]]
+  nombre = "Construcción"
+  serie = "pib_trimestral"
+  id = 17306
+  rotulo = "F. Construcción"
+
+[[indicador]]
+clave = "pib_construccion_real"
+seccion = "construccion"
+titulo = "Construcción en el PIB real"
+nota = "Índice de volumen encadenado, serie original."
+frecuencia = "T"
+naturaleza = "indice"
+unidad = "Índice (2014 = 100)"
+vistas = ["var_anual", "nivel"]
+  [[indicador.linea]]
+  nombre = "Construcción"
+  serie = "pib_trimestral_volumen"
+  id = 17275
+  rotulo = "F. Construcción"
+
+[[indicador]]
+clave = "cemento"
+seccion = "construccion"
+titulo = "Consumo aparente de cemento"
+nota = "Producción nacional más importaciones menos exportaciones, en miles de bolsas de 42.5 kg."
+frecuencia = "M"
+naturaleza = "flujo"
+unidad = "Miles de bolsas de 42.5 kg"
+vistas = ["suma_anual", "nivel", "var_anual"]
+  [[indicador.linea]]
+  nombre = "Consumo aparente de cemento"
+  serie = "otros_indicadores"
+  id = 16673
+  rotulo = "Consumo"

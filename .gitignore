@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+.cache/
+_site/
+sitio/datos/
+.venv/

@@ -1,0 +1,128 @@
+# Los datos del BCR. El cron es solo un latido: el calendario (tuberias/calendario.py) decide qué se
+# trae. Si nada toca, la corrida termina en segundos y no guarda nada.
+#
+# DÓNDE CORRE. El portal del BCR responde 403 a los runners de GitHub (comprobado el 2026-11-12 con
+# alcance.yml), así que este trabajo necesita un runner que sí lo alcance: uno propio (self-hosted).
+# La variable RUNNER_DATOS del repositorio (Settings → Secrets and variables → Actions → Variables)
+# dice cuál, p. ej. «self-hosted». Sin esa variable las corridas programadas no salen; a mano
+# (Run workflow) corre en ubuntu-latest, que sirve para ver si el bloqueo sigue. El README explica
+# las otras dos maneras de traer los datos: una tarea programada fuera de GitHub, o a mano.
+name: Datos del BCR
+
+on:
+  schedule:
+    - cron: "10 16,22 * * 1-6"   # 10:10 y 16:10 en El Salvador (UTC−6, sin horario de verano), lunes a sábado
+    - cron: "10 12 * * 0"        # domingo 6:10: se trae todo otra vez, para captar las revisiones del BCR
+  workflow_dispatch:
+    inputs:
+      forzar:
+        description: "Traer todas las series aunque no toquen"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  issues: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: lago
+  cancel-in-progress: false
+
+jobs:
+  actualizar:
+    if: vars.RUNNER_DATOS != '' || github.event_name == 'workflow_dispatch'
+    runs-on: ${{ vars.RUNNER_DATOS || 'ubuntu-latest' }}
+    timeout-minutes: 40
+    defaults:
+      run:
+        shell: bash
+    outputs:
+      cambio: ${{ steps.guardar.outputs.cambio }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+
+      - name: ¿Alcanza este runner al portal del BCR?
+        run: |
+          codigo=$(curl -s -o /dev/null -m 30 -A "Mozilla/5.0 (compatible; lector-de-estadisticas-publicas)" -w "%{http_code}" "https://estadisticas.bcr.gob.sv/api/calendario-api?lang=es" || true)
+          echo "El portal del BCR respondió HTTP $codigo"
+          if [ "$codigo" != "200" ]; then
+            echo "::error::El portal del BCR respondió $codigo a este runner. Los runners de GitHub están bloqueados: hace falta un runner propio (variable RUNNER_DATOS) u otra de las maneras que explica el README."
+            exit 1
+          fi
+
+      - name: Calendario de divulgación del BCR
+        id: cal
+        continue-on-error: true      # sin calendario nuevo se decide con el que ya está en el lago
+        run: python tuberias/traer.py calendario
+
+      - name: Qué toca hoy
+        id: toca
+        run: |
+          python tuberias/calendario.py
+          python tuberias/calendario.py toca > /dev/null
+          if [ "${{ inputs.forzar }}" = "true" ] || [ "${{ github.event.schedule }}" = "10 12 * * 0" ]; then
+            echo "todo=si" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Traer del BCR
+        id: traer
+        if: steps.toca.outputs.claves != '' || steps.toca.outputs.todo == 'si'
+        continue-on-error: true      # una serie que falla no impide guardar las que sí llegaron
+        run: |
+          if [ "${{ steps.toca.outputs.todo }}" = "si" ]; then
+            python tuberias/traer.py bcr
+          else
+            python tuberias/traer.py bcr --solo "${{ steps.toca.outputs.claves }}"
+          fi
+
+      - name: Plata, oro y compuerta
+        run: |
+          python tuberias/plata.py
+          python tuberias/oro.py
+          python tuberias/calendario.py plata
+          python tuberias/verificar.py
+
+      - name: Guardar en el repositorio
+        id: guardar
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lago
+          if git diff --cached --quiet; then
+            echo "cambio=no" >> "$GITHUB_OUTPUT"
+            echo "Nada nuevo."
+          else
+            git commit -m "Datos del BCR: ${{ steps.toca.outputs.todo == 'si' && 'todas las series' || steps.toca.outputs.claves || 'calendario' }}"
+            git pull --rebase --autostash
+            git push
+            echo "cambio=si" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Avisar si una serie falló o está atrasada
+        if: always() && (steps.cal.outcome == 'failure' || steps.traer.outcome == 'failure' || steps.toca.outputs.atrasadas != '')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          titulo="Datos del BCR: una serie no llegó"
+          cuerpo="Corrida: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          - Tocaban: \`${{ steps.toca.outputs.claves }}\`
+          - Atrasadas (más de 10 días desde su fecha esperada): \`${{ steps.toca.outputs.atrasadas }}\`
+          - El calendario del BCR terminó en: ${{ steps.cal.outcome }}
+          - El paso «Traer del BCR» terminó en: ${{ steps.traer.outcome }}
+
+          Qué mirar: el registro de la corrida dice qué serie no se escribió y por qué. Si el BCR cambió la fecha, el calendario se corrige solo; si cambió el cuadro o la dirección, hay que ajustar \`catalogo/series.toml\`."
+          abierto=$(gh issue list --state open --search "$titulo in:title" --json number --jq '.[0].number')
+          if [ -n "$abierto" ]; then gh issue comment "$abierto" --body "$cuerpo"; else gh issue create --title "$titulo" --body "$cuerpo"; fi
+
+  sitio:
+    needs: actualizar
+    if: needs.actualizar.outputs.cambio == 'si'
+    uses: ./.github/workflows/pages.yml

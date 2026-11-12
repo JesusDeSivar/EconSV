@@ -1,0 +1,282 @@
+# Las fuentes de noticias que lee tuberias/noticias.py cada mañana, y cómo se reparte cada nota en
+# las cinco categorías de la tabla.
+#
+# De cada nota se guarda solo lo que su propio medio publica en su feed: titular, extracto (cortado a
+# `largo_resumen` caracteres), fecha y enlace. Nunca el texto completo. Una noticia es contexto: las
+# cifras del sitio salen del BCR, no de aquí.
+#
+#   metodo     rss     un feed RSS o Atom
+#              wp_api  la API pública de WordPress del medio (/wp-json/wp/v2/posts), con `secciones`
+#              gnews   una búsqueda de Google News en RSS: trae titular, medio y enlace, sin extracto;
+#                      sirve para los medios que no dejan leer su feed (La Prensa Gráfica, El Mundo)
+#   categoria  la categoría de la nota cuando sus palabras no dicen otra cosa
+#   filtro     true: el feed trae de todo y solo entran las notas con palabras de economía
+#   exige      una lista de [palabras]: solo entran las notas que traen alguna (las búsquedas de Google
+#              sobre El Salvador devuelven también notas de otros países)
+#   opcional   true: si la fuente no responde, se anota y la corrida sigue sin fallar
+#
+# Reparto (tuberias/noticias.py, `clasificar`): una nota que menciona El Salvador es salvadoreña, y es
+# «Fiscales» si trae palabras fiscales; si no menciona El Salvador, las palabras de región deciden
+# entre EUA, LATAM y resto del mundo; sin palabras de región, vale la `categoria` de la fuente. Son
+# coincidencias de palabras, no una lectura de la nota: sirven para ordenar, y se equivocan a veces.
+
+[general]
+agente = "Mozilla/5.0 (compatible; lector-de-titulares)"
+pausa = 1.0                 # segundos entre pedidos
+dias = 3                    # se toman las notas publicadas en los últimos días
+largo_resumen = 300
+conservar_dias = 120        # las ediciones más viejas salen del lago (quedan en el historial de git)
+hora_de_corte = 7           # la edición del día D reúne lo publicado de las 7:00 de D−1 a las 7:00 de D
+
+# ------------------------------------------------------------------ Internacional – EUA
+[[fuente]]
+clave = "fed"
+nombre = "Reserva Federal"
+metodo = "rss"
+url = "https://www.federalreserve.gov/feeds/press_all.xml"
+categoria = "Internacional – EUA"
+idioma = "en"
+
+[[fuente]]
+clave = "bea"
+nombre = "Bureau of Economic Analysis"
+metodo = "rss"
+url = "https://apps.bea.gov/rss/rss.xml"
+categoria = "Internacional – EUA"
+idioma = "en"
+
+[[fuente]]
+clave = "infobae_eeuu"
+nombre = "Infobae · Estados Unidos"
+metodo = "rss"
+url = "https://www.infobae.com/arc/outboundfeeds/rss/category/estados-unidos/"
+categoria = "Internacional – EUA"
+filtro = true
+maximo = 20
+
+[[fuente]]
+clave = "gnews_eua"
+nombre = "Google News"
+metodo = "gnews"
+url = "https://news.google.com/rss/search?q=%22Reserva+Federal%22+OR+%22Wall+Street%22+OR+%22econom%C3%ADa+de+Estados+Unidos%22+when:1d&hl=es-419&gl=US&ceid=US:es-419"
+categoria = "Internacional – EUA"
+opcional = true
+maximo = 25
+
+# ------------------------------------------------------------------ Internacional – LATAM
+[[fuente]]
+clave = "bloomberg_linea"
+nombre = "Bloomberg Línea"
+metodo = "rss"
+url = "https://www.bloomberglinea.com/arc/outboundfeeds/rss/?outputType=xml"
+categoria = "Internacional – LATAM"
+maximo = 30
+
+[[fuente]]
+clave = "elpais_america"
+nombre = "El País · América, economía"
+metodo = "rss"
+url = "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/section/america/subsection/economia"
+categoria = "Internacional – LATAM"
+
+[[fuente]]
+clave = "expansion_mx"
+nombre = "Expansión (México)"
+metodo = "rss"
+url = "https://expansion.mx/rss/economia"
+categoria = "Internacional – LATAM"
+maximo = 15
+
+[[fuente]]
+clave = "infobae"
+nombre = "Infobae · Economía"
+metodo = "rss"
+url = "https://www.infobae.com/arc/outboundfeeds/rss/category/economia/"
+categoria = "Internacional – LATAM"
+maximo = 15
+
+[[fuente]]
+clave = "france24_amlat"
+nombre = "France 24 · América Latina"
+metodo = "rss"
+url = "https://www.france24.com/es/am%C3%A9rica-latina/rss"
+categoria = "Internacional – LATAM"
+filtro = true
+
+# ------------------------------------------------------------------ Internacional – Resto del mundo
+[[fuente]]
+clave = "elpais_economia"
+nombre = "El País · Economía"
+metodo = "rss"
+url = "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/section/economia/portada"
+categoria = "Internacional – Resto del mundo"
+
+[[fuente]]
+clave = "elpais_eeuu"
+nombre = "El País · edición EE. UU."
+metodo = "rss"
+url = "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/section/us/portada"
+categoria = "Internacional – Resto del mundo"
+filtro = true
+maximo = 20
+nota = "Es la portada de la edición, con notas de todo el mundo: sin palabras de región, van a resto del mundo."
+
+[[fuente]]
+clave = "bbc_mundo"
+nombre = "BBC Mundo · Economía"
+metodo = "rss"
+url = "https://feeds.bbci.co.uk/mundo/temas/economia/rss.xml"
+categoria = "Internacional – Resto del mundo"
+filtro = true
+nota = "El feed del tema trae también la portada general: solo entran las notas con palabras de economía."
+
+[[fuente]]
+clave = "france24_economia"
+nombre = "France 24 · Economía"
+metodo = "rss"
+url = "https://www.france24.com/es/econom%C3%ADa/rss"
+categoria = "Internacional – Resto del mundo"
+
+[[fuente]]
+clave = "dw"
+nombre = "DW · Economía"
+metodo = "rss"
+url = "https://rss.dw.com/rdf/rss-sp-eco"
+categoria = "Internacional – Resto del mundo"
+
+[[fuente]]
+clave = "bce"
+nombre = "Banco Central Europeo"
+metodo = "rss"
+url = "https://www.ecb.europa.eu/rss/press.html"
+categoria = "Internacional – Resto del mundo"
+idioma = "en"
+
+# ------------------------------------------------------------------ El Salvador
+[[fuente]]
+clave = "hacienda"
+nombre = "Ministerio de Hacienda"
+metodo = "rss"
+url = "https://www.mh.gob.sv/category/noticias/feed/"
+categoria = "El Salvador – Fiscales"
+opcional = true
+nota = "Respondió 403 desde la sesión en que se armó el catálogo (2026-11-12); se prueba en cada corrida."
+
+[[fuente]]
+clave = "bcr"
+nombre = "Banco Central de Reserva"
+metodo = "rss"
+url = "https://www.bcr.gob.sv/category/noticias/feed/"
+categoria = "El Salvador – Nacionales"
+opcional = true
+nota = "Su cortafuegos responde a ratos «Request Rejected» en lugar del feed."
+
+[[fuente]]
+clave = "diario_el_salvador"
+nombre = "Diario El Salvador"
+metodo = "wp_api"
+url = "https://diarioelsalvador.com"
+secciones = ["dedinero"]
+categoria = "El Salvador – Nacionales"
+
+[[fuente]]
+clave = "el_diario_de_hoy"
+nombre = "El Diario de Hoy"
+metodo = "wp_api"
+url = "https://www.elsalvador.com"
+secciones = ["h-negocios", "entorno-economico"]
+categoria = "El Salvador – Nacionales"
+
+[[fuente]]
+clave = "presidencia"
+nombre = "Presidencia de la República"
+metodo = "wp_api"
+url = "https://www.presidencia.gob.sv"
+secciones = []
+categoria = "El Salvador – Nacionales"
+filtro = true
+opcional = true
+
+[[fuente]]
+clave = "gnews_sv_fiscal"
+nombre = "Google News"
+metodo = "gnews"
+opcional = true
+exige = "el_salvador"
+url = "https://news.google.com/rss/search?q=%22El+Salvador%22+(Hacienda+OR+presupuesto+OR+deuda+OR+impuestos+OR+FMI)+when:2d&hl=es-419&gl=SV&ceid=SV:es-419"
+categoria = "El Salvador – Fiscales"
+nota = "La búsqueda ya es fiscal: lo que trae y menciona El Salvador va a «Fiscales»."
+
+[[fuente]]
+clave = "gnews_sv"
+nombre = "Google News"
+metodo = "gnews"
+opcional = true
+exige = "el_salvador"
+url = "https://news.google.com/rss/search?q=%22El+Salvador%22+econom%C3%ADa+when:1d&hl=es-419&gl=SV&ceid=SV:es-419"
+categoria = "El Salvador – Nacionales"
+
+[[fuente]]
+clave = "gnews_lpg"
+nombre = "Google News"
+metodo = "gnews"
+opcional = true
+url = "https://news.google.com/rss/search?q=site:laprensagrafica.com+econom%C3%ADa+when:2d&hl=es-419&gl=SV&ceid=SV:es-419"
+categoria = "El Salvador – Nacionales"
+filtro = true
+maximo = 30
+
+# Probadas y fuera, con su motivo. No se rodea un bloqueo: se anota y se vuelve a probar.
+[[excluida]]
+nombre = "La Prensa Gráfica (feed propio)"
+motivo = "403 de su protección antibots; sus titulares llegan por la búsqueda de Google News."
+
+[[excluida]]
+nombre = "Diario El Mundo (feed propio)"
+motivo = "No expone feed ni API: /rss devuelve su portada en HTML."
+
+[[excluida]]
+nombre = "FMI, CEPAL, BLS"
+motivo = "403 de sus redes de distribución a lectores automáticos (2026-11-12)."
+
+# ------------------------------------------------------------------ palabras
+# Sin mayúsculas ni tildes. Un término que termina en * es un prefijo; los demás, palabra entera.
+
+[palabras]
+el_salvador = ["el salvador", "salvadoren*", "san salvador", "bukele", "banco central de reserva",
+               "sonsonate", "usulutan", "chalatenango", "ahuachapan", "surf city", "minec", "isss",
+               "corsatur", "casalco", "camarasal", "fusades", "anep"]
+
+fiscal = ["presupuesto*", "deuda", "eurobono*", "bonos", "letes", "cetes", "fmi", "fondo monetario",
+          "impuesto*", "iva", "renta", "recaudacion", "tributari*", "hacienda", "pension*", "calificadora*",
+          "moody*", "fitch", "standard & poor*", "deficit", "politica fiscal", "reforma fiscal",
+          "ajuste fiscal", "regla fiscal", "sostenibilidad fiscal", "consolidacion fiscal", "gasto publico",
+          "financiamiento", "prestamo*", "aduana*", "evasion", "contribuyente*", "erario", "tesoreria",
+          "riesgo pais", "embi", "refinanciamiento", "endeudamiento", "recompra"]
+
+eua = ["estados unidos", "ee. uu.", "ee.uu.", "eeuu", "eua", "estadounidense*", "reserva federal", "la fed",
+       "wall street", "casa blanca", "washington", "trump", "powell", "nasdaq", "dow jones", "s&p 500",
+       "united states", "u.s.", "federal reserve", "fomc", "treasury", "white house", "american*",
+       "nueva york", "california", "texas", "florida"]
+
+latam = ["mexico", "mexican*", "brasil", "brasilen*", "argentin*", "chile", "chilen*", "colombia*", "peru",
+         "peruan*", "venezuela", "venezolan*", "ecuador", "ecuatorian*", "bolivia*", "paraguay*", "uruguay*",
+         "guatemala", "guatemaltec*", "honduras", "hondurena*", "hondureno*", "nicaragua*", "costa rica",
+         "costarricense*", "panama", "panamen*", "cuba", "cuban*", "republica dominicana", "dominican*", "haiti",
+         "puerto rico", "centroamerica*", "latinoamerica*", "america latina", "sudamerica*", "caribe", "cepal",
+         "mercosur", "milei", "lula", "sheinbaum", "petro", "boric", "pemex", "petrobras", "banxico"]
+
+resto = ["china", "chino*", "chinas", "europa", "europe*", "union europea", "zona euro", "eurozona", "bce",
+         "alemania", "aleman*", "francia", "frances*", "italia*", "espana", "reino unido",
+         "britanic*", "rusia", "ruso*", "rusa*", "ucrania", "japon", "japones*", "india", "corea", "taiwan", "israel",
+         "iran", "arabia saudita", "opep", "africa*", "asia", "asiatic*", "australia*", "canada", "turquia",
+         "ecb", "euro area", "ibex"]
+
+economia = ["econom*", "inflacion", "pib", "banco central", "tasa* de interes", "tipos de interes", "arancel*",
+            "comerci*", "exportac*", "importac*", "deuda", "bono*", "mercado*", "bolsa*", "empleo*", "desempleo",
+            "salario*", "dolar*", "peso", "euro", "petroleo", "crudo", "fmi", "banco mundial", "bid", "recesion",
+            "crecimiento", "inversi*", "politica fiscal", "reforma fiscal", "impuesto*", "presupuesto*", "deficit", "remesa*", "banca",
+            "banco*", "financ*", "empresa*", "industria*", "precio*", "turis*", "constru*", "energia",
+            "combustible*", "gasolina", "opep", "criptomoneda*", "bitcoin", "acciones", "wall street", "negocio*",
+            "tasas", "credito*", "ventas", "consumo", "pobreza", "canasta basica", "productividad", "aeropuerto*",
+            "puerto*", "cafe", "azucar", "maquila*", "zona franca"]

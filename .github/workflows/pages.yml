@@ -1,0 +1,47 @@
+# Arma los datos del sitio desde el lago y lo publica en GitHub Pages.
+# Lo llaman datos.yml y noticias.yml después de guardar (un push hecho con GITHUB_TOKEN no dispara
+# otros workflows), y corre solo cuando alguien cambia el sitio o el catálogo en main.
+name: Sitio
+
+on:
+  workflow_call:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "sitio/**"
+      - "catalogo/**"
+      - "tuberias/sitio.py"
+      - "lago/**"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.despliegue.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.ref_name }}    # la punta de la rama: incluye lo que acaba de guardar quien llama
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Armar los datos del sitio
+        run: python tuberias/sitio.py
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: sitio
+      - id: despliegue
+        uses: actions/deploy-pages@v4
