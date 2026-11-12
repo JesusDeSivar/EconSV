@@ -38,6 +38,8 @@ jobs:
       - run: pip install -r requirements.txt
 
       - name: Calendario de divulgación del BCR
+        id: cal
+        continue-on-error: true      # sin calendario nuevo se decide con el que ya está en el lago
         run: python tuberias/traer.py calendario
 
       - name: Qué toca hoy
@@ -84,7 +86,7 @@ jobs:
           fi
 
       - name: Avisar si una serie falló o está atrasada
-        if: steps.traer.outcome == 'failure' || steps.toca.outputs.atrasadas != ''
+        if: always() && (steps.cal.outcome == 'failure' || steps.traer.outcome == 'failure' || steps.toca.outputs.atrasadas != '')
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -93,6 +95,7 @@ jobs:
 
           - Tocaban: \`${{ steps.toca.outputs.claves }}\`
           - Atrasadas (más de 10 días desde su fecha esperada): \`${{ steps.toca.outputs.atrasadas }}\`
+          - El calendario del BCR terminó en: ${{ steps.cal.outcome }}
           - El paso «Traer del BCR» terminó en: ${{ steps.traer.outcome }}
 
           Qué mirar: el registro de la corrida dice qué serie no se escribió y por qué. Si el BCR cambió la fecha, el calendario se corrige solo; si cambió el cuadro o la dirección, hay que ajustar \`catalogo/series.toml\`."
