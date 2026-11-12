@@ -1,11 +1,10 @@
 # ¿Alcanza el runner de GitHub al portal del BCR y a los feeds? No escribe nada en el repositorio.
-# Se corre a mano; también sale sola cuando cambia este archivo.
+# Se corre a mano. Una corrida en rojo quiere decir «no alcanza»: el 2026-11-12 el portal del BCR
+# respondió 403 al calendario y a las series, y los feeds de noticias respondieron bien.
 name: Alcance
 
 on:
   workflow_dispatch:
-  push:
-    paths: [".github/workflows/alcance.yml"]
 
 permissions:
   contents: read
@@ -15,8 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
           cache: pip

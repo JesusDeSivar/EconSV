@@ -55,6 +55,15 @@ Learned the hard way on 2026-11-12; re-check before changing the reader.
 - `www.bcr.gob.sv` (the news feed) sits behind a firewall that sometimes answers «Request Rejected»
   with HTTP 200. That source is optional.
 
+## Where the BCR can be read from
+
+**GitHub-hosted runners get HTTP 403 from `estadisticas.bcr.gob.sv`** — the calendar API and every
+series page (two `alcance.yml` runs, 2026-11-12). Claude Code cloud sessions get 200. So the BCR chain
+cannot run on `ubuntu-latest`: `datos.yml` only schedules itself when the repo variable `RUNNER_DATOS`
+names a self-hosted runner, and otherwise the chain (`python tuberias/actualizar.py`) is run from a
+machine that reaches the portal and pushed. Do not route around the block with proxies or disguised
+headers. News feeds answer GitHub's runners normally. Run `alcance.yml` before assuming this changed.
+
 ## Schedules
 
 GitHub cron is UTC and El Salvador is UTC−6 all year (no daylight saving): 7:15 AM = `15 13 * * *`.

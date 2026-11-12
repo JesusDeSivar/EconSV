@@ -1,5 +1,12 @@
 # Los datos del BCR. El cron es solo un latido: el calendario (tuberias/calendario.py) decide qué se
 # trae. Si nada toca, la corrida termina en segundos y no guarda nada.
+#
+# DÓNDE CORRE. El portal del BCR responde 403 a los runners de GitHub (comprobado el 2026-11-12 con
+# alcance.yml), así que este trabajo necesita un runner que sí lo alcance: uno propio (self-hosted).
+# La variable RUNNER_DATOS del repositorio (Settings → Secrets and variables → Actions → Variables)
+# dice cuál, p. ej. «self-hosted». Sin esa variable las corridas programadas no salen; a mano
+# (Run workflow) corre en ubuntu-latest, que sirve para ver si el bloqueo sigue. El README explica
+# las otras dos maneras de traer los datos: una tarea programada fuera de GitHub, o a mano.
 name: Datos del BCR
 
 on:
@@ -25,17 +32,30 @@ concurrency:
 
 jobs:
   actualizar:
-    runs-on: ubuntu-latest
+    if: vars.RUNNER_DATOS != '' || github.event_name == 'workflow_dispatch'
+    runs-on: ${{ vars.RUNNER_DATOS || 'ubuntu-latest' }}
     timeout-minutes: 40
+    defaults:
+      run:
+        shell: bash
     outputs:
       cambio: ${{ steps.guardar.outputs.cambio }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
           cache: pip
       - run: pip install -r requirements.txt
+
+      - name: ¿Alcanza este runner al portal del BCR?
+        run: |
+          codigo=$(curl -s -o /dev/null -m 30 -A "Mozilla/5.0 (compatible; lector-de-estadisticas-publicas)" -w "%{http_code}" "https://estadisticas.bcr.gob.sv/api/calendario-api?lang=es" || true)
+          echo "El portal del BCR respondió HTTP $codigo"
+          if [ "$codigo" != "200" ]; then
+            echo "::error::El portal del BCR respondió $codigo a este runner. Los runners de GitHub están bloqueados: hace falta un runner propio (variable RUNNER_DATOS) u otra de las maneras que explica el README."
+            exit 1
+          fi
 
       - name: Calendario de divulgación del BCR
         id: cal
