@@ -40,8 +40,10 @@ GitHub publica el sitio.
 1. **Un runner propio** (self-hosted) en una computadora que sí alcance al BCR. Se registra en
    Settings → Actions → Runners y se crea la variable `RUNNER_DATOS = self-hosted`; desde ahí
    `datos.yml` corre solo, a las 10:10 y 16:10 de lunes a sábado y el domingo a las 6:10 (todo).
-2. **Una tarea programada fuera de GitHub** (por ejemplo, una sesión de Claude Code en la nube, que sí
-   alcanza al BCR) que corre la cadena y hace `git push`.
+2. **Una tarea programada fuera de GitHub** que corre la cadena y hace `git push`. **Es la que está
+   en uso:** una tarea de Claude Code en la nube, que sí alcanza al BCR, corre todos los días a las
+   4:10 PM de El Salvador (los domingos trae todo, para captar revisiones) y guarda en `main` solo
+   los cambios de `lago/`. Sus reglas están en `CLAUDE.md`.
 3. **A mano**, cuando la página Calendario del sitio dice que algo toca:
    `python tuberias/actualizar.py` y `git push`.
 
@@ -53,7 +55,7 @@ minutos de atraso.
 |---|---|---|
 | `noticias.yml` | 7:15 todos los días | feeds → categorías → edición del día → guardar → sitio |
 | `pages.yml` | cuando cambia `lago/`, `sitio/` o `catalogo/` en `main`, y lo llaman los otros | arma `sitio/datos/` y publica en GitHub Pages |
-| `datos.yml` | 10:10 y 16:10 lun–sáb, domingo 6:10; solo con un runner propio (`RUNNER_DATOS`) | la cadena de datos del BCR |
+| `datos.yml` | apagado mientras no haya un runner propio (`RUNNER_DATOS`); con él, 10:10 y 16:10 lun–sáb y domingo 6:10 | la cadena de datos del BCR |
 | `pruebas.yml` | en cada push y pull request | pruebas sin red, compuerta, sitio |
 | `alcance.yml` | a mano | dice si el runner alcanza el portal del BCR y los feeds |
 
@@ -122,7 +124,7 @@ python tuberias/noticias.py excel             # el Excel de la última edición
 1. Fusionar este trabajo a `main`: las corridas programadas de GitHub solo salen de la rama principal.
 2. **Settings → Pages → Build and deployment → Source: GitHub Actions.**
 3. **Actions → Noticias → Run workflow** para la primera edición y la primera publicación del sitio.
-4. Elegir cómo se traen los datos del BCR (las tres maneras de arriba).
+4. Los datos del BCR los trae la tarea programada de Claude; no hay que hacer nada más.
 
 ## Agregar cosas
 

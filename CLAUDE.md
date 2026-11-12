@@ -64,6 +64,29 @@ names a self-hosted runner, and otherwise the chain (`python tuberias/actualizar
 machine that reaches the portal and pushed. Do not route around the block with proxies or disguised
 headers. News feeds answer GitHub's runners normally. Run `alcance.yml` before assuming this changed.
 
+## The scheduled BCR update (a Claude Code cloud task)
+
+Because GitHub's runners are blocked, the owner chose on 2026-11-12 to fetch the BCR from a scheduled
+Claude Code cloud task: every day at 16:10 El Salvador time a fresh session runs the chain. He
+explicitly authorised that task to push **data commits under `lago/`** to `main` — that and nothing
+else. If you are that session:
+
+1. Start from the tip of `main`: `git fetch origin main && git checkout -B datos-bcr origin/main`.
+2. `pip install -r requirements.txt` if the imports fail, then `python tuberias/actualizar.py`
+   (on Sundays `python tuberias/actualizar.py --todo`, which refetches all 18 series to catch revisions).
+3. Read its exit code. **0**: everything due arrived and the gate passed. **2**: the gate passed but
+   the calendar or a series did not answer — keep what did arrive and say which did not. **Anything
+   else**: the gate failed — commit nothing, and report the failing check.
+4. If the gate passed and `git status --short lago` shows changes: `git add lago`,
+   `git commit -m "Datos del BCR: <series that changed>"`, `git pull --rebase origin main`,
+   `git push origin HEAD:main`. If nothing changed, push nothing. GitHub publishes the site when
+   `lago/` changes on `main`.
+5. In that run never edit code, catalogue, tests or workflows; never use `--aceptar-menos`; never
+   work around a block or a 403. If the reader needs a fix because the BCR changed its portal, stop and
+   say what broke and where — the owner decides.
+6. End with a short summary in Spanish: what was due, what arrived (series and period), how many
+   revisions were logged in `lago/plata/revisiones.csv`, and what is still pending.
+
 ## Schedules
 
 GitHub cron is UTC and El Salvador is UTC−6 all year (no daylight saving): 7:15 AM = `15 13 * * *`.
@@ -81,5 +104,6 @@ in both colour schemes, before calling it done. `sitio/datos/` is built, not com
 
 ## Git
 
-Develop on a branch and open a pull request only when asked. The scheduled workflows commit to `main`
-as `github-actions[bot]`, so `git pull --rebase` before pushing there.
+Develop on a branch and open a pull request only when asked. The news workflow commits to `main` as
+`github-actions[bot]` every morning and the scheduled BCR task pushes there in the afternoon, so
+`git pull --rebase` before pushing to `main`.
