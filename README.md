@@ -128,6 +128,8 @@ python tuberias/noticias.py excel             # el Excel de la última edición
 
 1. Fusionar este trabajo a `main`: las corridas programadas de GitHub solo salen de la rama principal.
 2. **Settings → Pages → Build and deployment → Source: GitHub Actions.**
+   No «Deploy from a branch»: con esa opción GitHub publica además la raíz del repositorio en cada
+   push, y el sitio queda mostrando este README en lugar del tablero.
 3. **Actions → Noticias → Run workflow** para la primera edición y la primera publicación del sitio.
 4. Los datos del BCR los trae la tarea programada de Claude; no hay que hacer nada más.
 

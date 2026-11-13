@@ -103,6 +103,18 @@ end if you must, never rename or reorder them without changing `EconSV.gs` and s
 for the sheet. Text that comes from outside (headlines, names) must land in columns set to plain text
 before writing, so nothing fetched can run as a formula.
 
+## What counts as a fiscal news note
+
+The owner writes a daily report from the news base, and its «Fiscales» section is the taste the search
+follows. Which Salvadoran note is «Fiscales» is the rule `fiscales` in `catalogo/noticias_fuentes.toml`
+(something fiscal, or a public-investment project, or a public actor next to money, or an international
+agreement being approved), decided by the note's words and never by the section it came from. One word
+alone lets in road closures and rescued dogs; too strict a rule throws out what he does include — his
+11 November report carried the visa-exemption agreement with Kuwait under Fiscales. The headlines of his
+reports are pinned in `pruebas/test_noticias.py` (`Fiscales`): change the lists against those tests, and
+look at what `noticias.al_dia` would drop from the stored base before committing. Rule and score are
+re-applied to the whole base on every run, so a change reaches the editions already stored.
+
 ## Schedules
 
 GitHub cron is UTC and El Salvador is UTC−6 all year (no daylight saving): 7:15 AM = `15 13 * * *`.
@@ -117,6 +129,13 @@ more categories than that is a `ranking`. Every chart has a table view and a CSV
 works from the keyboard, and data strings enter the DOM with `textContent`. After changing the site,
 run `python tuberias/sitio.py`, serve `sitio/` and look at it in a browser at desktop and phone width,
 in both colour schemes, before calling it done. `sitio/datos/` is built, not committed.
+
+**Pages must publish from «GitHub Actions», not «Deploy from a branch».** On 2026-11-13 the setting was
+on the branch: every push to `main` (the news bot's included) started GitHub's own «pages build and
+deployment» next to `pages.yml`, it finished last, and the public site showed the README rendered by
+Jekyll instead of the dashboard. If the site shows the README, that is the cause: the owner changes
+Settings → Pages → Source, and until then running `pages.yml` by hand (Actions → Sitio) puts the
+dashboard back until the next push. After any push to `main`, look at the live site, not only at the run.
 
 ## Git
 

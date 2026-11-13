@@ -14,14 +14,17 @@
 #                      sirve para los medios que no dejan leer su feed (La Prensa Gráfica, El Mundo)
 #   categoria  la categoría de la nota cuando sus palabras no dicen otra cosa
 #   filtro     true: el feed trae de todo y solo entran las notas con palabras de economía
-#   exige      una lista de [palabras]: solo entran las notas que traen alguna (las búsquedas de Google
-#              sobre El Salvador devuelven también notas de otros países)
+#   exige      lo que una nota tiene que cumplir para entrar: el nombre de una lista de [palabras] (trae
+#              alguna) o de una de las [reglas]; con varios nombres, todos. Las búsquedas de Google
+#              sobre El Salvador devuelven también notas de otros países, y las secciones Política y
+#              Nacional de un diario traen de todo: de ahí solo entra lo que cumple la regla `fiscales`
 #   opcional   true: si la fuente no responde, se anota y la corrida sigue sin fallar
 #   peso       puntos que suma al puntaje de cada nota suya: las fuentes de las que el dueño arma sus
 #              reportes pesan más (ver [gusto], al final)
 #
 # Reparto (tuberias/noticias.py, `clasificar`): una nota que menciona El Salvador es salvadoreña, y es
-# «Fiscales» si trae palabras fiscales; si no menciona El Salvador, las palabras de región deciden
+# «Fiscales» si cumple la regla `fiscales` (al final: dinero público, o lo que ratifica la Asamblea);
+# lo deciden sus palabras, no la sección de donde vino. Si no menciona El Salvador, las palabras de región deciden
 # entre EUA, LATAM y resto del mundo; sin palabras de región, vale la `categoria` de la fuente. Son
 # coincidencias de palabras, no una lectura de la nota: sirven para ordenar, y se equivocan a veces.
 
@@ -207,9 +210,9 @@ metodo = "elmundo"
 url = "https://diario.elmundo.sv/politica"
 paginas = 2
 categoria = "El Salvador – Fiscales"
-exige = "dinero_publico"
+exige = "fiscales"
 peso = 3
-nota = "De Política solo entra lo que habla de dinero público: presupuestos por ministerio, contratos, préstamos, gasto."
+nota = "De Política solo entra lo que cumple la regla `fiscales`: presupuestos por ministerio, contratos, préstamos, gasto, lo que ratifica la Asamblea."
 
 [[fuente]]
 clave = "el_mundo_nacionales"
@@ -218,7 +221,7 @@ metodo = "elmundo"
 url = "https://diario.elmundo.sv/nacionales"
 paginas = 2
 categoria = "El Salvador – Fiscales"
-exige = "dinero_publico"
+exige = "fiscales"
 peso = 3
 nota = "De Nacionales, lo mismo: obras, programas y servicios públicos con su dinero."
 
@@ -246,9 +249,9 @@ metodo = "wp_api"
 url = "https://www.elsalvador.com"
 secciones = ["nacional"]
 categoria = "El Salvador – Fiscales"
-exige = "dinero_publico"
+exige = "fiscales"
 peso = 2
-nota = "De Nacional, solo lo que habla de dinero público."
+nota = "De Nacional, solo lo que cumple la regla `fiscales`."
 
 [[fuente]]
 clave = "presidencia"
@@ -265,7 +268,7 @@ clave = "gnews_inversion_publica"
 nombre = "Google News"
 metodo = "gnews"
 opcional = true
-exige = "el_salvador"
+exige = ["el_salvador", "fiscales"]
 url = "https://news.google.com/rss/search?q=%22El+Salvador%22+(MOP+OR+FOVIAL+OR+DOM+OR+BCIE+OR+BID+OR+CAF+OR+%22Banco+Mundial%22+OR+KfW+OR+%22cooperaci%C3%B3n%22)+(proyecto+OR+pr%C3%A9stamo+OR+obra+OR+carretera+OR+financiamiento)+when:2d&hl=es-419&gl=SV&ceid=SV:es-419"
 categoria = "El Salvador – Fiscales"
 nota = "Proyectos de inversión pública: quién los financia (multilaterales, cooperación) y quién los ejecuta (MOP, FOVIAL, DOM)."
@@ -275,10 +278,10 @@ clave = "gnews_sv_fiscal"
 nombre = "Google News"
 metodo = "gnews"
 opcional = true
-exige = "el_salvador"
+exige = ["el_salvador", "fiscales"]
 url = "https://news.google.com/rss/search?q=%22El+Salvador%22+(Hacienda+OR+presupuesto+OR+deuda+OR+impuestos+OR+FMI)+when:2d&hl=es-419&gl=SV&ceid=SV:es-419"
 categoria = "El Salvador – Fiscales"
-nota = "La búsqueda ya es fiscal: lo que trae y menciona El Salvador va a «Fiscales»."
+nota = "Google busca en el cuerpo de la nota y devuelve de todo: solo entra la que lo dice en el titular."
 
 [[fuente]]
 clave = "gnews_sv"
@@ -318,11 +321,12 @@ el_salvador = ["el salvador", "salvadoren*", "san salvador", "bukele", "banco ce
 
 fiscal = ["presupuesto*", "deuda", "eurobono*", "bonos", "letes", "cetes", "fmi", "fondo monetario",
           "impuesto*", "iva", "renta", "recaudacion", "tributari*", "hacienda", "pension*", "calificadora*",
-          "moody*", "fitch", "standard & poor*", "deficit", "politica fiscal", "reforma fiscal",
+          "moody*", "fitch", "standard & poor*", "deficit fiscal", "deficit presupuestario", "politica fiscal", "reforma fiscal",
           "ajuste fiscal", "regla fiscal", "sostenibilidad fiscal", "consolidacion fiscal", "gasto publico",
-          "financiamiento", "prestamo*", "aduana*", "evasion", "contribuyente*", "erario", "tesoreria",
+          "prestamo*", "aduana*", "evasion", "contribuyente*", "erario", "tesoreria",
           "riesgo pais", "embi", "refinanciamiento", "endeudamiento", "recompra", "comision de hacienda", "bid", "bcie",
-          "adjudic*", "licitacion*", "comprasal", "remuneracion*", "subsidio*", "corte de cuentas"]
+          "adjudic*", "licitacion*", "comprasal", "remuneracion*", "subsidio*", "condonacion",
+          "tasas municipales", "amnistia fiscal"]
 
 # Proyectos de inversión pública: quién los financia (multilaterales y cooperación internacional) y
 # quién los ejecuta. Una nota salvadoreña con cualquiera de estas palabras es «Fiscales», entra aunque
@@ -332,27 +336,44 @@ inversion_publica = ["bcie", "banco centroamericano de integracion economica", "
                      "caf", "banco de desarrollo de america latina", "banco mundial", "birf",
                      "banco internacional de reconstruccion y fomento", "kfw", "cooperacion alemana", "giz",
                      "cooperacion espanola", "aecid", "cooperacion italiana", "aics", "cooperacion japonesa", "jica",
-                     "cooperacion coreana", "koica", "cooperacion internacional", "cooperacion china", "union europea",
+                     "cooperacion coreana", "koica", "cooperacion internacional", "cooperacion china", "cooperacion estadounidense",
+                     "cooperacion francesa", "cooperacion suiza", "cooperacion canadiense", "cooperacion europea", "union europea",
                      "luxemburgo", "usaid", "fida", "ofid", "opep fund", "banco europeo de inversiones",
                      "mop", "ministerio de obras publicas", "fovial", "fondo de conservacion vial", "dom",
                      "direccion de obras municipales", "inversion publica", "obra* publica*", "proyecto* de inversion",
-                     "paip", "prestamo*", "desembols*", "financiamiento externo", "no reembolsable*", "donacion*"]
+                     "paip", "prestamo*", "desembols*", "financiamiento externo", "no reembolsable*", "donacion*", "dona", "donan",
+                     "dono", "donara", "donativo*"]
 
 # En un diario salvadoreño, una nota con estas palabras es del país aunque nombre a otro: la
 # cooperación siempre nombra al país que coopera («cooperación alemana», «italiana»). Solo vale para las
 # fuentes cuya categoría es salvadoreña; en un medio de fuera, JICA o KfW pueden estar en cualquier parte.
 ancla_sv = ["mop", "ministerio de obras publicas", "fovial", "dom", "direccion de obras municipales", "kfw", "giz",
             "aecid", "aics", "jica", "koica", "cooperacion alemana", "cooperacion espanola", "cooperacion italiana",
-            "cooperacion japonesa", "cooperacion coreana", "asamblea legislativa", "ministerio de hacienda",
+            "cooperacion japonesa", "cooperacion coreana", "cooperacion estadounidense", "cooperacion francesa",
+            "cooperacion suiza", "cooperacion canadiense", "cooperacion europea", "cooperacion china",
+            "cooperacion internacional", "asamblea legislativa", "ministerio de hacienda",
             "alcaldia*", "diputados", "comision de hacienda"]
 
-# Lo que tiene que traer una nota de Política para entrar: que hable de dinero público.
-dinero_publico = ["presupuesto*", "millones", "fondos", "financia*", "prestamo*", "adjudic*", "contrat*",
-                  "licitacion*", "comprasal", "salario*", "bono*", "impuesto*", "deuda", "hacienda", "remuneracion*",
-                  "auditoria", "gasto*", "subsidio*", "pension*", "cooperacion", "recaudacion", "fodes", "bid",
-                  "bcie", "banco mundial", "ratific*", "convenio*", "acuerdo*", "comision de hacienda", "caf", "birf",
-                  "kfw", "aecid", "aics", "jica", "koica", "giz", "mop", "fovial", "dom", "obra*", "carretera*",
-                  "inversion publica", "no reembolsable*", "donacion*", "desembols*", "alcaldia*", "municip*", "tasas"]
+# Quién gasta dinero público y cómo se nombra ese dinero. Ninguna de las dos listas basta sola: «alcaldía»
+# está en la nota de una perrita rescatada y «millones» en la de 5.4 millones de consultas médicas. Juntas
+# sí dicen algo (una alcaldía que debe salarios, un ministerio que contrata): es la tercera vía de la
+# regla `fiscales`. "$cifra" no es una palabra: es cualquier monto escrito en dólares ($5,000).
+actor_publico = ["gobierno", "alcaldia*", "alcalde*", "comuna*", "concejo* municipal*", "ministerio*",
+                 "asamblea", "diputad*", "presidencia", "casa presidencial", "autonoma*", "sector publico",
+                 "empleados publicos", "instituciones publicas", "tse", "tribunal supremo electoral",
+                 "corte de cuentas"]
+
+dinero = ["$cifra", "millones de dolares", "salario*", "sueldo*", "aguinaldo*", "plazas", "despido*", "fondos",
+          "fodes", "financia*", "contrat*", "gasto*", "ahorro*", "recorte*", "audit*", "inversion",
+          "invert*", "inviert*", "bono", "cooperacion", "adeuda*", "pago*", "arancel*"]
+
+# La cuarta vía: un acuerdo internacional que se aprueba. Los reportes del dueño ponen en Fiscales lo que
+# ratifica la Asamblea (protección de inversiones con Argentina, exención de visas con Kuwait). «Acuerdo»
+# va con su preposición porque suelto está en cada «de acuerdo con el ministerio».
+acuerdo = ["acuerdo de", "acuerdo para", "acuerdo entre", "acuerdo sobre", "acuerdo bilateral", "acuerdo comercial",
+           "acuerdo marco", "acuerdos", "convenio*", "tratado de", "tratado entre", "tratados", "memorando*"]
+
+aprobacion = ["ratific*", "aprob*", "aprueba*", "asamblea", "diputad*", "pleno legislativo", "plenaria"]
 
 eua = ["estados unidos", "ee. uu.", "ee.uu.", "eeuu", "eua", "estadounidense*", "reserva federal", "la fed",
        "wall street", "casa blanca", "washington", "trump", "powell", "nasdaq", "dow jones", "s&p 500",
@@ -394,7 +415,8 @@ gusto_fiscal = ["presupuesto*", "comision de hacienda", "hacienda", "millones", 
                 "cetes", "fmi", "impuesto*", "recaudacion", "iva", "renta", "adjudic*", "contratacion", "comprasal",
                 "remuneracion*", "salario*", "pension*", "ministro", "ministra", "ministerio", "fondos", "financia*",
                 "cooperacion", "asamblea", "diputados", "2027", "fodes", "subsidio*", "gasto*", "auditoria",
-                "corte de cuentas", "bid", "bcie", "banco mundial", "ratific*", "convenio*", "acuerdo*", "aprueba*",
+                "corte de cuentas", "bid", "bcie", "banco mundial", "ratific*", "convenio*", "acuerdo de", "acuerdo para",
+                "acuerdo entre", "acuerdos", "aprueba*", "aprobad*", "exencion*",
                 "caf", "birf", "kfw", "aecid", "aics", "jica", "koica", "giz", "cooperacion alemana",
                 "cooperacion espanola", "cooperacion italiana", "cooperacion japonesa", "cooperacion coreana",
                 "mop", "obras publicas", "fovial", "dom", "obras municipales", "inversion publica", "obra*",
@@ -433,7 +455,16 @@ economia = ["econom*", "inflacion", "pib", "banco central", "tasa* de interes", 
 # lista `inversion_publica`); en lo económico, las cifras del BCR, CEPA, turismo,
 # inversión, agro y empresas. tuberias/noticias.py (`puntaje`) suma 2 por cada palabra preferida en el
 # titular, 1 en el extracto y el `peso` de la fuente, y resta 3 por cada palabra de `evita` y otros 3 si
-# el titular empieza como una nota de servicio. El puntaje ordena dentro de cada categoría.
+# el titular empieza como una nota de servicio. El puntaje ordena dentro de cada categoría; qué nota
+# entra en «Fiscales» no lo decide el puntaje sino la regla `fiscales`.
+
+[reglas]
+# Una regla se cumple por cualquiera de sus vías, y una vía, cuando la nota trae palabras de todas sus
+# listas. `fiscales` es lo que hace «Fiscales» a una nota salvadoreña, y lo que se le exige a las
+# secciones Política y Nacional de un diario: algo fiscal, o un proyecto de inversión pública, o un actor
+# público junto a dinero, o un acuerdo internacional que se aprueba o ratifica. Como el puntaje, se vuelve a aplicar a
+# toda la base en cada corrida: depende solo de este archivo.
+fiscales = [["fiscal"], ["inversion_publica"], ["actor_publico", "dinero"], ["acuerdo", "aprobacion"]]
 
 [gusto]
 "Internacional – EUA" = { prefiere = "gusto_mercados", evita = "evita" }

@@ -72,18 +72,35 @@ def plano(x):
 _REGEX = {}
 
 
+CIFRA = r"\$\s?\d[\d.,]*|\d[\d.,]*\s(?:mil\s|millones\sde\s)?dolares"     # «$cifra»: un monto en dólares
+
+
 def _regex(lista):
     if lista not in _REGEX:
         partes = []
         for t in cfg()["palabras"][lista]:
             t = plano(t)
-            partes.append(re.escape(t[:-1]) + r"\w*" if t.endswith("*") else re.escape(t))
-        _REGEX[lista] = re.compile(r"(?<![\w])(?:" + "|".join(partes) + r")(?![\w])")
+            if t != "$cifra":
+                partes.append(re.escape(t[:-1]) + r"\w*" if t.endswith("*") else re.escape(t))
+        patron = r"(?<![\w])(?:" + "|".join(partes) + r")(?![\w])"
+        _REGEX[lista] = re.compile(patron + "|" + CIFRA if "$cifra" in cfg()["palabras"][lista] else patron)
     return _REGEX[lista]
 
 
 def cuenta(lista, texto):
     return len(_regex(lista).findall(plano(texto)))
+
+
+def cumple(exige, texto):
+    """¿La nota trae lo que se le exige? `exige` nombra una lista de [palabras] (trae alguna) o una de
+    las [reglas] (cumple alguna de sus vías, y una vía, con palabras de todas sus listas); si son
+    varios nombres, todos."""
+    if not isinstance(exige, str):
+        return all(cumple(e, texto) for e in exige)
+    vias = cfg().get("reglas", {}).get(exige)
+    if vias is None:
+        return cuenta(exige, texto) > 0
+    return any(all(cuenta(lista, texto) for lista in via) for via in vias)
 
 
 def menciona_sv(texto):
@@ -96,8 +113,8 @@ def clasificar(texto, defecto):
     # habla de algo de aquí (la cooperación alemana, el MOP, una alcaldía)
     if menciona_sv(texto) or (defecto.startswith("El Salvador") and (
             cuenta("ancla_sv", texto) or not any(cuenta(r, texto) for r in ("eua", "latam", "resto")))):
-        fiscal = cuenta("fiscal", texto) or cuenta("inversion_publica", texto) or defecto == "El Salvador – Fiscales"
-        return "El Salvador – Fiscales" if fiscal else "El Salvador – Nacionales"
+        # «Fiscales» lo dicen las palabras de la nota, no la sección de donde vino
+        return "El Salvador – Fiscales" if cumple("fiscales", texto) else "El Salvador – Nacionales"
     n = {"Internacional – EUA": cuenta("eua", texto), "Internacional – LATAM": cuenta("latam", texto),
          "Internacional – Resto del mundo": cuenta("resto", texto)}
     mejor = max(n.values())
@@ -332,7 +349,7 @@ def notas_de(f, red, ahora, conocidas=frozenset()):
         texto = titular + " " + resumen
         if f.get("filtro") and not cuenta("economia", texto):
             continue
-        if f.get("exige") and not cuenta(f["exige"], texto):
+        if f.get("exige") and not cumple(f["exige"], texto):
             continue
         url = c["url"] if f["metodo"] == "gnews" else url_limpia(c["url"])
         out.append({"id": hashlib.sha1(url.encode("utf-8")).hexdigest()[:12], "edicion": edicion_de(momento),
@@ -351,6 +368,32 @@ def leer_plata():
         return []
     with open(p, encoding="utf-8", newline="") as fh:
         return list(csv.DictReader(fh))
+
+
+def _salio_de(n, f):
+    """¿Esta nota guardada salió de esa fuente? Se sabe por su dirección, donde va la sección del diario."""
+    if f["metodo"] == "elmundo":
+        return n["url"].startswith(f["url"].rstrip("/") + "/")
+    if f["metodo"] == "wp_api":
+        return n["url"].startswith(f["url"]) and any(f"/{s}/" in n["url"] for s in f.get("secciones", []))
+    return False
+
+
+def al_dia(notas):
+    """La base, puesta al día con el catálogo de hoy: se va la nota que su sección ya no admitiría (su
+    `exige`) y cada una vuelve a repartirse en su categoría. Así una regla que se afina vale también para
+    lo ya guardado, igual que el puntaje. De una nota cuya fuente no se reconoce por la dirección, la
+    categoría que tiene hace de categoría de la fuente: sin cambios en las listas, queda donde estaba."""
+    con_seccion = [f for f in cfg()["fuente"] if f["metodo"] in ("elmundo", "wp_api")]
+    out = []
+    for n in notas:
+        texto = n["titular"] + " " + n["resumen"]
+        f = next((f for f in con_seccion if _salio_de(n, f)), None)
+        if f and f.get("exige") and not cumple(f["exige"], texto):
+            continue
+        n["categoria"] = clasificar(texto, f["categoria"] if f else n["categoria"])
+        out.append(n)
+    return out
 
 
 def clave_titular(n):
@@ -400,7 +443,7 @@ def traer(seco=False, ahora=None):
     LARGO_RESUMEN = cfg()["general"]["largo_resumen"]
     ahora = ahora or dt.datetime.now(SV)
     limite = (ahora.date() - dt.timedelta(days=cfg()["general"]["conservar_dias"])).isoformat()
-    previas = [n for n in leer_plata() if n["edicion"] >= limite]
+    previas = al_dia([n for n in leer_plata() if n["edicion"] >= limite])
     red, nuevas, estado = Red(), [], []
     for f in cfg()["fuente"]:
         try:
