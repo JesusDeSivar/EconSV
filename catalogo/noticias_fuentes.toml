@@ -6,6 +6,9 @@
 # cifras del sitio salen del BCR, no de aquí.
 #
 #   metodo     rss     un feed RSS o Atom
+#              elmundo la portada de una sección de diario.elmundo.sv, que no tiene feed: de ahí salen
+#                      título, fecha y enlace, y de la página de cada nota nueva solo su extracto
+#                      (la etiqueta og:description); `paginas` dice cuántas páginas de la sección
 #              wp_api  la API pública de WordPress del medio (/wp-json/wp/v2/posts), con `secciones`
 #              gnews   una búsqueda de Google News en RSS: trae titular, medio y enlace, sin extracto;
 #                      sirve para los medios que no dejan leer su feed (La Prensa Gráfica, El Mundo)
@@ -14,6 +17,8 @@
 #   exige      una lista de [palabras]: solo entran las notas que traen alguna (las búsquedas de Google
 #              sobre El Salvador devuelven también notas de otros países)
 #   opcional   true: si la fuente no responde, se anota y la corrida sigue sin fallar
+#   peso       puntos que suma al puntaje de cada nota suya: las fuentes de las que el dueño arma sus
+#              reportes pesan más (ver [gusto], al final)
 #
 # Reparto (tuberias/noticias.py, `clasificar`): una nota que menciona El Salvador es salvadoreña, y es
 # «Fiscales» si trae palabras fiscales; si no menciona El Salvador, las palabras de región deciden
@@ -36,6 +41,7 @@ metodo = "rss"
 url = "https://www.federalreserve.gov/feeds/press_all.xml"
 categoria = "Internacional – EUA"
 idioma = "en"
+peso = 1
 
 [[fuente]]
 clave = "bea"
@@ -70,7 +76,18 @@ nombre = "Bloomberg Línea"
 metodo = "rss"
 url = "https://www.bloomberglinea.com/arc/outboundfeeds/rss/?outputType=xml"
 categoria = "Internacional – LATAM"
+maximo = 40
+peso = 2
+
+[[fuente]]
+clave = "bloomberg_linea_mercados"
+nombre = "Bloomberg Línea"
+metodo = "rss"
+url = "https://www.bloomberglinea.com/arc/outboundfeeds/rss/category/mercados/?outputType=xml"
+categoria = "Internacional – LATAM"
 maximo = 30
+peso = 2
+nota = "Mercados: bonos, divisas, petróleo, bancos centrales. Las palabras de región la reparten entre EUA y resto; lo demás es de la región."
 
 [[fuente]]
 clave = "elpais_america"
@@ -93,7 +110,9 @@ nombre = "Infobae · Economía"
 metodo = "rss"
 url = "https://www.infobae.com/arc/outboundfeeds/rss/category/economia/"
 categoria = "Internacional – LATAM"
-maximo = 15
+maximo = 8
+peso = -1
+nota = "Casi todo es economía interna de Argentina: entra poco y pesa menos."
 
 [[fuente]]
 clave = "france24_amlat"
@@ -172,6 +191,27 @@ opcional = true
 nota = "Su cortafuegos responde a ratos «Request Rejected» en lugar del feed."
 
 [[fuente]]
+clave = "el_mundo_economia"
+nombre = "Diario El Mundo"
+metodo = "elmundo"
+url = "https://diario.elmundo.sv/economia"
+paginas = 2
+categoria = "El Salvador – Nacionales"
+peso = 3
+nota = "La fuente principal de la parte nacional de los reportes del dueño."
+
+[[fuente]]
+clave = "el_mundo_politica"
+nombre = "Diario El Mundo"
+metodo = "elmundo"
+url = "https://diario.elmundo.sv/politica"
+paginas = 2
+categoria = "El Salvador – Fiscales"
+exige = "dinero_publico"
+peso = 3
+nota = "De Política solo entra lo que habla de dinero público: presupuestos por ministerio, contratos, préstamos, gasto."
+
+[[fuente]]
 clave = "diario_el_salvador"
 nombre = "Diario El Salvador"
 metodo = "wp_api"
@@ -186,6 +226,7 @@ metodo = "wp_api"
 url = "https://www.elsalvador.com"
 secciones = ["h-negocios", "entorno-economico"]
 categoria = "El Salvador – Nacionales"
+peso = 2
 
 [[fuente]]
 clave = "presidencia"
@@ -232,10 +273,6 @@ nombre = "La Prensa Gráfica (feed propio)"
 motivo = "403 de su protección antibots; sus titulares llegan por la búsqueda de Google News."
 
 [[excluida]]
-nombre = "Diario El Mundo (feed propio)"
-motivo = "No expone feed ni API: /rss devuelve su portada en HTML."
-
-[[excluida]]
 nombre = "FMI, CEPAL, BLS"
 motivo = "403 de sus redes de distribución a lectores automáticos (2026-11-12)."
 
@@ -252,11 +289,18 @@ fiscal = ["presupuesto*", "deuda", "eurobono*", "bonos", "letes", "cetes", "fmi"
           "moody*", "fitch", "standard & poor*", "deficit", "politica fiscal", "reforma fiscal",
           "ajuste fiscal", "regla fiscal", "sostenibilidad fiscal", "consolidacion fiscal", "gasto publico",
           "financiamiento", "prestamo*", "aduana*", "evasion", "contribuyente*", "erario", "tesoreria",
-          "riesgo pais", "embi", "refinanciamiento", "endeudamiento", "recompra"]
+          "riesgo pais", "embi", "refinanciamiento", "endeudamiento", "recompra", "comision de hacienda",
+          "adjudic*", "licitacion*", "comprasal", "remuneracion*", "subsidio*", "corte de cuentas"]
+
+# Lo que tiene que traer una nota de Política para entrar: que hable de dinero público.
+dinero_publico = ["presupuesto*", "millones", "fondos", "financia*", "prestamo*", "adjudic*", "contrat*",
+                  "licitacion*", "comprasal", "salario*", "bono*", "impuesto*", "deuda", "hacienda", "remuneracion*",
+                  "auditoria", "gasto*", "subsidio*", "pension*", "cooperacion", "recaudacion", "fodes"]
 
 eua = ["estados unidos", "ee. uu.", "ee.uu.", "eeuu", "eua", "estadounidense*", "reserva federal", "la fed",
        "wall street", "casa blanca", "washington", "trump", "powell", "nasdaq", "dow jones", "s&p 500",
        "united states", "u.s.", "federal reserve", "fomc", "treasury", "white house", "american*",
+       "fed", "treasur*", "bonos del tesoro", "wti", "s&p", "nvidia",
        "nueva york", "california", "texas", "florida"]
 
 latam = ["mexico", "mexican*", "brasil", "brasilen*", "argentin*", "chile", "chilen*", "colombia*", "peru",
@@ -270,7 +314,42 @@ resto = ["china", "chino*", "chinas", "europa", "europe*", "union europea", "zon
          "alemania", "aleman*", "francia", "frances*", "italia*", "espana", "reino unido",
          "britanic*", "rusia", "ruso*", "rusa*", "ucrania", "japon", "japones*", "india", "corea", "taiwan", "israel",
          "iran", "arabia saudita", "opep", "africa*", "asia", "asiatic*", "australia*", "canada", "turquia",
-         "ecb", "euro area", "ibex"]
+         "ecb", "euro area", "ibex", "brent", "yen", "yuan", "nikkei", "libra esterlina", "softbank"]
+
+gusto_mercados = ["fed", "reserva federal", "tasa*", "tipos de interes", "treasur*", "bonos del tesoro", "rendimiento*",
+                  "inflacion", "ipc", "pce", "wall street", "s&p", "dow jones", "nasdaq", "dolar", "empleo", "nominas",
+                  "desempleo", "arancel*", "opi", "ganancias", "bonificaciones", "inteligencia artificial", "chips",
+                  "nvidia", "petroleo", "wti", "recesion", "pib", "deficit", "deuda", "cierre del gobierno",
+                  "fomc", "bancos", "acciones", "futuros", "mercados", "centro* de datos", "softbank",
+                  "openai", "anthropic", "interest rate*", "monetary policy", "treasury", "gdp"]
+
+gusto_mundo = ["brent", "petroleo", "crudo", "opep", "bce", "tipos", "eurozona", "china", "yuan", "pib", "inflacion",
+               "arancel*", "banco central", "bonos", "mercados", "chips", "inteligencia artificial", "softbank", "japon",
+               "yen", "oro", "gas", "iran", "exportaciones", "deuda", "rendimiento*", "acciones", "bolsa*", "tasas",
+               "monetary policy", "interest rate*"]
+
+gusto_soberano = ["fmi", "fondo monetario", "bonos", "deuda", "canje", "banco central", "tasa*", "selic", "inflacion",
+                  "calificacion", "moody*", "fitch", "emision", "reservas", "pib", "peso", "real", "presupuesto",
+                  "deficit", "pemex", "petrobras", "arancel*", "banxico", "minutas", "finanzas publicas",
+                  "mercados internacionales", "riesgo pais", "remesas", "inversion", "dolar", "recorte*", "tipo de cambio"]
+
+gusto_fiscal = ["presupuesto*", "comision de hacienda", "hacienda", "millones", "prestamo*", "deuda", "bonos", "letes",
+                "cetes", "fmi", "impuesto*", "recaudacion", "iva", "renta", "adjudic*", "contratacion", "comprasal",
+                "remuneracion*", "salario*", "pension*", "ministro", "ministra", "ministerio", "fondos", "financia*",
+                "cooperacion", "asamblea", "diputados", "2027", "fodes", "subsidio*", "gasto*", "auditoria",
+                "corte de cuentas"]
+
+gusto_economia_sv = ["bcr", "banco central de reserva", "inflacion", "reservas", "remesas", "exportacion*", "importacion*",
+                     "pib", "ivae", "invers*", "turis*", "visitantes", "cepa", "aeropuerto", "puerto", "carga", "cafe",
+                     "azucar", "construccion", "empleo", "salario minimo", "banca", "credito", "opamss", "zona* franca*",
+                     "energia", "combustible*", "canasta basica", "precios", "empresa*", "millones", "productividad",
+                     "comercio exterior", "agro*", "centa", "cooperacion", "mitur", "proesa", "bandesal", "minec",
+                     "hoteler*", "logistic*"]
+
+evita = ["horoscopo", "loteria", "sorteo", "receta*", "futbol", "gol", "farandula", "pelicula", "netflix",
+         "pronostico del tiempo", "homicidio*", "capturan", "descuento*", "ofertas", "black friday", "cupon*",
+         "requisitos", "tramite*", "visa", "green card", "seguro de viaje", "estafa*", "fraudulent*", "consejos",
+         "tips", "amante*", "infidelidad*", "romance", "beca*", "cheque* de estimulo", "food stamps", "snap", "seguro social", "licencia de conducir"]
 
 economia = ["econom*", "inflacion", "pib", "banco central", "tasa* de interes", "tipos de interes", "arancel*",
             "comerci*", "exportac*", "importac*", "deuda", "bono*", "mercado*", "bolsa*", "empleo*", "desempleo",
@@ -280,3 +359,25 @@ economia = ["econom*", "inflacion", "pib", "banco central", "tasa* de interes", 
             "combustible*", "gasolina", "opep", "criptomoneda*", "bitcoin", "acciones", "wall street", "negocio*",
             "tasas", "credito*", "ventas", "consumo", "pobreza", "canasta basica", "productividad", "aeropuerto*",
             "puerto*", "cafe", "azucar", "maquila*", "zona franca"]
+
+# ------------------------------------------------------------------ el gusto
+# Qué notas se parecen a las que el dueño pone en sus reportes diarios (leídos el 2026-11-13 en su
+# edición del 10 de noviembre). Lo internacional es de corte financiero: mercados, la Fed, bonos del
+# Tesoro, grandes operaciones de empresas, y en América Latina la deuda soberana, el FMI y los bancos
+# centrales. Lo nacional sale sobre todo de Diario El Mundo: en Fiscales, el presupuesto de cada
+# ministerio, los contratos y el gasto público; en lo económico, las cifras del BCR, CEPA, turismo,
+# inversión, agro y empresas. tuberias/noticias.py (`puntaje`) suma 2 por cada palabra preferida en el
+# titular, 1 en el extracto y el `peso` de la fuente, y resta 3 por cada palabra de `evita` y otros 3 si
+# el titular empieza como una nota de servicio. El puntaje ordena dentro de cada categoría.
+
+[gusto]
+"Internacional – EUA" = { prefiere = "gusto_mercados", evita = "evita" }
+"Internacional – LATAM" = { prefiere = "gusto_soberano", evita = "evita" }
+"Internacional – Resto del mundo" = { prefiere = "gusto_mundo", evita = "evita" }
+"El Salvador – Fiscales" = { prefiere = "gusto_fiscal", evita = "evita" }
+"El Salvador – Nacionales" = { prefiere = "gusto_economia_sv", evita = "evita" }
+
+[gusto_listas]
+# Un titular que empieza así es una nota de servicio o una explicación, no una noticia.
+titular_de_servicio = ["¿", "como ", "que es ", "que son ", "cuanto ", "cuando ", "donde ", "estos son ", "estas son ",
+                       "asi puedes ", "paso a paso", "conoce ", "conozca ", "guia "]

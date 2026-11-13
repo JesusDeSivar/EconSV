@@ -12,7 +12,8 @@
  *   Diccionario                  qué es cada serie: título, unidad, frecuencia, variable del BCR,
  *                                tramo que cubre, último valor, y en qué hoja y columna está
  *   Calendario                   cuándo se espera el próximo dato de cada serie
- *   Noticias                     las últimas ediciones del resumen de noticias
+ *   Noticias                     las últimas ediciones del resumen de noticias; «Relevancia» ordena,
+ *                                dentro de cada categoría, lo que más se parece al reporte diario
  *   EconSV                       cuándo se actualizó y con qué
  *
  * De dónde: los CSV públicos de github.com/JesusDeSivar/EconSV (rama main, carpeta lago/). Las cifras
@@ -109,12 +110,13 @@ function actualizarNoticias() {
     ediciones++;
     if (!ultima) ultima = dia;
     objetos_(csv).forEach(function (r) {
-      filas.push([dia, r.fecha_hora.replace("T", " "), r.categoria, r.fuente, r.titular, r.resumen, r.url]);
+      filas.push([dia, r.fecha_hora.replace("T", " "), r.categoria, r.fuente, r.titular, r.resumen, r.url,
+        r.puntaje === undefined || r.puntaje === "" ? "" : Number(r.puntaje)]);
     });
   }
   if (!ediciones) throw new Error("no hay ediciones de noticias en los últimos " + CONFIG.DIAS_DE_NOTICIAS + " días");
   escribirHoja_(CONFIG.HOJAS.noticias,
-    [["Edición", "Publicada", "Categoría", "Fuente", "Titular", "Resumen", "Enlace"]].concat(filas),
+    [["Edición", "Publicada", "Categoría", "Fuente", "Titular", "Resumen", "Enlace", "Relevancia"]].concat(filas),
     { texto: [1, 2, 3, 4, 5, 6, 7] });
   return filas.length + " notas en " + ediciones + " ediciones, la última del " + ultima;
 }

@@ -10,6 +10,9 @@ Las fuentes y las palabras están en catalogo/noticias_fuentes.toml. De cada not
 su medio publica en su feed —titular, extracto, fecha y enlace—, nunca el texto completo.
 
   lago/plata/noticias.csv            todas las notas de los últimos `conservar_dias`, una por fila
+                                     (`puntaje`: cuánto se parece la nota a lo que el dueño pone en sus
+                                     reportes; sale de las listas [gusto] del catálogo y se recalcula entero
+                                     en cada corrida, así que cambiar una lista cambia todos los puntajes)
   lago/oro/noticias/AAAA-MM-DD.csv   la edición de cada día: lo publicado de las 7:00 del día anterior
                                      a las 7:00 de ese día (hora de El Salvador), ordenado por categoría
 
@@ -38,8 +41,10 @@ import rutas  # noqa: E402
 SV = ZoneInfo("America/El_Salvador")
 CATEGORIAS = ["Internacional – EUA", "Internacional – LATAM", "Internacional – Resto del mundo",
               "El Salvador – Nacionales", "El Salvador – Fiscales"]
-COLUMNAS = ["id", "edicion", "fecha_hora", "categoria", "fuente", "titular", "resumen", "url", "idioma"]
-COL_EDICION = ["fecha_hora", "categoria", "fuente", "titular", "resumen", "url"]
+COLUMNAS = ["id", "edicion", "fecha_hora", "categoria", "fuente", "titular", "resumen", "url", "idioma", "puntaje"]
+COL_EDICION = ["fecha_hora", "categoria", "fuente", "titular", "resumen", "url", "puntaje"]
+MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre",
+         "noviembre", "diciembre"]
 ATOM = "{http://www.w3.org/2005/Atom}"
 RSS1 = "{http://purl.org/rss/1.0/}"
 DC = "{http://purl.org/dc/elements/1.1/}"
@@ -98,6 +103,30 @@ def clasificar(texto, defecto):
         return defecto if defecto.startswith("Internacional") else "Internacional – Resto del mundo"
     ganan = [c for c, v in n.items() if v == mejor]
     return defecto if defecto in ganan else ganan[0]
+
+
+def puntaje(n):
+    """Cuánto se parece una nota a lo que entra en los reportes: 2 por cada palabra preferida de su
+    categoría en el titular y 1 en el extracto, más el peso de su fuente, menos 3 por cada palabra de
+    las que se evitan. Ordena dentro de una categoría; no compara categorías entre sí."""
+    g = cfg().get("gusto", {}).get(n["categoria"])
+    if not g:
+        return 0
+    p = 2 * cuenta(g["prefiere"], n["titular"]) + cuenta(g["prefiere"], n["resumen"])
+    p -= 3 * cuenta(g["evita"], n["titular"] + " " + n["resumen"])
+    if plano(n["titular"]).lstrip("«\"'“ ").startswith(tuple(plano(x) for x in cfg()["gusto_listas"]["titular_de_servicio"])):
+        p -= 3
+    return p + _pesos().get(n["fuente"], 0)
+
+
+_PESOS = None
+
+
+def _pesos():
+    global _PESOS
+    if _PESOS is None:
+        _PESOS = {f["nombre"]: f.get("peso", 0) for f in cfg()["fuente"] if f.get("peso")}
+    return _PESOS
 
 
 # ------------------------------------------------------------------ texto
@@ -222,10 +251,65 @@ def leer_wp(f, red, desde):
                "medio": ""}
 
 
-def notas_de(f, red, ahora):
-    """Las notas de una fuente dentro de la ventana, ya limpias y clasificadas."""
+def fecha_elmundo(x):
+    """«jueves 12, noviembre 2026 - 5:47 p. m.» → datetime en hora de El Salvador; None si no se entiende."""
+    m = re.search(r"(\d{1,2}),\s*([a-záéíóú]+)\s+(\d{4})\s*-\s*(\d{1,2}):(\d{2})\s*([ap])", plano(x))
+    if not m or m.group(2) not in MESES:
+        return None
+    hora = int(m.group(4)) % 12 + (12 if m.group(6) == "p" else 0)
+    return dt.datetime(int(m.group(3)), MESES.index(m.group(2)) + 1, int(m.group(1)), hora, int(m.group(5)), tzinfo=SV)
+
+
+def portada_elmundo(pagina):
+    """Las notas que lista una sección de diario.elmundo.sv: (url, titular, fecha)."""
+    out = []
+    for art in re.findall(r"<article[\s\S]*?</article>", pagina):
+        m = re.search(r'class="article-title">\s*<a\s+href="([^"]+)"\s+title="([^"]*)"', art)
+        d = re.search(r'class="article-date">\s*([^<]+?)\s*<', art)
+        if m:
+            out.append((m.group(1), sin_html(m.group(2)), fecha_elmundo(d.group(1)) if d else None))
+    return out
+
+
+def meta(pagina, nombre):
+    """El contenido de una etiqueta <meta> de la cabecera de una página."""
+    m = (re.search(r'<meta[^>]+(?:property|name)="' + re.escape(nombre) + r'"[^>]+content="([^"]*)"', pagina)
+         or re.search(r'<meta[^>]+content="([^"]*)"[^>]+(?:property|name)="' + re.escape(nombre) + '"', pagina))
+    return html.unescape(m.group(1)).strip() if m else ""
+
+
+def leer_elmundo(f, red, desde, conocidas):
+    """Diario El Mundo no tiene feed: se lee la portada de la sección (título, fecha y enlace) y, de
+    cada nota que el lago no tiene, su página, solo por el extracto y la fecha que el propio medio
+    publica en sus etiquetas <meta>. El texto de la nota no se lee ni se guarda."""
+    for pag in range(1, f.get("paginas", 2) + 1):
+        lista = portada_elmundo(red.get(f["url"] + (f"?page={pag}" if pag > 1 else "")).text)
+        if not lista:
+            if pag == 1:
+                raise IOError("la portada no lista notas: cambió su forma")
+            return
+        for url, titular, fecha in lista:
+            if fecha is None or fecha < desde:
+                continue
+            if hashlib.sha1(url_limpia(url).encode("utf-8")).hexdigest()[:12] in conocidas:
+                continue
+            nota = red.get(url).text
+            yield {"titular": titular, "url": url, "fecha": fecha_de(meta(nota, "article:published_time")) or fecha,
+                   "resumen": meta(nota, "og:description") or meta(nota, "description"), "medio": ""}
+        if all(fecha is not None and fecha < desde for _, _, fecha in lista):
+            return
+
+
+def notas_de(f, red, ahora, conocidas=frozenset()):
+    """Las notas de una fuente dentro de la ventana, ya limpias y clasificadas. `conocidas` son los id
+    que el lago ya tiene: sirve para no volver a pedir la página de una nota ya guardada."""
     desde = ahora - dt.timedelta(days=cfg()["general"]["dias"])
-    crudas = leer_wp(f, red, desde.astimezone(dt.timezone.utc)) if f["metodo"] == "wp_api" else leer_rss(f, red)
+    if f["metodo"] == "wp_api":
+        crudas = leer_wp(f, red, desde.astimezone(dt.timezone.utc))
+    elif f["metodo"] == "elmundo":
+        crudas = leer_elmundo(f, red, desde, conocidas)
+    else:
+        crudas = leer_rss(f, red)
     out = []
     for c in crudas:
         if not c["titular"] or not c["url"] or c["fecha"] is None:
@@ -269,7 +353,12 @@ def clave_titular(n):
 
 
 def orden(n):
-    return (n["edicion"], CATEGORIAS.index(n["categoria"]), n["fecha_hora"], n["id"])
+    return (n["edicion"], CATEGORIAS.index(n["categoria"]), -int(n["puntaje"]), n["fecha_hora"], n["id"])
+
+
+def orden_edicion(n):
+    """Dentro de una edición: por categoría, lo más afín primero, y a igual puntaje lo más reciente."""
+    return (CATEGORIAS.index(n["categoria"]), -int(n["puntaje"]), [-ord(c) for c in n["fecha_hora"]])
 
 
 def texto_csv(cols, filas):
@@ -290,7 +379,7 @@ def escribir_ediciones(notas, ahora):
         if n["edicion"] <= cerrada:
             por.setdefault(n["edicion"], []).append(n)
     for ed, filas in por.items():
-        filas.sort(key=lambda n: (CATEGORIAS.index(n["categoria"]), n["fecha_hora"]))
+        filas.sort(key=orden_edicion)
         texto = texto_csv(COL_EDICION, filas)
         p = carpeta / f"{ed}.csv"
         if not p.exists() or p.read_text(encoding="utf-8") != texto:
@@ -305,10 +394,12 @@ def traer(seco=False, ahora=None):
     global LARGO_RESUMEN
     LARGO_RESUMEN = cfg()["general"]["largo_resumen"]
     ahora = ahora or dt.datetime.now(SV)
+    limite = (ahora.date() - dt.timedelta(days=cfg()["general"]["conservar_dias"])).isoformat()
+    previas = [n for n in leer_plata() if n["edicion"] >= limite]
     red, nuevas, estado = Red(), [], []
     for f in cfg()["fuente"]:
         try:
-            ns = notas_de(f, red, ahora)
+            ns = notas_de(f, red, ahora, frozenset(n["id"] for n in previas))
             nuevas += ns
             estado.append((f["clave"], len(ns), ""))
         except (IOError, ET.ParseError, KeyError, ValueError) as e:
@@ -318,8 +409,6 @@ def traer(seco=False, ahora=None):
     if not nuevas:
         print("noticias: ninguna fuente entregó notas")
         return 1
-    limite = (ahora.date() - dt.timedelta(days=cfg()["general"]["conservar_dias"])).isoformat()
-    previas = [n for n in leer_plata() if n["edicion"] >= limite]
     ids = {n["id"] for n in previas}
     titulares = {(n["edicion"], clave_titular(n)) for n in previas}
     agregadas = []
@@ -330,15 +419,18 @@ def traer(seco=False, ahora=None):
         ids.add(n["id"])
         titulares.add((n["edicion"], k))
         agregadas.append(n)
-    todas = sorted(previas + agregadas, key=orden)
+    todas = previas + agregadas
+    for n in todas:
+        n["puntaje"] = puntaje(n)               # entero y de nuevo: depende solo del catálogo
+    todas.sort(key=orden)
     por_cat = {c: sum(1 for n in agregadas if n["categoria"] == c) for c in CATEGORIAS}
     print(f"noticias: {len(agregadas)} nuevas de {len(nuevas)} leídas — " + " · ".join(f"{c}: {v}" for c, v in por_cat.items()))
     fallidas = [c for c, _, falla in estado if falla and "opcional" not in falla]
     if seco:
         for c in CATEGORIAS:
             print(f"\n{c}")
-            for n in [n for n in agregadas if n["categoria"] == c][:6]:
-                print(f"   {n['fecha_hora'][5:]}  {n['fuente'][:28]:<28} {n['titular'][:95]}")
+            for n in sorted((n for n in agregadas if n["categoria"] == c), key=orden_edicion)[:8]:
+                print(f"   {n['puntaje']:>3}  {n['fecha_hora'][5:]}  {n['fuente'][:24]:<24} {n['titular'][:92]}")
         return 0
     rutas.PLATA.mkdir(parents=True, exist_ok=True)
     (rutas.PLATA / "noticias.csv").write_text(texto_csv(COLUMNAS, todas), encoding="utf-8", newline="")
@@ -392,7 +484,9 @@ def ediciones():
     for n in leer_plata():
         por.setdefault(n["edicion"], []).append(n)
     for filas in por.values():
-        filas.sort(key=lambda n: (CATEGORIAS.index(n["categoria"]), n["fecha_hora"]))
+        for n in filas:
+            n["puntaje"] = n.get("puntaje") or 0
+        filas.sort(key=orden_edicion)
     return por
 
 

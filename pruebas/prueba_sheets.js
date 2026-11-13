@@ -236,10 +236,10 @@ prueba("si el lago no responde, lo dice y no borra nada", () => {
 prueba("un titular que parece fórmula se escribe como texto", () => {
   const dia = entorno().ultimaEdicion;
   const x = entorno({ contenido: { ["oro/noticias/" + dia + ".csv"]:
-    'fecha_hora,categoria,fuente,titular,resumen,url\n2026-11-12T06:45,El Salvador – Fiscales,=HYPERLINK("http://x";"y"),"=IMPORTXML(""http://x"";""//a"")",+503 2222-0000,https://ejemplo.org/a\n' } });
+    'fecha_hora,categoria,fuente,titular,resumen,url,puntaje\n2026-11-12T06:45,El Salvador – Fiscales,=HYPERLINK("http://x";"y"),"=IMPORTXML(""http://x"";""//a"")",+503 2222-0000,https://ejemplo.org/a,7\n' } });
   x.ctx.actualizarNoticias();                  // el doble de la hoja falla si esa cadena cae en una columna que no es de texto
   const fila = x.hojas.Noticias.valores.find((f) => f[4].startsWith("=IMPORTXML"));
-  assert(fila && fila[5] === "+503 2222-0000");
+  assert(fila && fila[5] === "+503 2222-0000" && fila[7] === 7);
   assert.deepStrictEqual(Object.keys(x.hojas.Noticias.texto).map(Number), [1, 2, 3, 4, 5, 6, 7]);
 });
 

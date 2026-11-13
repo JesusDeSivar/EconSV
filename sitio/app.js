@@ -364,7 +364,7 @@
   }
   function paginaInicio() {
     const ed = N.cerradas[N.cerradas.length - 1] || N.ediciones[N.ediciones.length - 1];
-    const titulares = N.notas.filter((n) => n[0] === ed && n[2] >= 3).sort((a, b) => (a[1] < b[1] ? 1 : -1)).slice(0, 6);
+    const titulares = N.notas.filter((n) => n[0] === ed && n[2] >= 3).sort((a, b) => (b[7] || 0) - (a[7] || 0) || (a[1] < b[1] ? 1 : -1)).slice(0, 6);
     poner(vista, 
       h("h1", {}, "Signos vitales de la economía salvadoreña"),
       h("p", { class: "bajada" }, "Los indicadores que publica el Banco Central de Reserva, puestos al día según su calendario de divulgación, y un resumen de noticias cada mañana."),
@@ -405,7 +405,7 @@
     if (!st.edicion || (st.edicion !== "todas" && !N.ediciones.includes(st.edicion))) st.edicion = N.cerradas[N.cerradas.length - 1] || N.ediciones[N.ediciones.length - 1];
     const q = st.texto.trim().toLowerCase();
     const filas = N.notas.filter((n) => (st.edicion === "todas" || n[0] === st.edicion) && (st.categoria < 0 || n[2] === st.categoria) &&
-      (!q || (n[4] + " " + n[5] + " " + n[3]).toLowerCase().includes(q))).sort((a, b) => a[2] - b[2] || (a[1] < b[1] ? 1 : -1));
+      (!q || (n[4] + " " + n[5] + " " + n[3]).toLowerCase().includes(q))).sort((a, b) => a[2] - b[2] || (b[7] || 0) - (a[7] || 0) || (a[1] < b[1] ? 1 : -1));
     const corteH = N.hora_de_corte || 7;
     const cuerpo = filas.length ? h("div", { class: "caja desliza" }, h("table", {}, h("thead", {}, h("tr", {}, h("th", {}, "Publicada"), h("th", {}, "Categoría"), h("th", { class: "oculta-movil" }, "Fuente"), h("th", {}, "Titular y extracto"))),
       h("tbody", {}, filas.map((n) => h("tr", {}, h("td", { class: "fijo" }, fechaCorta(n[1].slice(0, 10)).split(" ").slice(1).join(" ") + " " + n[1].slice(11)), h("td", {}, h("span", { class: "chip" }, N.categorias[n[2]])), h("td", { class: "oculta-movil" }, n[3]),
@@ -414,7 +414,7 @@
     buscar.addEventListener("input", () => { st.texto = buscar.value; paginaNoticias(); const b = document.getElementById("buscar"); b.focus(); b.setSelectionRange(b.value.length, b.value.length); });
     poner(vista, 
       h("h1", {}, "Resumen de noticias"),
-      h("p", { class: "bajada" }, "Cada mañana a las 7:15, los titulares de economía en cinco categorías. La edición de un día reúne lo publicado desde las " + corteH + ":00 del día anterior hasta las " + corteH + ":00 de ese día, hora de El Salvador. De cada nota hay solo titular, extracto y enlace a su medio."),
+      h("p", { class: "bajada" }, "Cada mañana a las 7:15, los titulares de economía en cinco categorías. La edición de un día reúne lo publicado desde las " + corteH + ":00 del día anterior hasta las " + corteH + ":00 de ese día, hora de El Salvador. Dentro de cada categoría van primero las notas de mercados, finanzas públicas y economía, que son las que entran en el reporte diario. De cada nota hay solo titular, extracto y enlace a su medio."),
       h("div", { class: "filtros" },
         h("label", { for: "edicion" }, "Edición"),
         h("select", { id: "edicion", onchange: (ev) => { st.edicion = ev.target.value; paginaNoticias(); } },

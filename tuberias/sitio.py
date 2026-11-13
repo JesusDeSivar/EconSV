@@ -130,7 +130,7 @@ def notas():
         noticias.excel(por[ed], carpeta / f"{ed}.xlsx", f"Resumen de noticias · edición del {ed}")
         (carpeta / f"{ed}.csv").write_text(noticias.texto_csv(noticias.COL_EDICION, por[ed]), encoding="utf-8-sig", newline="")
     filas = [[n["edicion"], n["fecha_hora"], noticias.CATEGORIAS.index(n["categoria"]), n["fuente"], n["titular"],
-              n["resumen"], n["url"]] for ed in recientes for n in por[ed]]
+              n["resumen"], n["url"], int(n["puntaje"])] for ed in recientes for n in por[ed]]
     return {"categorias": noticias.CATEGORIAS, "ediciones": recientes, "cerradas": [e for e in cerradas if e in recientes],
             "hora_de_corte": noticias.cfg()["general"]["hora_de_corte"], "notas": filas}
 

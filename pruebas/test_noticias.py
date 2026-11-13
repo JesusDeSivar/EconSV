@@ -46,6 +46,62 @@ class Reparto(unittest.TestCase):
         self.assertFalse(noticias.menciona_sv("el salvadorismo"))
 
 
+class Gusto(unittest.TestCase):
+    """El puntaje ordena, dentro de una categoría, lo que más se parece al reporte diario."""
+
+    def nota(self, categoria, titular, resumen="", fuente="Otra"):
+        return {"categoria": categoria, "titular": titular, "resumen": resumen, "fuente": fuente}
+
+    def test_lo_fiscal_de_el_mundo_va_primero(self):
+        a = noticias.puntaje(self.nota(FIS, "Ministro de Defensa pide presupuesto de $314.5 millones para el año 2027", fuente="Diario El Mundo"))
+        b = noticias.puntaje(self.nota(FIS, "Salinas Pliego dice que bitcoin es el mejor dinero"))
+        self.assertGreater(a, b + 5)
+
+    def test_el_titular_pesa_el_doble_que_el_extracto(self):
+        t = noticias.puntaje(self.nota(EUA, "La Fed sube las tasas"))
+        r = noticias.puntaje(self.nota(EUA, "Una decisión esperada", "La Fed sube las tasas"))
+        self.assertEqual(t, 2 * r)
+
+    def test_una_nota_de_servicio_baja(self):
+        noticia = noticias.puntaje(self.nota(NAC, "La inflación repunta a 3.91 % en octubre"))
+        servicio = noticias.puntaje(self.nota(NAC, "¿Cómo afecta la inflación a tu bolsillo?"))
+        self.assertGreater(noticia, servicio)
+        self.assertLess(noticias.puntaje(self.nota(EUA, "Requisitos para tramitar la visa de trabajo")), 0)
+
+    def test_cada_categoria_tiene_sus_listas(self):
+        for cat, g in noticias.cfg()["gusto"].items():
+            self.assertIn(cat, noticias.CATEGORIAS)
+            self.assertIn(g["prefiere"], noticias.cfg()["palabras"])
+            self.assertIn(g["evita"], noticias.cfg()["palabras"])
+        self.assertEqual(set(noticias.cfg()["gusto"]), set(noticias.CATEGORIAS))
+
+
+class ElMundo(unittest.TestCase):
+    PORTADA = '''<article> <div class="article-image"><a href="https://diario.elmundo.sv/economia/nota-uno" title="x"></a></div>
+      <div class="article-details"><div class="article-title"><a href="https://diario.elmundo.sv/economia/nota-uno"
+      title="La inflaci&oacute;n repunta a 3.91 %">La inflación repunta a 3.91 %</a></div>
+      <div class="article-date"> lunes 9, noviembre 2026 - 4:50 a. m. </div></div></article>
+      <article><div class="article-title"><a href="https://diario.elmundo.sv/economia/nota-dos" title="Otra nota">Otra nota</a></div>
+      <div class="article-date"> jueves 12, noviembre 2026 - 12:07 p. m. </div></article>'''
+
+    def test_la_portada_da_enlace_titular_y_fecha(self):
+        notas = noticias.portada_elmundo(self.PORTADA)
+        self.assertEqual([(u.rsplit("/", 1)[1], t) for u, t, _ in notas], [("nota-uno", "La inflación repunta a 3.91 %"), ("nota-dos", "Otra nota")])
+        self.assertEqual(notas[0][2].strftime("%Y-%m-%d %H:%M"), "2026-11-09 04:50")
+        self.assertEqual(notas[1][2].strftime("%Y-%m-%d %H:%M"), "2026-11-12 12:07")
+
+    def test_fechas(self):
+        self.assertEqual(noticias.fecha_elmundo("jueves 12, noviembre 2026 - 5:47 p. m.").hour, 17)
+        self.assertEqual(noticias.fecha_elmundo("jueves 12, noviembre 2026 - 12:30 a. m.").hour, 0)
+        self.assertIsNone(noticias.fecha_elmundo("ayer"))
+
+    def test_meta(self):
+        pagina = '<meta property="og:description" content="El BCR inform&oacute; el dato."><meta content="2026-11-12T17:47:21-06:00" property="article:published_time">'
+        self.assertEqual(noticias.meta(pagina, "og:description"), "El BCR informó el dato.")
+        self.assertEqual(noticias.fecha_de(noticias.meta(pagina, "article:published_time")).hour, 17)
+        self.assertEqual(noticias.meta(pagina, "no-esta"), "")
+
+
 class Limpieza(unittest.TestCase):
     def test_extracto_sin_html_y_cortado(self):
         self.assertEqual(noticias.extracto("<p>Hola&nbsp;<b>mundo</b> &amp; más</p>"), "Hola mundo & más")
@@ -73,7 +129,7 @@ class Limpieza(unittest.TestCase):
     def test_las_fuentes_del_catalogo_tienen_categoria_valida(self):
         for f in noticias.cfg()["fuente"]:
             self.assertIn(f["categoria"], noticias.CATEGORIAS, f["clave"])
-            self.assertIn(f["metodo"], {"rss", "wp_api", "gnews"}, f["clave"])
+            self.assertIn(f["metodo"], {"rss", "wp_api", "gnews", "elmundo"}, f["clave"])
             if f.get("exige"):
                 self.assertIn(f["exige"], noticias.cfg()["palabras"])
 
