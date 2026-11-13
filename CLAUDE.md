@@ -72,20 +72,36 @@ explicitly authorised that task to push **data commits under `lago/`** to `main`
 else. If you are that session:
 
 1. Start from the tip of `main`: `git fetch origin main && git checkout -B datos-bcr origin/main`.
-2. `pip install -r requirements.txt` if the imports fail, then `python tuberias/actualizar.py`
-   (on Sundays `python tuberias/actualizar.py --todo`, which refetches all 18 series to catch revisions).
-3. Read its exit code. **0**: everything due arrived and the gate passed. **2**: the gate passed but
+2. Check write access once, before the work: `git push --dry-run origin HEAD:main` changes nothing and
+   says whether this session may push. Quote its answer in the summary. On 2026-11-13 the task's
+   sessions started with no repository attached (they clone because the repo is public), so a refusal
+   here means the owner still has to give the task access to the repository.
+3. `python -m pip install -r requirements.txt` (not bare `pip`: in that environment `pip` installs for
+   another Python than `python`), then `python tuberias/actualizar.py` (on Sundays
+   `python tuberias/actualizar.py --todo`, which refetches all 18 series to catch revisions).
+4. Read its exit code. **0**: everything due arrived and the gate passed. **2**: the gate passed but
    the calendar or a series did not answer — keep what did arrive and say which did not. **Anything
    else**: the gate failed — commit nothing, and report the failing check.
-4. If the gate passed and `git status --short lago` shows changes: `git add lago`,
+5. If the gate passed and `git status --short lago` shows changes: `git add lago`,
    `git commit -m "Datos del BCR: <series that changed>"`, `git pull --rebase origin main`,
    `git push origin HEAD:main`. If nothing changed, push nothing. GitHub publishes the site when
    `lago/` changes on `main`.
-5. In that run never edit code, catalogue, tests or workflows; never use `--aceptar-menos`; never
+6. In that run never edit code, catalogue, tests or workflows; never use `--aceptar-menos`; never
    work around a block or a 403. If the reader needs a fix because the BCR changed its portal, stop and
    say what broke and where — the owner decides.
-6. End with a short summary in Spanish: what was due, what arrived (series and period), how many
+7. End with a short summary in Spanish: what the dry-run answered, what was due, what arrived (series and period), how many
    revisions were logged in `lago/plata/revisiones.csv`, and what is still pending.
+
+## What reads the gold layer from outside
+
+`lago/oro/indicadores.csv` and `lago/oro/indicadores_catalogo.csv` are read straight from `main` by
+the Apps Script in `integraciones/google_sheets/` (through raw.githubusercontent.com), and people keep
+that script pasted in their own spreadsheets. So the column names of those two files, of
+`lago/plata/calendario.csv` and of `lago/oro/noticias/<day>.csv` are a contract: add columns at the
+end if you must, never rename or reorder them without changing `EconSV.gs` and saying so.
+`node pruebas/prueba_sheets.js` runs that script against the lake in the repo with a strict stand-in
+for the sheet. Text that comes from outside (headlines, names) must land in columns set to plain text
+before writing, so nothing fetched can run as a formula.
 
 ## Schedules
 

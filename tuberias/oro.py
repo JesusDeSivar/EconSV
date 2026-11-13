@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """De plata a oro: lo que EconSV calcula sobre las cifras del BCR.
 
-    python tuberias/oro.py            escribe lago/oro/indicadores.csv
+    python tuberias/oro.py            escribe lago/oro/indicadores.csv y su catálogo
     python tuberias/oro.py --check    sin escribir: falla si oro no es lo que da plata
 
 Lee catalogo/indicadores.toml y, para cada línea de cada indicador, calcula sus vistas:
@@ -15,6 +15,11 @@ Lee catalogo/indicadores.toml y, para cada línea de cada indicador, calcula sus
 
 Todo sale de una sola cuenta, la del BCR: ninguna vista mezcla otra fuente. Columnas:
 indicador, linea, vista, fecha, periodo, valor.
+
+lago/oro/indicadores_catalogo.csv dice qué es cada serie de esa tabla, una fila por (indicador, línea,
+vista): su título, sección, frecuencia y unidad de la vista, de qué variable del BCR sale, el tramo
+que cubre y su último valor. Es lo que necesita quien lee oro desde fuera (una hoja de cálculo, R,
+Python) para rotular sin abrir catalogo/indicadores.toml.
 """
 import argparse
 import csv
@@ -28,6 +33,8 @@ import rutas  # noqa: E402
 
 PASO = {"M": 12, "T": 4, "A": 1}
 COLUMNAS = ["indicador", "linea", "vista", "fecha", "periodo", "valor"]
+COL_CATALOGO = ["indicador", "linea", "vista", "seccion", "titulo", "frecuencia", "unidad", "naturaleza", "tipo",
+                "serie_bcr", "variable_id", "desde", "hasta", "ultimo_valor", "nota"]
 PIB_TRIMESTRAL = ("pib_trimestral", 17322)          # PIB nominal trimestral, enfoque de la producción
 IMPORTACIONES = ("balanza_comercial", 8628)         # importaciones de mercancías, CIF
 VISTAS = ["nivel", "var_anual", "var_periodo", "suma_anual", "pct_pib", "meses_importacion"]
@@ -123,6 +130,23 @@ def meses_importacion(v, fr, imp12):
     return {k: x / (imp12[k] / 12) for k, x in v.items() if imp12.get(k)}
 
 
+def unidad_de(ind, vista, fr):
+    """La unidad en que queda una vista."""
+    if vista in ("var_anual", "var_periodo"):
+        return "%"
+    if vista == "pct_pib":
+        return "% del PIB"
+    if vista == "meses_importacion":
+        return "Meses de importación de mercancías"
+    if vista == "suma_anual":
+        return ind["unidad"] + (", suma de 12 meses" if fr == "M" else ", suma de 4 trimestres")
+    return ind["unidad"]
+
+
+def cifra(x):
+    return f"{x:.4f}".rstrip("0").rstrip(".")
+
+
 def norma(x):
     return re.sub(r"[^a-z0-9]+", "", x.lower())
 
@@ -133,7 +157,7 @@ def construir():
     pib4 = suma_anual(pib, "T")
     _, imp = plata.valores(*IMPORTACIONES)
     imp12 = suma_anual(imp, "M")
-    filas, vistos = [], set()
+    filas, cat, vistos = [], [], set()
     for ind in rutas.catalogo("indicadores")["indicador"]:
         if ind["clave"] in vistos:
             raise SystemExit(f"oro: el indicador «{ind['clave']}» está dos veces en el catálogo")
@@ -169,10 +193,20 @@ def construir():
                     r = meses_importacion(v, fr, imp12)
                 for (a, sub) in sorted(r):
                     filas.append([ind["clave"], linea["nombre"], vista, fecha(a, sub, frv), etiqueta(a, sub, frv),
-                                  f"{r[(a, sub)]:.4f}".rstrip("0").rstrip(".")])
+                                  cifra(r[(a, sub)])])
+                if r:
+                    k0, k1 = min(r), max(r)
+                    cat.append([ind["clave"], linea["nombre"], vista, ind["seccion"], ind["titulo"], frv,
+                                unidad_de(ind, vista, fr), ind["naturaleza"], ind.get("tipo", "lineas"),
+                                linea["serie"], linea["id"], etiqueta(*k0, frv), etiqueta(*k1, frv), cifra(r[k1]),
+                                ind.get("nota", "")])
+    return texto_csv(COLUMNAS, filas), texto_csv(COL_CATALOGO, cat)
+
+
+def texto_csv(columnas, filas):
     buf = io.StringIO()
     w = csv.writer(buf, lineterminator="\n")
-    w.writerow(COLUMNAS)
+    w.writerow(columnas)
     w.writerows(filas)
     return buf.getvalue()
 
@@ -181,16 +215,22 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--check", action="store_true")
     args = ap.parse_args()
-    texto = construir()
-    destino = rutas.ORO / "indicadores.csv"
-    igual = destino.exists() and destino.read_text(encoding="utf-8") == texto
+    viejos = 0
+    for nombre, texto in zip(("indicadores.csv", "indicadores_catalogo.csv"), construir()):
+        destino = rutas.ORO / nombre
+        igual = destino.exists() and destino.read_text(encoding="utf-8") == texto
+        if args.check:
+            if not igual:
+                print(f"  {rutas.rel(destino)} no es lo que da plata")
+                viejos += 1
+            continue
+        if not igual:
+            rutas.ORO.mkdir(parents=True, exist_ok=True)
+            destino.write_text(texto, encoding="utf-8", newline="")
+        print(f"  {rutas.rel(destino)}: {texto.count(chr(10)) - 1} filas{'' if not igual else ' (sin cambios)'}")
     if args.check:
-        print(f"oro --check: {'al día' if igual else rutas.rel(destino) + ' no es lo que da plata'}")
-        sys.exit(0 if igual else 1)
-    if not igual:
-        rutas.ORO.mkdir(parents=True, exist_ok=True)
-        destino.write_text(texto, encoding="utf-8", newline="")
-    print(f"  {rutas.rel(destino)}: {texto.count(chr(10)) - 1} filas{'' if not igual else ' (sin cambios)'}")
+        print(f"oro --check: {'al día' if not viejos else str(viejos) + ' archivos por reconstruir'}")
+        sys.exit(1 if viejos else 0)
 
 
 if __name__ == "__main__":

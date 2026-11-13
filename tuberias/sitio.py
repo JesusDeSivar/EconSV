@@ -86,6 +86,7 @@ def descargas():
     carpeta = DATOS / "descargas"
     carpeta.mkdir(parents=True, exist_ok=True)
     shutil.copy(rutas.ORO / "indicadores.csv", carpeta / "indicadores.csv")
+    shutil.copy(rutas.ORO / "indicadores_catalogo.csv", carpeta / "indicadores_catalogo.csv")
     shutil.copy(rutas.PLATA / "bcr_variables.csv", carpeta / "bcr_variables.csv")
     with open(rutas.PLATA / "bcr_variables.csv", encoding="utf-8", newline="") as fh:
         dic = list(csv.DictReader(fh))

@@ -28,3 +28,5 @@ jobs:
         run: |
           python tuberias/sitio.py
           node --check sitio/app.js
+      - name: El script de Google Sheets, con el lago del repositorio
+        run: node pruebas/prueba_sheets.js

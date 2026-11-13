@@ -439,7 +439,11 @@
           h("td", { class: "fijo" }, h("a", { href: "datos/descargas/bcr_" + k + ".csv", download: true }, "CSV"), " · ", h("a", { href: "datos/descargas/bcr_" + k + ".xlsx", download: true }, "Excel"))))))),
       h("h2", {}, "Lo que calcula EconSV"),
       h("p", { class: "bajada" }, h("a", { href: "datos/descargas/indicadores.csv", download: true }, "indicadores.csv"), " tiene cada gráfica de este sitio con todas sus vistas: nivel, variación anual y del período, suma de 12 meses o 4 trimestres, porcentaje del PIB y meses de importación. ",
+        h("a", { href: "datos/descargas/indicadores_catalogo.csv", download: true }, "indicadores_catalogo.csv"), " dice qué es cada serie de esa tabla: título, unidad, frecuencia y último valor. ",
         h("a", { href: "datos/descargas/bcr_variables.csv", download: true }, "bcr_variables.csv"), " es el diccionario de las variables del BCR."),
+      h("h2", {}, "En Google Sheets"),
+      h("p", { class: "bajada" }, "Un script de Apps Script trae todo esto a una hoja de cálculo y la mantiene al día: una hoja mensual, una trimestral y una anual con una columna por serie, la tabla larga, el diccionario, el calendario y las noticias. ",
+        h("a", { href: "https://github.com/JesusDeSivar/EconSV/tree/main/integraciones/google_sheets", rel: "noopener" }, "Cómo instalarlo"), "."),
       h("h2", {}, "Cómo se arma"),
       h("p", { class: "bajada" }, "Tres capas. Bronce guarda lo que el portal del BCR sirve, con su huella sha256. Plata lo ordena en tablas sin calcular nada, y anota cada cifra que el BCR revisa. Oro es lo que este sitio calcula. Antes de publicar, una compuerta revisa que las sumas que el propio BCR imprime cuadren y que ninguna serie tenga huecos."));
   }

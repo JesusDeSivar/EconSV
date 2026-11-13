@@ -20,6 +20,9 @@ Estados Unidos.
 | Noticias | Tabla diaria en cinco categorías, descargable en CSV y Excel |
 | Datos | Cada serie del BCR completa, en CSV y Excel |
 
+**En Google Sheets.** [`integraciones/google_sheets`](integraciones/google_sheets) tiene un script de
+Apps Script que trae la capa oro a una hoja de cálculo y la mantiene al día.
+
 Cada gráfica ofrece varias vistas (nivel, variación anual o del período, suma de 12 meses o 4
 trimestres, % del PIB), su tabla y su descarga.
 
@@ -70,7 +73,7 @@ catalogo/indicadores.toml       las gráficas del sitio: qué variable, qué vis
 catalogo/noticias_fuentes.toml  los feeds, sus categorías y las palabras del reparto
 lago/bronce/                    lo que sirve el BCR, sin tocar, con su sha256 (fuentes.lock.json)
 lago/plata/                     lo mismo en tablas largas; calendario, noticias y bitácora de revisiones
-lago/oro/                       lo que EconSV calcula: indicadores.csv y la edición diaria de noticias
+lago/oro/                       lo que EconSV calcula: indicadores.csv, su catálogo y la edición diaria de noticias
 tuberias/bcr.py                 el lector del portal del BCR (HTTP, sin navegador)
 tuberias/traer.py               bronce: bcr | calendario | noticias | verificar
 tuberias/plata.py · oro.py      construyen cada capa (--check dice si están al día)
@@ -80,7 +83,8 @@ tuberias/noticias.py            feeds → categorías → ediciones
 tuberias/verificar.py           la compuerta
 tuberias/sitio.py               el lago → sitio/datos/
 sitio/                          index.html, app.js, estilo.css (sin bibliotecas externas)
-pruebas/                        pruebas sin red
+integraciones/google_sheets/    el script de Apps Script que lleva la capa oro a Google Sheets
+pruebas/                        pruebas sin red (Python) y prueba_sheets.js (Node) para ese script
 ```
 
 Reglas que sostienen las cifras:
@@ -113,6 +117,7 @@ python tuberias/plata.py && python tuberias/oro.py
 python tuberias/noticias.py                   # el resumen de noticias
 python tuberias/verificar.py                  # la compuerta
 python -m unittest discover -s pruebas        # pruebas sin red
+node pruebas/prueba_sheets.js                 # el script de Google Sheets, con el lago del repositorio
 
 python tuberias/sitio.py                      # arma sitio/datos/
 python -m http.server --directory sitio 8000  # y se ve en http://localhost:8000

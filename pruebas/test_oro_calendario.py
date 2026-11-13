@@ -50,6 +50,32 @@ class Oro(unittest.TestCase):
                 self.assertTrue(set(linea.get("vistas", [])) <= set(ind["vistas"]))
 
 
+class Catalogo(unittest.TestCase):
+    """lago/oro/indicadores_catalogo.csv describe exactamente las series de indicadores.csv."""
+
+    def test_una_fila_por_serie_y_su_ultimo_valor(self):
+        import csv
+        with open(rutas.ORO / "indicadores.csv", encoding="utf-8", newline="") as fh:
+            ultimo = {(r["indicador"], r["linea"], r["vista"]): (r["periodo"], r["valor"]) for r in csv.DictReader(fh)}
+        with open(rutas.ORO / "indicadores_catalogo.csv", encoding="utf-8", newline="") as fh:
+            cat = list(csv.DictReader(fh))
+        self.assertEqual(list(cat[0])[:3], ["indicador", "linea", "vista"])
+        self.assertEqual({(r["indicador"], r["linea"], r["vista"]) for r in cat}, set(ultimo))
+        self.assertEqual(len(cat), len(ultimo))
+        for r in cat:
+            self.assertEqual((r["hasta"], r["ultimo_valor"]), ultimo[(r["indicador"], r["linea"], r["vista"])])
+            self.assertIn(r["frecuencia"], {"M", "T", "A"})
+            self.assertTrue(r["titulo"] and r["unidad"])
+
+    def test_unidad_de_cada_vista(self):
+        ind = {"unidad": "Millones de US$"}
+        self.assertEqual(oro.unidad_de(ind, "var_anual", "M"), "%")
+        self.assertEqual(oro.unidad_de(ind, "pct_pib", "T"), "% del PIB")
+        self.assertEqual(oro.unidad_de(ind, "suma_anual", "M"), "Millones de US$, suma de 12 meses")
+        self.assertEqual(oro.unidad_de(ind, "suma_anual", "T"), "Millones de US$, suma de 4 trimestres")
+        self.assertEqual(oro.unidad_de(ind, "nivel", "M"), "Millones de US$")
+
+
 class Calendario(unittest.TestCase):
     def setUp(self):
         self._orig = (calendario.leer_bronce, calendario.cortes, rutas.series)
