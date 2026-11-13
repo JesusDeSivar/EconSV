@@ -44,7 +44,7 @@ const VISTAS = {
 // ------------------------------------------------------------------ menú y órdenes
 
 function onOpen() {
-  SpreadsheetApp.getUi().createMenu("EconSV")
+  const menu = SpreadsheetApp.getUi().createMenu("EconSV")
     .addItem("Actualizar todo", "actualizarTodo")
     .addSeparator()
     .addItem("Solo indicadores", "actualizarIndicadores")
@@ -52,8 +52,14 @@ function onOpen() {
     .addItem("Solo noticias", "actualizarNoticias")
     .addSeparator()
     .addItem("Programar actualización automática", "programarActualizacion")
-    .addItem("Quitar actualización automática", "quitarActualizacion")
-    .addToUi();
+    .addItem("Quitar actualización automática", "quitarActualizacion");
+  // Otro archivo del mismo proyecto puede sumar entradas al menú declarando
+  // const MENU_EXTRA = [["Texto de la entrada", "nombreDeLaFuncion"], ...];
+  if (typeof MENU_EXTRA !== "undefined" && MENU_EXTRA.length) {
+    menu.addSeparator();
+    MENU_EXTRA.forEach(function (e) { menu.addItem(e[0], e[1]); });
+  }
+  menu.addToUi();
 }
 
 /** Trae todo. Es también lo que corre la actualización automática. */
