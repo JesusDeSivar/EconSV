@@ -12,7 +12,8 @@ Qué revisa:
               catalogo/indicadores.toml siga llamándose como el catálogo espera
   calendario  cada serie tiene un próximo período con fecha esperada
   noticias    categorías válidas, sin texto largo, y ninguna nota que mencione El Salvador en una
-              categoría internacional
+              categoría internacional; ningún medio de
+              [medios] fuera, y `orden` de 1 en adelante en cada (edición, categoría)
 
 Las cifras del BCR vienen redondeadas, así que una suma de n de ellas puede diferir medio último
 decimal por cada una solo por redondeo: la tolerancia de una identidad es (n + 1) medios decimales.
@@ -139,6 +140,15 @@ def main():
              not (mal_cat or largas or sv),
              f"{len(notas)} notas" if not (mal_cat or largas or sv)
              else f"{len(mal_cat)} sin categoría válida, {len(largas)} extractos largos, {len(sv)} salvadoreñas en internacional")
+        vetadas = sorted({r["fuente"] for r in notas if noticias.fuera(r["fuente"])})
+        lugares = {}
+        for r in notas:
+            lugares.setdefault((r["edicion"], r["categoria"]), []).append(int(r.get("orden") or 0))
+        mal_orden = [f"{ed} {cat}" for (ed, cat), ls in lugares.items() if sorted(ls) != list(range(1, len(ls) + 1))]
+        paso("noticias: ningún medio de los que no entran, y cada subsección numerada de 1 en adelante",
+             not (vetadas or mal_orden),
+             f"{len(lugares)} subsecciones" if not (vetadas or mal_orden)
+             else "; ".join(filter(None, [", ".join(vetadas), "orden roto en " + ", ".join(mal_orden[:4]) if mal_orden else ""])))
 
     print(f"\n{n - len(fallas)} de {n} revisiones pasan" + ("" if not fallas else "; fallan: " + "; ".join(fallas)))
     sys.exit(1 if fallas else 0)

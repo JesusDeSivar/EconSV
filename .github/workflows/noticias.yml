@@ -1,9 +1,17 @@
-# El resumen de noticias de cada mañana. GitHub puede arrancar un cron con algunos minutos de atraso.
+# El resumen de noticias de cada mañana.
+#
+# GitHub no garantiza la hora de un cron: el 13 de noviembre de 2026 el de las 7:15 no llegó a salir, y
+# el único que había salido en este repositorio (el de datos) llegó 4 h 26 min tarde. Por eso hay
+# varios intentos. El primero que llega después de las 7:00 hace el trabajo; los demás ven que la
+# edición del día ya está guardada y terminan en segundos. Disparado a mano corre siempre.
 name: Noticias
 
 on:
-  schedule:
-    - cron: "15 13 * * *"        # 7:15 AM en El Salvador (UTC−6, sin horario de verano), todos los días
+  schedule:                      # El Salvador es UTC−6 todo el año, sin horario de verano
+    - cron: "7 13 * * *"         # 7:07 AM
+    - cron: "37 13 * * *"        # 7:37 AM
+    - cron: "17 14 * * *"        # 8:17 AM
+    - cron: "17 16 * * *"        # 10:17 AM
   workflow_dispatch:
 
 permissions:
@@ -19,18 +27,34 @@ jobs:
   noticias:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    outputs:
+      hecha: ${{ steps.hecha.outputs.si }}
     steps:
       - uses: actions/checkout@v5
+      - name: ¿Ya está la edición de hoy?
+        id: hecha
+        if: github.event_name == 'schedule'
+        run: |
+          hoy=$(TZ=America/El_Salvador date +%F)
+          if [ -f "lago/oro/noticias/$hoy.csv" ]; then
+            echo "La edición del $hoy ya está guardada: este intento de respaldo no hace nada."
+            echo "si=1" >> "$GITHUB_OUTPUT"
+          fi
       - uses: actions/setup-python@v6
+        if: steps.hecha.outputs.si != '1'
         with:
           python-version: "3.12"
           cache: pip
-      - run: pip install -r requirements.txt
+      - if: steps.hecha.outputs.si != '1'
+        run: pip install -r requirements.txt
       - name: Leer los feeds y repartir en categorías
+        if: steps.hecha.outputs.si != '1'
         run: python tuberias/noticias.py
       - name: Compuerta
+        if: steps.hecha.outputs.si != '1'
         run: python tuberias/verificar.py
       - name: Guardar en el repositorio
+        if: steps.hecha.outputs.si != '1'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -45,4 +69,5 @@ jobs:
 
   sitio:
     needs: noticias
+    if: needs.noticias.outputs.hecha != '1'
     uses: ./.github/workflows/pages.yml

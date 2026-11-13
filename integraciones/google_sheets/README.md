@@ -30,7 +30,7 @@ contenido.
 | **Oro** | La tabla larga tal como está en el lago: `indicador`, `linea`, `vista`, `fecha`, `periodo`, `valor`. Para tablas dinámicas y `QUERY`. |
 | **Diccionario** | Qué es cada serie: título, unidad, frecuencia, de qué variable del BCR sale, qué tramo cubre, su último valor, y en qué hoja y columna está. |
 | **Calendario** | Cuándo se espera el próximo dato de cada serie. |
-| **Noticias** | Las ediciones de los últimos siete días del resumen de noticias: categoría, fuente, titular, extracto, enlace y relevancia. |
+| **Noticias** | Las ediciones de los últimos siete días del resumen de noticias: categoría, fuente, titular, extracto, enlace, relevancia, tema y orden (el lugar de cada nota dentro de su categoría). |
 | **EconSV** | Cuándo se actualizó y qué llegó. |
 
 Cada serie viene en varias vistas, y cada vista es una columna: `nivel` (la cifra del BCR),

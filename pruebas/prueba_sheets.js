@@ -200,6 +200,10 @@ prueba("Calendario y Noticias", () => {
   assert.strictEqual(nt.length - 1, esperadas);
   assert.strictEqual(nt[1][0], e.ultimaEdicion, "la edición más nueva va arriba");
   assert(nt.slice(1).every((x) => /^https?:\/\//.test(x[6])), "una nota sin enlace");
+  assert.deepStrictEqual(Array.from(nt[0]).slice(7), ["Relevancia", "Tema", "Orden"]);
+  const fiscales = nt.slice(1).filter((x) => x[0] === e.ultimaEdicion && x[2] === "El Salvador – Fiscales");
+  assert(fiscales.length && fiscales.every((x, i) => x[9] === i + 1), "Fiscales no viene numerada 1, 2, 3… en «Orden»");
+  assert(fiscales.every((x) => typeof x[8] === "string" && x[8]), "una nota fiscal sin tema");
 });
 
 prueba("la hoja de estado y el aviso", () => {
@@ -240,7 +244,8 @@ prueba("un titular que parece fórmula se escribe como texto", () => {
   x.ctx.actualizarNoticias();                  // el doble de la hoja falla si esa cadena cae en una columna que no es de texto
   const fila = x.hojas.Noticias.valores.find((f) => f[4].startsWith("=IMPORTXML"));
   assert(fila && fila[5] === "+503 2222-0000" && fila[7] === 7);
-  assert.deepStrictEqual(Object.keys(x.hojas.Noticias.texto).map(Number), [1, 2, 3, 4, 5, 6, 7]);
+  assert(fila[8] === "" && fila[9] === "", "una edición sin `tema` ni `orden` deja esas dos celdas vacías");
+  assert.deepStrictEqual(Object.keys(x.hojas.Noticias.texto).map(Number), [1, 2, 3, 4, 5, 6, 7, 9]);
 });
 
 prueba("programar y quitar la actualización automática", () => {

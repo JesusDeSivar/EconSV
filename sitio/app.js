@@ -405,16 +405,27 @@
     if (!st.edicion || (st.edicion !== "todas" && !N.ediciones.includes(st.edicion))) st.edicion = N.cerradas[N.cerradas.length - 1] || N.ediciones[N.ediciones.length - 1];
     const q = st.texto.trim().toLowerCase();
     const filas = N.notas.filter((n) => (st.edicion === "todas" || n[0] === st.edicion) && (st.categoria < 0 || n[2] === st.categoria) &&
-      (!q || (n[4] + " " + n[5] + " " + n[3]).toLowerCase().includes(q))).sort((a, b) => a[2] - b[2] || (b[7] || 0) - (a[7] || 0) || (a[1] < b[1] ? 1 : -1));
+      (!q || (n[4] + " " + n[5] + " " + n[3]).toLowerCase().includes(q))).sort((a, b) => (a[0] < b[0] ? 1 : a[0] > b[0] ? -1 : 0) || a[2] - b[2] || (a[8] || 1e6) - (b[8] || 1e6) || (b[7] || 0) - (a[7] || 0) || (a[1] < b[1] ? 1 : -1));
+    // En cada categoría van arriba las notas principales (puntaje sobre 0); las nacionales, bajo el
+    // subtítulo de su tema. El resto —la misma historia en otro medio, otras fuentes— va bajo «Más notas».
+    const renglones = [];
+    let grupo = "", subtitulo = "";
+    filas.forEach((n) => {
+      const g = n[0] + "|" + n[2], sub = (n[7] || 0) > 0 ? n[9] || "" : "Más notas";
+      if (g !== grupo) { grupo = g; subtitulo = ""; }
+      if (sub && sub !== subtitulo) renglones.push(h("tr", { class: "grupo" }, h("th", { colspan: 4, scope: "colgroup" }, sub === "Más notas" ? "Más notas: la misma historia en otro medio y otras fuentes" : sub)));
+      subtitulo = sub;
+      renglones.push(h("tr", {}, h("td", { class: "fijo" }, fechaCorta(n[1].slice(0, 10)).split(" ").slice(1).join(" ") + " " + n[1].slice(11)), h("td", {}, h("span", { class: "chip" }, N.categorias[n[2]])), h("td", { class: "oculta-movil" }, n[3]),
+        h("td", {}, h("a", { class: "titular", href: n[6], rel: "noopener" }, n[4]), n[5] ? h("span", { class: "resumen" }, n[5]) : null)));
+    });
     const corteH = N.hora_de_corte || 7;
     const cuerpo = filas.length ? h("div", { class: "caja desliza" }, h("table", {}, h("thead", {}, h("tr", {}, h("th", {}, "Publicada"), h("th", {}, "Categoría"), h("th", { class: "oculta-movil" }, "Fuente"), h("th", {}, "Titular y extracto"))),
-      h("tbody", {}, filas.map((n) => h("tr", {}, h("td", { class: "fijo" }, fechaCorta(n[1].slice(0, 10)).split(" ").slice(1).join(" ") + " " + n[1].slice(11)), h("td", {}, h("span", { class: "chip" }, N.categorias[n[2]])), h("td", { class: "oculta-movil" }, n[3]),
-        h("td", {}, h("a", { class: "titular", href: n[6], rel: "noopener" }, n[4]), n[5] ? h("span", { class: "resumen" }, n[5]) : null)))))) : h("p", { class: "vacio" }, "Ninguna nota con ese filtro.");
+      h("tbody", {}, renglones))) : h("p", { class: "vacio" }, "Ninguna nota con ese filtro.");
     const buscar = h("input", { type: "search", id: "buscar", placeholder: "Buscar en titulares", value: st.texto, "aria-label": "Buscar en titulares" });
     buscar.addEventListener("input", () => { st.texto = buscar.value; paginaNoticias(); const b = document.getElementById("buscar"); b.focus(); b.setSelectionRange(b.value.length, b.value.length); });
     poner(vista, 
       h("h1", {}, "Resumen de noticias"),
-      h("p", { class: "bajada" }, "Cada mañana a las 7:15, los titulares de economía en cinco categorías. La edición de un día reúne lo publicado desde las " + corteH + ":00 del día anterior hasta las " + corteH + ":00 de ese día, hora de El Salvador. Dentro de cada categoría van primero las notas de mercados, finanzas públicas y economía, que son las que entran en el reporte diario. De cada nota hay solo titular, extracto y enlace a su medio."),
+      h("p", { class: "bajada" }, "Cada mañana, poco después de las 7:00, los titulares de economía en cinco categorías. La edición de un día reúne lo publicado desde las " + corteH + ":00 del día anterior hasta las " + corteH + ":00 de ese día, hora de El Salvador. En las dos categorías de El Salvador las notas van por tema: en Fiscales, combustibles, deuda pública, presupuesto y otra materia fiscal; en Nacionales, sector real, externo, monetario, turismo, agricultura y otros. De una misma historia queda arriba la del medio que más pesa. De cada nota hay solo titular, extracto y enlace a su medio."),
       h("div", { class: "filtros" },
         h("label", { for: "edicion" }, "Edición"),
         h("select", { id: "edicion", onchange: (ev) => { st.edicion = ev.target.value; paginaNoticias(); } },
@@ -423,7 +434,7 @@
           h("button", { type: "button", "aria-pressed": String(st.categoria === i), onclick: () => { st.categoria = i; paginaNoticias(); } }, c))),
         buscar),
       h("div", { class: "filtros" },
-        h("button", { class: "boton", type: "button", onclick: () => descargar("noticias_" + st.edicion + ".csv", [["fecha_hora", "categoria", "fuente", "titular", "resumen", "url"]].concat(filas.map((n) => [n[1].replace("T", " "), N.categorias[n[2]], n[3], n[4], n[5], n[6]]))) }, "Descargar esta tabla (CSV)"),
+        h("button", { class: "boton", type: "button", onclick: () => descargar("noticias_" + st.edicion + ".csv", [["fecha_hora", "categoria", "tema", "fuente", "titular", "resumen", "url"]].concat(filas.map((n) => [n[1].replace("T", " "), N.categorias[n[2]], n[9] || "", n[3], n[4], n[5], n[6]]))) }, "Descargar esta tabla (CSV)"),
         st.edicion !== "todas" ? h("a", { class: "boton", href: "datos/noticias/" + st.edicion + ".xlsx", download: true }, "Descargar la edición (Excel)") : null,
         h("span", { class: "cuenta" }, filas.length + (filas.length === 1 ? " nota" : " notas"))),
       cuerpo);

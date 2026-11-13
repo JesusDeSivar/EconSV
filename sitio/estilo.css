@@ -140,6 +140,7 @@ td { padding: 9px 12px; border-bottom: 1px solid var(--rejilla); vertical-align:
 tr:last-child td { border-bottom: 0; }
 td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
 td.fijo { white-space: nowrap; }
+tr.grupo th { background: var(--lavado); color: var(--tinta); font-size: 13px; padding: 7px 12px; border-bottom: 1px solid var(--rejilla); white-space: normal; }
 .tabla-vista { max-height: 280px; overflow: auto; margin-top: 8px; border: 1px solid var(--rejilla); border-radius: 8px; }
 .tabla-vista th { position: sticky; top: 0; }
 .tabla-vista td, .tabla-vista th { padding: 6px 10px; font-size: 13px; }

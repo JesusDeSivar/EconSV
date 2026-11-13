@@ -3,6 +3,8 @@
 
     python tuberias/noticias.py                       trae los feeds y actualiza el lago
     python tuberias/noticias.py --seco                los trae y muestra el reparto, sin escribir
+    python tuberias/noticias.py --sin-red             no lee ningún feed: vuelve a pasar la base por el catálogo
+                                                      (después de cambiar una lista, un peso o un tema)
     python tuberias/noticias.py excel                 escribe el Excel de la última edición
     python tuberias/noticias.py excel --edicion 2026-11-12 --destino resumen.xlsx
 
@@ -10,11 +12,16 @@ Las fuentes y las palabras están en catalogo/noticias_fuentes.toml. De cada not
 su medio publica en su feed —titular, extracto, fecha y enlace—, nunca el texto completo.
 
   lago/plata/noticias.csv            todas las notas de los últimos `conservar_dias`, una por fila
-                                     (`puntaje`: cuánto se parece la nota a lo que el dueño pone en sus
-                                     reportes; sale de las listas [gusto] del catálogo y se recalcula entero
-                                     en cada corrida, así que cambiar una lista cambia todos los puntajes)
   lago/oro/noticias/AAAA-MM-DD.csv   la edición de cada día: lo publicado de las 7:00 del día anterior
                                      a las 7:00 de ese día (hora de El Salvador), ordenado por categoría
+
+Tres columnas dicen la prioridad de cada nota, y se recalculan enteras en cada corrida (dependen del
+catálogo, de las otras notas de su edición y del calendario del BCR, no de cuándo entró la nota):
+
+  puntaje   cuánto merece estar entre las elegidas de su subsección (palabras, peso del medio, dato del
+            BCR recién publicado); 0 o menos si repite una historia que ya trae un medio de más peso
+  tema      en las dos subsecciones nacionales, su tema («Deuda pública», «Sector externo»…)
+  orden     su lugar en la subsección: 1 es la primera. El sitio y la hoja de Google ordenan por aquí
 
 Una noticia es contexto, nunca la fuente de una cifra.
 """
@@ -41,8 +48,12 @@ import rutas  # noqa: E402
 SV = ZoneInfo("America/El_Salvador")
 CATEGORIAS = ["Internacional – EUA", "Internacional – LATAM", "Internacional – Resto del mundo",
               "El Salvador – Nacionales", "El Salvador – Fiscales"]
-COLUMNAS = ["id", "edicion", "fecha_hora", "categoria", "fuente", "titular", "resumen", "url", "idioma", "puntaje"]
-COL_EDICION = ["fecha_hora", "categoria", "fuente", "titular", "resumen", "url", "puntaje"]
+NACIONALES = ("El Salvador – Nacionales", "El Salvador – Fiscales")
+# Las columnas son un contrato con quien lee el lago desde fuera: las nuevas van al final.
+COLUMNAS = ["id", "edicion", "fecha_hora", "categoria", "fuente", "titular", "resumen", "url", "idioma", "puntaje",
+            "tema", "orden"]
+COL_EDICION = ["fecha_hora", "categoria", "fuente", "titular", "resumen", "url", "puntaje", "tema", "orden"]
+VIA_GOOGLE = " (vía Google News)"
 MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre",
          "noviembre", "diciembre"]
 ATOM = "{http://www.w3.org/2005/Atom}"
@@ -75,15 +86,17 @@ _REGEX = {}
 CIFRA = r"\$\s?\d[\d.,]*|\d[\d.,]*\s(?:mil\s|millones\sde\s)?dolares"     # «$cifra»: un monto en dólares
 
 
+def _patron(terminos):
+    """La expresión que encuentra cualquiera de los términos, por palabra entera. Un * vale por el resto
+    de la palabra, también en medio del término: «obra* publica*» encuentra «obras públicas»."""
+    partes = [r"\w*".join(re.escape(x) for x in t.split("*")) for t in map(plano, terminos) if t != "$cifra"]
+    patron = r"(?<![\w])(?:" + "|".join(partes) + r")(?![\w])"
+    return re.compile(patron + "|" + CIFRA if "$cifra" in terminos else patron)
+
+
 def _regex(lista):
     if lista not in _REGEX:
-        partes = []
-        for t in cfg()["palabras"][lista]:
-            t = plano(t)
-            if t != "$cifra":
-                partes.append(re.escape(t[:-1]) + r"\w*" if t.endswith("*") else re.escape(t))
-        patron = r"(?<![\w])(?:" + "|".join(partes) + r")(?![\w])"
-        _REGEX[lista] = re.compile(patron + "|" + CIFRA if "$cifra" in cfg()["palabras"][lista] else patron)
+        _REGEX[lista] = _patron(cfg()["palabras"][lista])
     return _REGEX[lista]
 
 
@@ -107,14 +120,64 @@ def menciona_sv(texto):
     return cuenta("el_salvador", texto) > 0
 
 
-def clasificar(texto, defecto):
+def sin_figuras(texto):
+    """El texto, ya sin mayúsculas ni tildes, y sin los giros en que una palabra fiscal no lo es («una
+    deuda con la justicia», «déficit de lluvias»)."""
+    return _regex("figurado").sub(" ", plano(texto))
+
+
+# ------------------------------------------------------------------ medios
+def medio_de(fuente):
+    """El medio que publica, llegue por su feed o por Google News."""
+    return fuente[:-len(VIA_GOOGLE)] if fuente.endswith(VIA_GOOGLE) else fuente
+
+
+def fuera(fuente):
+    """¿Es un medio de los que no entran ([medios] fuera)?"""
+    if "·fuera" not in _REGEX:
+        _REGEX["·fuera"] = _patron(cfg()["medios"]["fuera"])
+    return bool(_REGEX["·fuera"].search(plano(fuente)))
+
+
+def peso_de(fuente, categoria):
+    """Lo que pesa un medio en lo nacional o en lo internacional; 0 es «otra fuente»."""
+    return cfg()["pesos"]["nacional" if categoria in NACIONALES else "internacional"].get(medio_de(fuente), 0)
+
+
+def cripto_ajena(texto):
+    """Una nota de una criptomoneda que no interesa: nombra otra y no al bitcoin, una moneda estable o
+    una casa de cambio."""
+    return cuenta("cripto_otras", texto) > 0 and cuenta("cripto_si", texto) == 0
+
+
+# ------------------------------------------------------------------ categoría, puntaje y tema
+def _de_aqui(texto, titular):
+    """En un medio salvadoreño, ¿la nota es del país? Lo es si no nombra otra región, o si la nombra pero
+    habla de algo de aquí (la cooperación alemana, el MOP, una alcaldía), o si es de combustibles o de
+    petróleo y eso manda en el titular: es lo primero de «Fiscales»."""
+    if cuenta("ancla_sv", texto) or not any(cuenta(r, texto) for r in ("eua", "latam", "resto")):
+        return True
+    c = cuenta("combustibles", titular)
+    return c > 0 and c >= max(cuenta(r, titular) for r in ("eua", "latam", "resto"))
+
+
+def es_fiscal(texto, titular):
+    """¿Una nota salvadoreña es «Fiscales»? La regla `fiscales`, y manda el titular: si solo se cumple
+    contando el extracto, no basta una única palabra de la lista `fiscal` («…ingresos tributarios»)."""
+    if cumple("fiscales", titular):
+        return True
+    otras = [v for v in cfg()["reglas"]["fiscales"] if v != ["fiscal"]]
+    return any(all(cuenta(lista, texto) for lista in v) for v in otras) or cuenta("fiscal", texto) >= 2
+
+
+def clasificar(texto, defecto, titular=None):
     """La categoría de una nota por sus palabras; `defecto` es la de su fuente."""
-    # de un diario salvadoreño, una nota es del país si no nombra otra región, o si la nombra pero
-    # habla de algo de aquí (la cooperación alemana, el MOP, una alcaldía)
-    if menciona_sv(texto) or (defecto.startswith("El Salvador") and (
-            cuenta("ancla_sv", texto) or not any(cuenta(r, texto) for r in ("eua", "latam", "resto")))):
+    texto, titular = sin_figuras(texto), sin_figuras(texto if titular is None else titular)
+    if menciona_sv(texto) or (defecto.startswith("El Salvador") and _de_aqui(texto, titular)):
         # «Fiscales» lo dicen las palabras de la nota, no la sección de donde vino
-        return "El Salvador – Fiscales" if cumple("fiscales", texto) else "El Salvador – Nacionales"
+        return "El Salvador – Fiscales" if es_fiscal(texto, titular) else "El Salvador – Nacionales"
+    if cumple("precio_btc", titular):
+        return "El Salvador – Nacionales"       # el precio del bitcoin va en lo nacional, venga de donde venga
     n = {"Internacional – EUA": cuenta("eua", texto), "Internacional – LATAM": cuenta("latam", texto),
          "Internacional – Resto del mundo": cuenta("resto", texto)}
     mejor = max(n.values())
@@ -124,31 +187,162 @@ def clasificar(texto, defecto):
     return defecto if defecto in ganan else ganan[0]
 
 
-def puntaje(n):
-    """Cuánto se parece una nota a lo que entra en los reportes: 2 por cada palabra preferida de su
-    categoría en el titular y 1 en el extracto, más el peso de su fuente, menos 3 por cada palabra de
-    las que se evitan. En Fiscales, las palabras de inversión pública suman aparte: 3 y 1. Ordena dentro de una categoría; no compara categorías entre sí."""
+def puntaje(n, publicado=None):
+    """Cuánto merece una nota estar entre las elegidas de su subsección: 2 por cada palabra preferida de
+    su categoría en el titular y 1 en el extracto, menos 3 por cada palabra de las que se evitan. En
+    Fiscales, las palabras de inversión pública suman aparte: 3 y 1. Una nota nacional que recoge un dato
+    que el BCR acaba de publicar (`publicado`, de `publicaciones()`) suma el bono. Si con eso queda en
+    positivo, suma el peso de su medio. No compara categorías entre sí."""
     g = cfg().get("gusto", {}).get(n["categoria"])
     if not g:
         return 0
-    p = 2 * cuenta(g["prefiere"], n["titular"]) + cuenta(g["prefiere"], n["resumen"])
+    titular, resumen = sin_figuras(n["titular"]), sin_figuras(n["resumen"])
+    p = 2 * cuenta(g["prefiere"], titular) + cuenta(g["prefiere"], resumen)
     if n["categoria"] == "El Salvador – Fiscales":
         # un proyecto de inversión pública (quién lo financia, quién lo ejecuta) es lo que más se busca
-        p += 3 * cuenta("inversion_publica", n["titular"]) + cuenta("inversion_publica", n["resumen"])
+        p += 3 * cuenta("inversion_publica", titular) + cuenta("inversion_publica", resumen)
     p -= 3 * cuenta(g["evita"], n["titular"] + " " + n["resumen"])
     if plano(n["titular"]).lstrip("«\"'“ ").startswith(tuple(plano(x) for x in cfg()["gusto_listas"]["titular_de_servicio"])):
         p -= 3
-    return p + _pesos().get(n["fuente"], 0)
+    if publicado and n["categoria"] in NACIONALES and dato_reciente(n, publicado):
+        p += cfg()["general"]["bono_dato_bcr"]
+    # el peso del medio ordena entre notas que ya dicen algo: no rescata a la que no trae nada
+    return p + peso_de(n["fuente"], n["categoria"]) if p > 0 else p
 
 
-_PESOS = None
+def publicaciones(filas=None):
+    """{serie: fechas} de lo que el BCR anunció en su calendario (lago/plata/calendario.csv)."""
+    if filas is None:
+        p = rutas.PLATA / "calendario.csv"
+        if not p.exists():
+            return {}
+        with open(p, encoding="utf-8", newline="") as fh:
+            filas = list(csv.DictReader(fh))
+    out = {}
+    for r in filas:
+        if r["origen"] == "bcr":
+            out.setdefault(r["serie"], set()).add(dt.date.fromisoformat(r["fecha_esperada"]))
+    return out
 
 
-def _pesos():
-    global _PESOS
-    if _PESOS is None:
-        _PESOS = {f["nombre"]: f.get("peso", 0) for f in cfg()["fuente"] if f.get("peso")}
-    return _PESOS
+def dato_reciente(n, publicado):
+    """¿La nota recoge una serie que el BCR publicó en los días previos a su edición?"""
+    dia = dt.date.fromisoformat(n["edicion"])
+    desde = dia - dt.timedelta(days=cfg()["general"]["dias_dato_bcr"])
+    texto = plano(n["titular"] + " " + n["resumen"])
+    for i, d in enumerate(cfg().get("dato_bcr", [])):
+        if any(desde <= f <= dia for s in d["series"] for f in publicado.get(s, ())):
+            if f"·dato{i}" not in _REGEX:
+                _REGEX[f"·dato{i}"] = _patron(d["palabras"])
+            if _REGEX[f"·dato{i}"].search(texto):
+                return True
+    return False
+
+
+_TEMAS = {}
+
+
+def temas_de(categoria):
+    if categoria not in _TEMAS:
+        _TEMAS[categoria] = [t for t in cfg().get("tema", []) if t["categoria"] == categoria]
+    return _TEMAS[categoria]
+
+
+def tema(n):
+    """(lugar, nombre) del tema de una nota en su subsección; (0, "") si su categoría no tiene temas.
+    Gana el tema con más palabras suyas en la nota (el titular vale doble); si empatan, el que va
+    antes; sin ninguna, el tema `resto`. Un tema con `regla` se queda la nota si el titular la cumple."""
+    ts = temas_de(n["categoria"])
+    if not ts:
+        return 0, ""
+    titular, resumen = sin_figuras(n["titular"]), sin_figuras(n["resumen"])
+    mejor, puntos = None, 0
+    for i, t in enumerate(ts):
+        if t.get("regla") and cumple(t["regla"], titular):
+            return i, t["nombre"]
+        if t.get("palabras"):
+            p = 2 * cuenta(t["palabras"], titular) + cuenta(t["palabras"], resumen)
+            if p > puntos:
+                mejor, puntos = i, p
+    if mejor is None:
+        mejor = next(i for i, t in enumerate(ts) if t.get("resto"))
+    return mejor, ts[mejor]["nombre"]
+
+
+# ------------------------------------------------------------------ una historia, una nota
+VACIAS = frozenset("""que con por los las del una uno unos unas sus son fue han hay mas muy sin ser the and
+    para como tras entre sobre desde hasta este esta estos estas pero porque segun ante mientras donde
+    cuando tiene tienen sera seran sido estan esto menos nuevo nueva nuevos nuevas ano anos dice dijo
+    salvador""".split())
+
+
+def fichas(titular):
+    """Lo que dice de qué trata un titular: sus palabras de tres letras o más, recortadas a cinco para que
+    «aporte» y «aportar» sean la misma, y sus cifras."""
+    return frozenset(w if w[0].isdigit() else w[:5]
+                     for w in re.findall(r"[a-z0-9]+(?:[.,][0-9]+)*", plano(titular))
+                     if (len(w) >= 3 or w[0].isdigit()) and w not in VACIAS)
+
+
+def misma_historia(a, b):
+    """Dos juegos de fichas son la misma historia si comparten al menos tres y la parte `misma_historia`
+    de las del titular más corto."""
+    comunes = len(a & b)
+    return comunes >= 3 and comunes >= cfg()["general"]["misma_historia"] * min(len(a), len(b))
+
+
+def priorizar(notas, publicado=None):
+    """Pone en cada nota su `puntaje`, su `tema` y su `orden` dentro de (edición, categoría).
+
+    Principales son las notas que traen algo de lo que se busca (puntaje sobre 0) y cuentan una historia
+    por primera vez —de varias con la misma, la del medio que más pesa—, sin pasar de
+    `otras_por_subseccion` notas de medios sin peso en cada subsección ni del `maximo` de su tema. Van primero, por tema y dentro del tema por puntaje; la segunda
+    de un tema pierde `paso_mismo_tema` puntos y la tercera el doble, para que las de más puntaje cubran
+    todos los temas. Las demás bajan al final con puntaje 0 o menos, y nadie las elige sin mirarlas:
+    en cada subsección, las de puntaje sobre 0 son las principales y van juntas arriba."""
+    g_ = cfg()["general"]
+    ambitos, grupos = {}, {}
+    for n in notas:
+        n["puntaje"] = puntaje(n, publicado)
+        n["_tema"], n["tema"] = tema(n)
+        ambitos.setdefault((n["edicion"], n["categoria"] in NACIONALES), []).append(n)
+        grupos.setdefault((n["edicion"], n["categoria"]), []).append(n)
+    reciente = lambda n: [-ord(c) for c in n["fecha_hora"]]
+    bajan = {n["id"] for n in notas if n["puntaje"] <= 0}        # la que no trae nada de lo que se busca
+    for g in ambitos.values():          # la misma historia en otro medio, esté en la subsección que esté
+        cabezas = []
+        for n in sorted(g, key=lambda n: (n["id"] in bajan, -peso_de(n["fuente"], n["categoria"]), -n["puntaje"],
+                                          reciente(n), n["id"])):
+            f = fichas(n["titular"])
+            if n["id"] in bajan:
+                continue
+            if any(misma_historia(f, c) for c in cabezas):
+                bajan.add(n["id"])
+            else:
+                cabezas.append(f)
+    for (_, categoria), g in grupos.items():
+        mejores = sorted((n for n in g if n["id"] not in bajan), key=lambda n: (-n["puntaje"], reciente(n), n["id"]))
+        otras = [n for n in mejores if peso_de(n["fuente"], categoria) == 0]      # de otras fuentes, solo unas pocas
+        bajan.update(n["id"] for n in otras[g_["otras_por_subseccion"]:])
+        for i, t in enumerate(temas_de(categoria)):
+            suyas = [n for n in mejores if n["_tema"] == i and n["id"] not in bajan]
+            if t.get("maximo"):                                  # de un tema, no más de su máximo
+                bajan.update(n["id"] for n in suyas[t["maximo"]:])
+                suyas = suyas[:t["maximo"]]
+            for k, n in enumerate(suyas):                        # y cada nota más del mismo tema vale menos
+                n["_puesto"] = k
+        clave = lambda n: (n["id"] in bajan, n["_tema"], n.get("_puesto", 0), -n["puntaje"], reciente(n), n["id"])
+        for lugar, n in enumerate(sorted(g, key=clave), 1):
+            n["orden"] = lugar
+        for n in g:
+            if n["id"] in bajan:
+                n["puntaje"] = min(n["puntaje"], 0)
+            elif n["puntaje"] > 0:                               # nunca por debajo de 1: sigue siendo principal
+                n["puntaje"] = max(n["puntaje"] - g_["paso_mismo_tema"] * n.get("_puesto", 0), 1)
+    for n in notas:
+        n.pop("_puesto", None)
+        del n["_tema"]
+    return notas
 
 
 # ------------------------------------------------------------------ texto
@@ -345,15 +539,17 @@ def notas_de(f, red, ahora, conocidas=frozenset()):
             medio = c["medio"] or titular.rpartition(" - ")[2]
             if medio and titular.endswith(" - " + medio):
                 titular = titular[:-len(medio) - 3].strip()
-            fuente, resumen = f"{medio} (vía Google News)" if medio else "Google News", ""
+            fuente, resumen = f.get("medio") or (medio + VIA_GOOGLE if medio else "Google News"), ""
         texto = titular + " " + resumen
+        if fuera(fuente) or cripto_ajena(texto):
+            continue
         if f.get("filtro") and not cuenta("economia", texto):
             continue
         if f.get("exige") and not cumple(f["exige"], texto):
             continue
         url = c["url"] if f["metodo"] == "gnews" else url_limpia(c["url"])
         out.append({"id": hashlib.sha1(url.encode("utf-8")).hexdigest()[:12], "edicion": edicion_de(momento),
-                    "fecha_hora": momento.strftime("%Y-%m-%dT%H:%M"), "categoria": clasificar(texto, f["categoria"]),
+                    "fecha_hora": momento.strftime("%Y-%m-%dT%H:%M"), "categoria": clasificar(texto, f["categoria"], titular),
                     "fuente": fuente, "titular": titular, "resumen": resumen, "url": url,
                     "idioma": f.get("idioma", "es")})
         if len(out) >= f.get("maximo", 200):
@@ -380,18 +576,21 @@ def _salio_de(n, f):
 
 
 def al_dia(notas):
-    """La base, puesta al día con el catálogo de hoy: se va la nota que su sección ya no admitiría (su
-    `exige`) y cada una vuelve a repartirse en su categoría. Así una regla que se afina vale también para
-    lo ya guardado, igual que el puntaje. De una nota cuya fuente no se reconoce por la dirección, la
-    categoría que tiene hace de categoría de la fuente: sin cambios en las listas, queda donde estaba."""
+    """La base, puesta al día con el catálogo de hoy: se va la nota de un medio que ya no entra, la de
+    una criptomoneda que no interesa y la que su sección ya no admitiría (su `exige`), y cada una vuelve
+    a repartirse en su categoría. Así una regla que se afina vale también para lo ya guardado, igual que
+    el puntaje. De una nota cuya fuente no se reconoce por la dirección, la categoría que tiene hace de
+    categoría de la fuente: sin cambios en las listas, queda donde estaba."""
     con_seccion = [f for f in cfg()["fuente"] if f["metodo"] in ("elmundo", "wp_api")]
     out = []
     for n in notas:
         texto = n["titular"] + " " + n["resumen"]
+        if fuera(n["fuente"]) or cripto_ajena(texto):
+            continue
         f = next((f for f in con_seccion if _salio_de(n, f)), None)
         if f and f.get("exige") and not cumple(f["exige"], texto):
             continue
-        n["categoria"] = clasificar(texto, f["categoria"] if f else n["categoria"])
+        n["categoria"] = clasificar(texto, f["categoria"] if f else n["categoria"], n["titular"])
         out.append(n)
     return out
 
@@ -400,13 +599,15 @@ def clave_titular(n):
     return re.sub(r"[^a-z0-9]+", "", plano(n["titular"]))[:90]
 
 
-def orden(n):
-    return (n["edicion"], CATEGORIAS.index(n["categoria"]), -int(n["puntaje"]), n["fecha_hora"], n["id"])
-
-
 def orden_edicion(n):
-    """Dentro de una edición: por categoría, lo más afín primero, y a igual puntaje lo más reciente."""
-    return (CATEGORIAS.index(n["categoria"]), -int(n["puntaje"]), [-ord(c) for c in n["fecha_hora"]])
+    """Dentro de una edición: por categoría y, en cada una, por su `orden` (una base anterior a esa
+    columna se ordena por puntaje)."""
+    return (CATEGORIAS.index(n["categoria"]), int(n.get("orden") or 10 ** 6), -int(n.get("puntaje") or 0),
+            [-ord(c) for c in n["fecha_hora"]])
+
+
+def orden(n):
+    return (n["edicion"],) + orden_edicion(n) + (n["id"],)
 
 
 def texto_csv(cols, filas):
@@ -438,14 +639,14 @@ def escribir_ediciones(notas, ahora):
     return cerrada, por
 
 
-def traer(seco=False, ahora=None):
+def traer(seco=False, ahora=None, sin_red=False):
     global LARGO_RESUMEN
     LARGO_RESUMEN = cfg()["general"]["largo_resumen"]
     ahora = ahora or dt.datetime.now(SV)
     limite = (ahora.date() - dt.timedelta(days=cfg()["general"]["conservar_dias"])).isoformat()
     previas = al_dia([n for n in leer_plata() if n["edicion"] >= limite])
-    red, nuevas, estado = Red(), [], []
-    for f in cfg()["fuente"]:
+    red, nuevas, estado = None if sin_red else Red(), [], []
+    for f in [] if sin_red else cfg()["fuente"]:
         try:
             ns = notas_de(f, red, ahora, frozenset(n["id"] for n in previas))
             nuevas += ns
@@ -454,7 +655,7 @@ def traer(seco=False, ahora=None):
             estado.append((f["clave"], 0, f"{'opcional, ' if f.get('opcional') else ''}no respondió: {e}"))
     for clave, n, falla in estado:
         print(f"  {clave:<20} {n:>4} notas{'  — ' + falla if falla else ''}")
-    if not nuevas:
+    if not nuevas and not sin_red:
         print("noticias: ninguna fuente entregó notas")
         return 1
     ids = {n["id"] for n in previas}
@@ -467,9 +668,7 @@ def traer(seco=False, ahora=None):
         ids.add(n["id"])
         titulares.add((n["edicion"], k))
         agregadas.append(n)
-    todas = previas + agregadas
-    for n in todas:
-        n["puntaje"] = puntaje(n)               # entero y de nuevo: depende solo del catálogo
+    todas = priorizar(previas + agregadas, publicaciones())      # puntaje, tema y orden, de nuevo para todas
     todas.sort(key=orden)
     por_cat = {c: sum(1 for n in agregadas if n["categoria"] == c) for c in CATEGORIAS}
     print(f"noticias: {len(agregadas)} nuevas de {len(nuevas)} leídas — " + " · ".join(f"{c}: {v}" for c, v in por_cat.items()))
@@ -477,8 +676,8 @@ def traer(seco=False, ahora=None):
     if seco:
         for c in CATEGORIAS:
             print(f"\n{c}")
-            for n in sorted((n for n in agregadas if n["categoria"] == c), key=orden_edicion)[:8]:
-                print(f"   {n['puntaje']:>3}  {n['fecha_hora'][5:]}  {n['fuente'][:24]:<24} {n['titular'][:92]}")
+            for n in sorted((n for n in agregadas if n["categoria"] == c), key=orden)[:10]:
+                print(f"   {n['puntaje']:>3}  {n['edicion'][5:]} {n['orden']:>3}  {n['tema'][:16]:<16} {medio_de(n['fuente'])[:20]:<20} {n['titular'][:80]}")
         return 0
     rutas.PLATA.mkdir(parents=True, exist_ok=True)
     (rutas.PLATA / "noticias.csv").write_text(texto_csv(COLUMNAS, todas), encoding="utf-8", newline="")
@@ -501,8 +700,8 @@ def excel(notas, destino, titulo):
     from openpyxl import Workbook
     from openpyxl.styles import Alignment, Font, PatternFill
     wb = Workbook()
-    cab = ["Fecha y hora", "Categoría", "Fuente", "Titular", "Resumen", "Enlace"]
-    anchos = [17, 30, 28, 70, 90, 50]
+    cab = ["Fecha y hora", "Categoría", "Fuente", "Titular", "Resumen", "Enlace", "Tema"]
+    anchos = [17, 30, 28, 70, 90, 50, 28]
     hojas = [("Todas", notas)] + [(c.replace(" – ", " - ")[:31], [n for n in notas if n["categoria"] == c]) for c in CATEGORIAS]
     for i, (nombre, filas) in enumerate(hojas):
         ws = wb.active if i == 0 else wb.create_sheet()
@@ -514,15 +713,16 @@ def excel(notas, destino, titulo):
             c.font = Font(bold=True, color="FFFFFF")
             c.fill = PatternFill("solid", fgColor="1F3A5F")
         for n in filas:
-            ws.append([n["fecha_hora"].replace("T", " "), n["categoria"], n["fuente"], n["titular"], n["resumen"], n["url"]])
+            ws.append([n["fecha_hora"].replace("T", " "), n["categoria"], n["fuente"], n["titular"], n["resumen"], n["url"],
+                       n.get("tema") or ""])
             celda = ws.cell(row=ws.max_row, column=6)
             celda.hyperlink, celda.font = n["url"], Font(color="1155CC", underline="single")
             for col in (4, 5):
                 ws.cell(row=ws.max_row, column=col).alignment = Alignment(wrap_text=True, vertical="top")
         for j, a in enumerate(anchos):
-            ws.column_dimensions["ABCDEF"[j]].width = a
+            ws.column_dimensions["ABCDEFG"[j]].width = a
         ws.freeze_panes = "A3"
-        ws.auto_filter.ref = f"A2:F{max(ws.max_row, 2)}"
+        ws.auto_filter.ref = f"A2:G{max(ws.max_row, 2)}"
     Path(destino).parent.mkdir(parents=True, exist_ok=True)
     wb.save(destino)
 
@@ -532,8 +732,6 @@ def ediciones():
     for n in leer_plata():
         por.setdefault(n["edicion"], []).append(n)
     for filas in por.values():
-        for n in filas:
-            n["puntaje"] = n.get("puntaje") or 0
         filas.sort(key=orden_edicion)
     return por
 
@@ -542,6 +740,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("orden", nargs="?", choices=["excel"])
     ap.add_argument("--seco", action="store_true")
+    ap.add_argument("--sin-red", action="store_true")
     ap.add_argument("--edicion")
     ap.add_argument("--destino")
     a = ap.parse_args()
@@ -555,7 +754,7 @@ def main():
         excel(por[ed], destino, f"Resumen de noticias · edición del {ed}")
         print(f"  {destino}: {len(por[ed])} notas")
         return
-    sys.exit(traer(seco=a.seco))
+    sys.exit(traer(seco=a.seco, sin_red=a.sin_red))
 
 
 if __name__ == "__main__":

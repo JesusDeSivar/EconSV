@@ -12,6 +12,8 @@
 #              wp_api  la API pública de WordPress del medio (/wp-json/wp/v2/posts), con `secciones`
 #              gnews   una búsqueda de Google News en RSS: trae titular, medio y enlace, sin extracto;
 #                      sirve para los medios que no dejan leer su feed (La Prensa Gráfica, El Mundo)
+#   medio      en una búsqueda de Google News de un solo sitio (site:), el nombre con que se guarda
+#              la fuente; sin él, queda «Medio (vía Google News)»
 #   categoria  la categoría de la nota cuando sus palabras no dicen otra cosa
 #   filtro     true: el feed trae de todo y solo entran las notas con palabras de economía
 #   exige      lo que una nota tiene que cumplir para entrar: el nombre de una lista de [palabras] (trae
@@ -19,8 +21,9 @@
 #              sobre El Salvador devuelven también notas de otros países, y las secciones Política y
 #              Nacional de un diario traen de todo: de ahí solo entra lo que cumple la regla `fiscales`
 #   opcional   true: si la fuente no responde, se anota y la corrida sigue sin fallar
-#   peso       puntos que suma al puntaje de cada nota suya: las fuentes de las que el dueño arma sus
-#              reportes pesan más (ver [gusto], al final)
+#
+# Cuánto pesa cada medio está en [pesos], y los que no entran, en [medios]; qué notas van primero en
+# cada subsección, en los bloques [[tema]], al final.
 #
 # Reparto (tuberias/noticias.py, `clasificar`): una nota que menciona El Salvador es salvadoreña, y es
 # «Fiscales» si cumple la regla `fiscales` (al final: dinero público, o lo que ratifica la Asamblea);
@@ -35,6 +38,11 @@ dias = 3                    # se toman las notas publicadas en los últimos día
 largo_resumen = 300
 conservar_dias = 120        # las ediciones más viejas salen del lago (quedan en el historial de git)
 hora_de_corte = 7           # la edición del día D reúne lo publicado de las 7:00 de D−1 a las 7:00 de D
+otras_por_subseccion = 2    # en cada subsección, cuántas notas de medios sin peso ([pesos]) quedan entre las principales
+paso_mismo_tema = 3         # puntos que pierde la segunda nota de un mismo tema (la tercera, el doble…): así las elegidas cubren todos los temas
+misma_historia = 0.6        # dos titulares son la misma historia si comparten esta parte de las palabras del más corto
+bono_dato_bcr = 6           # puntos que suma una nota nacional que recoge un dato que el BCR acaba de publicar
+dias_dato_bcr = 2           # … durante cuántos días después de la fecha del calendario del BCR
 
 # ------------------------------------------------------------------ Internacional – EUA
 [[fuente]]
@@ -44,7 +52,6 @@ metodo = "rss"
 url = "https://www.federalreserve.gov/feeds/press_all.xml"
 categoria = "Internacional – EUA"
 idioma = "en"
-peso = 1
 
 [[fuente]]
 clave = "bea"
@@ -55,15 +62,6 @@ categoria = "Internacional – EUA"
 idioma = "en"
 
 [[fuente]]
-clave = "infobae_eeuu"
-nombre = "Infobae · Estados Unidos"
-metodo = "rss"
-url = "https://www.infobae.com/arc/outboundfeeds/rss/category/estados-unidos/"
-categoria = "Internacional – EUA"
-filtro = true
-maximo = 20
-
-[[fuente]]
 clave = "gnews_eua"
 nombre = "Google News"
 metodo = "gnews"
@@ -72,7 +70,9 @@ categoria = "Internacional – EUA"
 opcional = true
 maximo = 25
 
-# ------------------------------------------------------------------ Internacional – LATAM
+# ------------------------------------------------------------------ Internacional – LATAM y resto
+# Bloomberg Línea es la fuente de lo internacional: pesa más que cualquier otra (ver [pesos.internacional]). Sus
+# cuatro feeds traen notas de todas partes; las palabras de región las reparten.
 [[fuente]]
 clave = "bloomberg_linea"
 nombre = "Bloomberg Línea"
@@ -80,7 +80,6 @@ metodo = "rss"
 url = "https://www.bloomberglinea.com/arc/outboundfeeds/rss/?outputType=xml"
 categoria = "Internacional – LATAM"
 maximo = 40
-peso = 2
 
 [[fuente]]
 clave = "bloomberg_linea_mercados"
@@ -89,33 +88,24 @@ metodo = "rss"
 url = "https://www.bloomberglinea.com/arc/outboundfeeds/rss/category/mercados/?outputType=xml"
 categoria = "Internacional – LATAM"
 maximo = 30
-peso = 2
-nota = "Mercados: bonos, divisas, petróleo, bancos centrales. Las palabras de región la reparten entre EUA y resto; lo demás es de la región."
+nota = "Mercados: bonos, divisas, petróleo, bancos centrales."
 
 [[fuente]]
-clave = "elpais_america"
-nombre = "El País · América, economía"
+clave = "bloomberg_linea_economia"
+nombre = "Bloomberg Línea"
 metodo = "rss"
-url = "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/section/america/subsection/economia"
+url = "https://www.bloomberglinea.com/arc/outboundfeeds/rss/category/economia/?outputType=xml"
 categoria = "Internacional – LATAM"
+maximo = 30
 
 [[fuente]]
-clave = "expansion_mx"
-nombre = "Expansión (México)"
+clave = "bloomberg_linea_mundo"
+nombre = "Bloomberg Línea"
 metodo = "rss"
-url = "https://expansion.mx/rss/economia"
-categoria = "Internacional – LATAM"
-maximo = 15
-
-[[fuente]]
-clave = "infobae"
-nombre = "Infobae · Economía"
-metodo = "rss"
-url = "https://www.infobae.com/arc/outboundfeeds/rss/category/economia/"
-categoria = "Internacional – LATAM"
-maximo = 8
-peso = -1
-nota = "Casi todo es economía interna de Argentina: entra poco y pesa menos."
+url = "https://www.bloomberglinea.com/arc/outboundfeeds/rss/category/mundo/?outputType=xml"
+categoria = "Internacional – Resto del mundo"
+maximo = 30
+nota = "Al salir El País y DW, «Resto del mundo» quedaba en dos o tres notas por edición: esta sección lo repone con la fuente preferida."
 
 [[fuente]]
 clave = "france24_amlat"
@@ -124,24 +114,6 @@ metodo = "rss"
 url = "https://www.france24.com/es/am%C3%A9rica-latina/rss"
 categoria = "Internacional – LATAM"
 filtro = true
-
-# ------------------------------------------------------------------ Internacional – Resto del mundo
-[[fuente]]
-clave = "elpais_economia"
-nombre = "El País · Economía"
-metodo = "rss"
-url = "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/section/economia/portada"
-categoria = "Internacional – Resto del mundo"
-
-[[fuente]]
-clave = "elpais_eeuu"
-nombre = "El País · edición EE. UU."
-metodo = "rss"
-url = "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/section/us/portada"
-categoria = "Internacional – Resto del mundo"
-filtro = true
-maximo = 20
-nota = "Es la portada de la edición, con notas de todo el mundo: sin palabras de región, van a resto del mundo."
 
 [[fuente]]
 clave = "bbc_mundo"
@@ -160,13 +132,6 @@ url = "https://www.france24.com/es/econom%C3%ADa/rss"
 categoria = "Internacional – Resto del mundo"
 
 [[fuente]]
-clave = "dw"
-nombre = "DW · Economía"
-metodo = "rss"
-url = "https://rss.dw.com/rdf/rss-sp-eco"
-categoria = "Internacional – Resto del mundo"
-
-[[fuente]]
 clave = "bce"
 nombre = "Banco Central Europeo"
 metodo = "rss"
@@ -175,6 +140,10 @@ categoria = "Internacional – Resto del mundo"
 idioma = "en"
 
 # ------------------------------------------------------------------ El Salvador
+# El orden de las fuentes nacionales es del dueño (2026-11-13) y está en [pesos.nacional]: elEconomista.net,
+# Diario El Salvador, Diario El Mundo, La Prensa Gráfica, El Diario de Hoy, y después cualquier otra,
+# que pesa tan poco que solo caben dos por subsección. De cada diario, la sección de economía entra
+# entera; de las generales (país, política, nacionales, social) solo lo que cumple la regla `de_interes`.
 [[fuente]]
 clave = "hacienda"
 nombre = "Ministerio de Hacienda"
@@ -194,14 +163,41 @@ opcional = true
 nota = "Su cortafuegos responde a ratos «Request Rejected» en lugar del feed."
 
 [[fuente]]
+clave = "eleconomista"
+nombre = "Google News"
+medio = "elEconomista.net"
+metodo = "gnews"
+url = "https://news.google.com/rss/search?q=site:eleconomista.net+when:3d&hl=es-419&gl=SV&ceid=SV:es-419"
+categoria = "El Salvador – Nacionales"
+filtro = true
+opcional = true
+nota = "La que más pesa en lo nacional. Su sitio y su feed responden con un desafío antirrobots (HTTP 202 de AWS WAF, 2026-11-13) y su robots.txt cierra el paso: llega por Google News, solo titular y enlace. Es regional: las palabras de región sacan de lo nacional lo de otros países."
+
+[[fuente]]
+clave = "diario_el_salvador"
+nombre = "Diario El Salvador"
+metodo = "wp_api"
+url = "https://diarioelsalvador.com"
+secciones = ["dedinero", "decomercio"]
+categoria = "El Salvador – Nacionales"
+
+[[fuente]]
+clave = "diario_el_salvador_pais"
+nombre = "Diario El Salvador"
+metodo = "wp_api"
+url = "https://diarioelsalvador.com"
+secciones = ["depais"]
+categoria = "El Salvador – Nacionales"
+exige = "de_interes"
+nota = "DePaís trae de todo (seguridad, sucesos, política): solo entra lo económico o lo fiscal."
+
+[[fuente]]
 clave = "el_mundo_economia"
 nombre = "Diario El Mundo"
 metodo = "elmundo"
 url = "https://diario.elmundo.sv/economia"
 paginas = 2
 categoria = "El Salvador – Nacionales"
-peso = 3
-nota = "La fuente principal de la parte nacional de los reportes del dueño."
 
 [[fuente]]
 clave = "el_mundo_politica"
@@ -209,10 +205,9 @@ nombre = "Diario El Mundo"
 metodo = "elmundo"
 url = "https://diario.elmundo.sv/politica"
 paginas = 2
-categoria = "El Salvador – Fiscales"
-exige = "fiscales"
-peso = 3
-nota = "De Política solo entra lo que cumple la regla `fiscales`: presupuestos por ministerio, contratos, préstamos, gasto, lo que ratifica la Asamblea."
+categoria = "El Salvador – Nacionales"
+exige = "de_interes"
+nota = "De Política: presupuestos por ministerio, contratos, préstamos, gasto, lo que ratifica la Asamblea."
 
 [[fuente]]
 clave = "el_mundo_nacionales"
@@ -220,38 +215,47 @@ nombre = "Diario El Mundo"
 metodo = "elmundo"
 url = "https://diario.elmundo.sv/nacionales"
 paginas = 2
-categoria = "El Salvador – Fiscales"
-exige = "fiscales"
-peso = 3
-nota = "De Nacionales, lo mismo: obras, programas y servicios públicos con su dinero."
-
-[[fuente]]
-clave = "diario_el_salvador"
-nombre = "Diario El Salvador"
-metodo = "wp_api"
-url = "https://diarioelsalvador.com"
-secciones = ["dedinero"]
 categoria = "El Salvador – Nacionales"
+exige = "de_interes"
 
 [[fuente]]
-clave = "el_diario_de_hoy"
+clave = "lpg_economia"
+nombre = "Google News"
+medio = "La Prensa Gráfica"
+metodo = "gnews"
+url = "https://news.google.com/rss/search?q=site:laprensagrafica.com/economia+when:2d&hl=es-419&gl=SV&ceid=SV:es-419"
+categoria = "El Salvador – Nacionales"
+opcional = true
+nota = "laprensagrafica.com responde con el mismo desafío antirrobots que elEconomista.net (son del mismo grupo): sus secciones llegan por Google News, solo titular y enlace."
+
+[[fuente]]
+clave = "lpg_elsalvador"
+nombre = "Google News"
+medio = "La Prensa Gráfica"
+metodo = "gnews"
+url = "https://news.google.com/rss/search?q=site:laprensagrafica.com/elsalvador+when:2d&hl=es-419&gl=SV&ceid=SV:es-419"
+categoria = "El Salvador – Nacionales"
+exige = "de_interes"
+opcional = true
+nota = "Política y Social van bajo /elsalvador/ en sus direcciones."
+
+[[fuente]]
+clave = "edh_negocios"
 nombre = "El Diario de Hoy"
 metodo = "wp_api"
-url = "https://www.elsalvador.com"
-secciones = ["h-negocios", "entorno-economico"]
+url = "https://www.eldiariodehoy.com"
+secciones = ["negocios", "gente-y-empresa"]
 categoria = "El Salvador – Nacionales"
-peso = 2
+nota = "eldiariodehoy.com, el sitio propio del diario; hasta el 2026-11-13 se leía elsalvador.com."
 
 [[fuente]]
-clave = "el_diario_de_hoy_nacional"
+clave = "edh_nacionales"
 nombre = "El Diario de Hoy"
 metodo = "wp_api"
-url = "https://www.elsalvador.com"
-secciones = ["nacional"]
-categoria = "El Salvador – Fiscales"
-exige = "fiscales"
-peso = 2
-nota = "De Nacional, solo lo que cumple la regla `fiscales`."
+url = "https://www.eldiariodehoy.com"
+secciones = ["nacionales"]
+categoria = "El Salvador – Nacionales"
+exige = "de_interes"
 
 [[fuente]]
 clave = "presidencia"
@@ -292,27 +296,68 @@ exige = "el_salvador"
 url = "https://news.google.com/rss/search?q=%22El+Salvador%22+econom%C3%ADa+when:1d&hl=es-419&gl=SV&ceid=SV:es-419"
 categoria = "El Salvador – Nacionales"
 
-[[fuente]]
-clave = "gnews_lpg"
-nombre = "Google News"
-metodo = "gnews"
-opcional = true
-url = "https://news.google.com/rss/search?q=site:laprensagrafica.com+(econom%C3%ADa+OR+millones+OR+presupuesto+OR+alcald%C3%ADa+OR+BCIE+OR+BID+OR+MOP+OR+pr%C3%A9stamo)+when:2d&hl=es-419&gl=SV&ceid=SV:es-419"
-categoria = "El Salvador – Nacionales"
-filtro = true
-maximo = 30
-
 # Probadas y fuera, con su motivo. No se rodea un bloqueo: se anota y se vuelve a probar.
 [[excluida]]
-nombre = "La Prensa Gráfica (feed propio)"
-motivo = "403 de su protección antibots; sus titulares llegan por la búsqueda de Google News."
+nombre = "La Prensa Gráfica y elEconomista.net (sitio y feed propios)"
+motivo = "Desafío antirrobots (HTTP 202, x-amzn-waf-action: challenge) y robots.txt cerrado; sus titulares llegan por Google News."
 
 [[excluida]]
 nombre = "FMI, CEPAL, BLS"
 motivo = "403 de sus redes de distribución a lectores automáticos (2026-11-12)."
 
+[[excluida]]
+nombre = "Infobae (Economía y Estados Unidos), El País (Economía, América y edición EE. UU.), Expansión (México), DW"
+motivo = "El dueño las retiró el 2026-11-13: sin la reputación que pide o demasiado de un solo país. Están también en [medios] fuera, por si llegan por Google News."
+
+[[excluida]]
+nombre = "elsalvador.com (El Diario de Hoy)"
+motivo = "Reemplazado el 2026-11-13 por eldiariodehoy.com, que es el que el dueño lee: Nacionales, Negocios, Gente y Empresa."
+
+# ------------------------------------------------------------------ medios y pesos
+[medios]
+# No entran, lleguen por donde lleguen (casi todos, por Google News). Lista del dueño, 2026-11-13. Se
+# compara con el nombre del medio, sin mayúsculas ni tildes y por palabra entera: "el pais" saca a
+# «EL PAÍS» y a «El País América»; "dw", a «DW · Economía». También se aplica a lo ya guardado.
+fuera = ["clarin", "comercio tv", "comerciotv", "debate", "diario digital cronio", "diariodigitalrd", "expansion",
+         "funds society", "fxstreet", "howl.link", "infobae", "el pais", "la cronica de hoy", "la nacion costa rica",
+         "la republica ec", "lancasteronline", "luz noticias", "marketscreener", "noticias24hrs", "ntn24", "quartz",
+         "advfn", "rfi", "rosario finanzas", "san antonio express-news", "talcual", "universitat de valencia",
+         "univision", "xtb", "dw"]
+
+# Puntos que suma al puntaje de una nota el medio que la publica, llegue por su feed o por Google
+# News. El orden es del dueño (2026-11-13): en lo internacional manda Bloomberg Línea; en lo nacional,
+# elEconomista.net, Diario El Salvador, Diario El Mundo, La Prensa Gráfica y El Diario de Hoy, en ese
+# orden. Con 1 van los medios conocidos que no tienen lugar en ese orden. Un medio que no está en la
+# tabla es «otra fuente»: suma 0 y solo `otras_por_subseccion` notas suyas quedan entre las
+# principales de cada subsección; así un medio nuevo que aparezca en Google News no la llena.
+[pesos.internacional]
+"Bloomberg Línea" = 3
+"Reserva Federal" = 1
+"Bureau of Economic Analysis" = 1
+"Banco Central Europeo" = 1
+"BBC Mundo · Economía" = 1
+"France 24 · Economía" = 1
+"France 24 · América Latina" = 1
+"elEconomista.net" = 1
+"Diario El Salvador" = 1
+"Diario El Mundo" = 1
+"La Prensa Gráfica" = 1
+"El Diario de Hoy" = 1
+
+[pesos.nacional]
+"elEconomista.net" = 6
+"Diario El Salvador" = 5
+"Diario El Mundo" = 4
+"La Prensa Gráfica" = 3
+"El Diario de Hoy" = 2
+"Bloomberg Línea" = 1
+"Ministerio de Hacienda" = 1
+"Banco Central de Reserva" = 1
+"Presidencia de la República" = 1
+
 # ------------------------------------------------------------------ palabras
-# Sin mayúsculas ni tildes. Un término que termina en * es un prefijo; los demás, palabra entera.
+# Sin mayúsculas ni tildes, por palabra entera. Un * vale por el resto de la palabra: «prestamo*» es
+# préstamo y préstamos, y «obra* publica*», obra pública y obras públicas.
 
 [palabras]
 el_salvador = ["el salvador", "salvadoren*", "san salvador", "bukele", "banco central de reserva",
@@ -328,6 +373,11 @@ fiscal = ["presupuesto*", "deuda", "eurobono*", "bonos", "letes", "cetes", "fmi"
           "adjudic*", "licitacion*", "comprasal", "remuneracion*", "subsidio*", "condonacion",
           "tasas municipales", "amnistia fiscal"]
 
+# Giros en que una palabra fiscal no lo es: se quitan del texto antes de repartir y de puntuar.
+figurado = ["deuda con la justicia", "deuda historica", "deuda social", "deuda moral", "deuda pendiente con",
+            "saldar su deuda", "saldar la deuda", "en deuda con", "deficit de lluvia*", "deficit habitacional",
+            "deficit hidrico", "deficit de atencion"]
+
 # Proyectos de inversión pública: quién los financia (multilaterales y cooperación internacional) y
 # quién los ejecuta. Una nota salvadoreña con cualquiera de estas palabras es «Fiscales», entra aunque
 # venga de Política o Nacionales, y sube en el puntaje. La lista es del dueño (2026-11-13): no solo BCIE
@@ -341,8 +391,7 @@ inversion_publica = ["bcie", "banco centroamericano de integracion economica", "
                      "luxemburgo", "usaid", "fida", "ofid", "opep fund", "banco europeo de inversiones",
                      "mop", "ministerio de obras publicas", "fovial", "fondo de conservacion vial", "dom",
                      "direccion de obras municipales", "inversion publica", "obra* publica*", "proyecto* de inversion",
-                     "paip", "prestamo*", "desembols*", "financiamiento externo", "no reembolsable*", "donacion*", "dona", "donan",
-                     "dono", "donara", "donativo*"]
+                     "paip", "prestamo*", "desembols*", "financiamiento externo", "no reembolsable*"]
 
 # En un diario salvadoreño, una nota con estas palabras es del país aunque nombre a otro: la
 # cooperación siempre nombra al país que coopera («cooperación alemana», «italiana»). Solo vale para las
@@ -363,9 +412,12 @@ actor_publico = ["gobierno", "alcaldia*", "alcalde*", "comuna*", "concejo* munic
                  "empleados publicos", "instituciones publicas", "tse", "tribunal supremo electoral",
                  "corte de cuentas"]
 
-dinero = ["$cifra", "millones de dolares", "salario*", "sueldo*", "aguinaldo*", "plazas", "despido*", "fondos",
-          "fodes", "financia*", "contrat*", "gasto*", "ahorro*", "recorte*", "audit*", "inversion",
-          "invert*", "inviert*", "bono", "cooperacion", "adeuda*", "pago*", "arancel*"]
+dinero = ["$cifra", "millones de dolares", "salario*", "salarial*", "sueldo*", "aguinaldo*", "plazas", "despido*", "fondos",
+          "fodes", "financia*", "contrat*", "gasto*", "ahorro*", "recorte*", "auditoria*", "auditor*", "auditar*",
+          "audita", "auditan", "audito", "inversion", "invert*", "inviert*", "bono", "cooperacion", "adeuda*", "pago*",
+          "arancel*", "donacion*", "donativo*", "dona", "donan", "dono"]
+# Una donación sola no es asunto fiscal (un supermercado que dona a una fundación): cuenta como dinero,
+# y hace falta que la reciba o la dé un actor público.
 
 # La cuarta vía: un acuerdo internacional que se aprueba. Los reportes del dueño ponen en Fiscales lo que
 # ratifica la Asamblea (protección de inversiones con Argentina, exención de visas con Kuwait). «Acuerdo»
@@ -374,6 +426,81 @@ acuerdo = ["acuerdo de", "acuerdo para", "acuerdo entre", "acuerdo sobre", "acue
            "acuerdo marco", "acuerdos", "convenio*", "tratado de", "tratado entre", "tratados", "memorando*"]
 
 aprobacion = ["ratific*", "aprob*", "aprueba*", "asamblea", "diputad*", "pleno legislativo", "plenaria"]
+
+# Combustibles y petróleo: en un medio salvadoreño es lo primero de Fiscales (los precios de referencia,
+# el subsidio al gas, el barril), siempre que mande en el titular: «El barril de Brent baja de 90 dólares»
+# sí; «Wall Street se recupera por Nvidia y el repunte del petróleo», no. En Bloomberg Línea el petróleo
+# sigue siendo internacional.
+combustibles = ["combustible*", "gasolina*", "diesel", "petroleo", "crudo", "barril", "brent", "wti", "gas licuado",
+                "glp", "hidrocarburos", "galon"]
+
+# Lo económico que se le exige, junto con lo fiscal, a una sección general de un diario (DePaís,
+# Política, Nacionales, Social): términos que por sí solos dicen economía. «Empresa», «precio» o
+# «millones» no están: solos dejan pasar cualquier cosa.
+economia_nacional = ["economia", "economic*", "pib", "producto interno bruto", "ivae", "actividad economica", "inflacion",
+                     "ipc", "canasta basica", "costo de vida", "remesa*", "exportac*", "importac*", "inversion extranjera",
+                     "ied", "balanza comercial", "comercio exterior", "arancel*", "reservas internacionales", "migrante*",
+                     "migratori*", "emigra*", "diaspora", "deportad*", "deportacion*", "turis*", "visitantes", "hoteler*",
+                     "cosecha*", "agricultor*", "agropecuari*",
+                     "granos basicos", "maiz", "frijol", "cafetaler*", "banca", "bancos", "credito*", "sistema financiero",
+                     "empleo*", "desempleo", "salario minimo", "construccion", "zona* franca*", "incentivo* fiscal*",
+                     "productividad", "bitcoin", "banco central de reserva", "bcr"]
+
+# Cripto. Interesan el bitcoin, las monedas estables y las casas de cambio; una nota de otra moneda que
+# no nombre nada de eso no entra (regla del dueño, 2026-11-13).
+cripto_si = ["bitcoin", "btc", "stablecoin*", "moneda* estable*", "usdt", "usdc", "tether", "circle", "exchange*",
+             "binance", "coinbase", "bitfinex", "kraken", "okx", "bybit", "bitso"]
+
+cripto_otras = ["ethereum", "ether", "solana", "xrp", "ripple", "dogecoin", "shiba inu", "cardano", "memecoin*",
+                "altcoin*", "nft", "nfts", "polkadot", "litecoin", "bnb", "toncoin", "shitcoin*", "airdrop*"]
+
+# El precio del bitcoin: las dos listas tienen que estar en el titular. Esa nota va a «El Salvador –
+# Nacionales», venga de donde venga, y de ahí al tema «Otros: precio del bitcoin».
+bitcoin = ["bitcoin", "btc"]
+
+precio = ["$cifra", "precio*", "cotiza*", "cotizacion*", "sube", "suben", "subio", "subida", "cae", "caen", "cayo",
+          "caida", "baja", "repunta*", "rebota*", "desploma*", "desplome", "supera*", "toca", "maximo*", "minimo*",
+          "record", "rally", "retrocede*", "alza", "nivel*"]
+
+# ---- los temas: con qué palabras se reconoce cada uno (el orden está en los bloques [[tema]])
+tema_deuda = ["deuda", "bonos", "eurobono*", "letes", "cetes", "titulos valores", "prestamo*", "credito*", "emprestito*",
+              "financiamiento", "bcie", "bid", "banco mundial", "caf", "birf", "fmi", "fondo monetario", "calificadora*",
+              "moody*", "fitch", "standard & poor*", "riesgo pais", "embi", "recompra", "canje", "emision", "colocacion",
+              "endeudamiento", "refinanciamiento", "desembols*", "no reembolsable*"]
+
+tema_presupuesto = ["presupuest*", "transferencia*",
+                    "asignacion*", "reorientacion", "comision de hacienda", "fondo general", "partida*", "2027"]
+
+tema_real = ["pib", "producto interno bruto", "ivae", "actividad economica", "crecimiento", "crecio", "construccion",
+             "constructor*", "cemento", "vivienda*", "inmobiliari*", "industria*", "manufactur*", "empleo*", "desempleo",
+             "salario minimo", "laboral*", "productividad", "inflacion", "ipc", "canasta basica", "costo de vida",
+             "precios", "energia electrica", "electricidad", "consumo", "ventas", "opamss"]
+
+tema_externo = ["remesa*", "migrante*", "migratori*", "emigra*", "deportad*", "deportacion*", "diaspora", "tps",
+                "exportac*", "importac*",
+                "balanza comercial", "comercio exterior", "inversion extranjera", "ied", "arancel*",
+                "tratado de libre comercio", "tlc", "reservas internacionales", "balanza de pagos", "cuenta corriente",
+                "puerto*", "carga", "logistic*"]
+
+tema_monetario = ["banca", "banco", "bancos", "bancari*", "credito*", "deposito*", "tasa* de interes", "sistema financiero",
+                  "superintendencia del sistema financiero", "ssf", "seguros", "aseguradora*", "bolsa de valores",
+                  "fintech", "pagos digitales", "activos digitales", "stablecoin*", "exchange*", "bitfinex", "binance",
+                  "tether", "bandesal", "inclusion financiera", "cooperativa*", "tarjeta* de credito", "financier*"]
+
+tema_turismo = ["turis*", "visitante*", "hotel*", "hoteler*", "aeropuerto*", "aerolinea*", "vuelo*", "crucero*", "mitur",
+                "corsatur", "istu", "surf city", "playa*"]
+
+tema_agro = ["agricultur*", "agricultor*", "agricola*", "agro*", "agropecuari*", "productor*", "cosecha*", "zafra",
+             "maiz", "frijol", "granos basicos", "cafe", "cafetaler*", "azucar", "cana", "ganader*", "pesca",
+             "pesquer*", "mag", "centa", "sequia*",
+             "seguridad alimentaria", "fertilizante*", "lacteos", "avicola*"]
+
+tema_investigacion = ["estudio*", "investigacion*", "informe", "encuesta*", "fusades", "icefi", "funde", "fundaungo", "uca",
+                      "frente a frente", "economista*", "analista*", "centro de estudios", "cepal", "indice de"]
+
+tema_empresas = ["empresa*", "compania*", "inviert*", "invert*", "inversion", "planta", "fabrica*", "tienda*",
+                 "sucursal*", "centro* comercial*", "apertura", "inaugura*", "incentivo* fiscal*", "zona* franca*",
+                 "ley de servicios internacionales", "startup*", "emprend*", "franquicia*", "expansion"]
 
 eua = ["estados unidos", "ee. uu.", "ee.uu.", "eeuu", "eua", "estadounidense*", "reserva federal", "la fed",
        "wall street", "casa blanca", "washington", "trump", "powell", "nasdaq", "dow jones", "s&p 500",
@@ -422,14 +549,25 @@ gusto_fiscal = ["presupuesto*", "comision de hacienda", "hacienda", "millones", 
                 "mop", "obras publicas", "fovial", "dom", "obras municipales", "inversion publica", "obra*",
                 "carretera*", "puente*", "bypass", "periferico", "viaducto", "paso a desnivel", "pavimentacion",
                 "desembols*", "no reembolsable*", "donacion*", "licitacion*", "alcaldia*", "municip*", "ingresos",
-                "erario", "condonacion", "tasas"]
+                "erario", "condonacion", "tasas",
+                "combustible*", "gasolina*", "diesel", "petroleo", "barril", "eurobono*", "titulos valores", "calificadora*",
+                "moody*", "fitch", "riesgo pais", "emision", "recompra", "presupuestari*", "refuerzo*", "transferencia*",
+                "salarial*", "tributari*"]
 
 gusto_economia_sv = ["bcr", "banco central de reserva", "inflacion", "reservas", "remesas", "exportacion*", "importacion*",
                      "pib", "ivae", "invers*", "turis*", "visitantes", "cepa", "aeropuerto", "puerto", "carga", "cafe",
                      "azucar", "construccion", "empleo", "salario minimo", "banca", "credito", "opamss", "zona* franca*",
                      "energia", "combustible*", "canasta basica", "precios", "empresa*", "millones", "productividad",
                      "comercio exterior", "agro*", "centa", "cooperacion", "mitur", "proesa", "bandesal", "minec",
-                     "hoteler*", "logistic*"]
+                     "hoteler*", "logistic*",
+                     "crecimiento", "industria*", "manufactur*", "desempleo", "laboral*", "costo de vida", "vivienda*",
+                     "inmobiliari*", "consumo", "ventas", "migrante*", "deportad*", "deportacion*", "diaspora", "arancel*",
+                     "ied", "balanza comercial", "bancos", "bancari*", "deposito*", "tasa* de interes",
+                     "sistema financiero", "seguros", "bolsa de valores", "fintech", "activos digitales", "stablecoin*",
+                     "bitcoin", "hotel*", "aerolinea*", "vuelo*", "crucero*", "agricultur*", "agricultor*", "agricola*",
+                     "agropecuari*", "productor*", "cosecha*", "zafra", "maiz", "frijol", "granos basicos",
+                     "cafetaler*", "ganader*", "pesca", "pesquer*", "sequia*", "estudio*", "fusades", "icefi", "funde",
+                     "economista*", "incentivo* fiscal*", "invertira*", "inviert*"]
 
 evita = ["horoscopo", "loteria", "sorteo", "receta*", "futbol", "gol", "farandula", "pelicula", "netflix",
          "pronostico del tiempo", "homicidio*", "capturan", "descuento*", "ofertas", "black friday", "cupon*",
@@ -446,25 +584,46 @@ economia = ["econom*", "inflacion", "pib", "banco central", "tasa* de interes", 
             "puerto*", "cafe", "azucar", "maquila*", "zona franca"]
 
 # ------------------------------------------------------------------ el gusto
-# Qué notas se parecen a las que el dueño pone en sus reportes diarios (leídos el 2026-11-13 en sus
-# ediciones del 10, el 11 y el 12 de noviembre). Lo internacional es de corte financiero: mercados, la Fed, bonos del
-# Tesoro, grandes operaciones de empresas, y en América Latina la deuda soberana, el FMI y los bancos
-# centrales. Lo nacional sale sobre todo de Diario El Mundo: en Fiscales, el presupuesto de cada
-# ministerio, los contratos, el gasto público (también el de las alcaldías), lo que ratifica la Asamblea
-# y, sobre todo, cualquier proyecto de inversión pública: quién lo financia y quién lo ejecuta (la
-# lista `inversion_publica`); en lo económico, las cifras del BCR, CEPA, turismo,
-# inversión, agro y empresas. tuberias/noticias.py (`puntaje`) suma 2 por cada palabra preferida en el
-# titular, 1 en el extracto y el `peso` de la fuente, y resta 3 por cada palabra de `evita` y otros 3 si
-# el titular empieza como una nota de servicio. El puntaje ordena dentro de cada categoría; qué nota
-# entra en «Fiscales» no lo decide el puntaje sino la regla `fiscales`.
+# Qué notas van en los reportes diarios del dueño y en qué lugar. Lo dijo él el 2026-11-13 y sus
+# titulares están fijados en pruebas/test_noticias.py. tuberias/noticias.py lo aplica así, en cada
+# corrida y a toda la base:
+#
+#   qué entra    [medios] fuera saca medios enteros; `exige`, lo que no es fiscal ni económico de una
+#                sección general; las listas de cripto, las monedas que no interesan.
+#   `puntaje`    cuánto merece una nota estar entre las elegidas de su subsección: 2 por cada palabra
+#                preferida de su categoría ([gusto]) en el titular y 1 en el extracto, más el peso de su
+#                medio ([pesos], si la nota ya suma algo) y el bono de un dato recién publicado por el BCR ([[dato_bcr]]); menos 3
+#                por cada palabra de `evita` y otros 3 si el titular es de servicio.
+#   una historia La misma noticia en varios medios cuenta una vez: queda la del medio que más pesa y las
+#                demás bajan al final, con puntaje 0 o menos. Lo mismo las notas de «otras fuentes» que
+#                pasan de `otras_por_subseccion` y las que pasan del `maximo` de su tema.
+#   `tema`       En Fiscales y en Nacionales, el tema de la nota ([[tema]]): gana el que más palabras
+#                suyas tiene (el titular vale doble) y, si empatan, el que va antes. La segunda nota de
+#                un tema pierde `paso_mismo_tema` puntos, la tercera el doble: quien toma las de más
+#                puntaje se lleva algo de cada tema y no seis notas del mismo.
+#   `orden`      El lugar de la nota en su subsección: primero las principales, por tema y dentro del
+#                tema por puntaje; después las que bajaron. El sitio y la hoja de Google ordenan por aquí.
+#
+# Lo internacional es de corte financiero: mercados, la Fed, bonos del Tesoro, grandes operaciones de
+# empresas, y en América Latina la deuda soberana, el FMI y los bancos centrales; manda Bloomberg Línea.
 
 [reglas]
 # Una regla se cumple por cualquiera de sus vías, y una vía, cuando la nota trae palabras de todas sus
 # listas. `fiscales` es lo que hace «Fiscales» a una nota salvadoreña, y lo que se le exige a las
 # secciones Política y Nacional de un diario: algo fiscal, o un proyecto de inversión pública, o un actor
-# público junto a dinero, o un acuerdo internacional que se aprueba o ratifica. Como el puntaje, se vuelve a aplicar a
-# toda la base en cada corrida: depende solo de este archivo.
-fiscales = [["fiscal"], ["inversion_publica"], ["actor_publico", "dinero"], ["acuerdo", "aprobacion"]]
+# público junto a dinero, o un acuerdo internacional que se aprueba o ratifica, o combustibles y petróleo.
+# Manda el titular: si la regla solo se cumple contando el extracto y por una única palabra de la lista
+# `fiscal` («…generó ingresos tributarios»), la nota no es fiscal.
+# Como el puntaje, se vuelve a aplicar a toda la base en cada corrida: depende solo de este archivo.
+fiscales = [["fiscal"], ["inversion_publica"], ["actor_publico", "dinero"], ["acuerdo", "aprobacion"], ["combustibles"]]
+
+# Lo que se le exige a una sección general de un diario (DePaís, Política, Nacionales, Social): que la
+# nota sea fiscal o que sea de economía.
+de_interes = [["fiscal"], ["inversion_publica"], ["actor_publico", "dinero"], ["acuerdo", "aprobacion"], ["combustibles"],
+              ["economia_nacional"]]
+
+# El precio del bitcoin (se mira solo el titular).
+precio_btc = [["bitcoin", "precio"]]
 
 [gusto]
 "Internacional – EUA" = { prefiere = "gusto_mercados", evita = "evita" }
@@ -477,3 +636,116 @@ fiscales = [["fiscal"], ["inversion_publica"], ["actor_publico", "dinero"], ["ac
 # Un titular que empieza así es una nota de servicio o una explicación, no una noticia.
 titular_de_servicio = ["¿", "como ", "que es ", "que son ", "cuanto ", "cuando ", "donde ", "estos son ", "estas son ",
                        "asi puedes ", "paso a paso", "conoce ", "conozca ", "guia "]
+
+
+# ------------------------------------------------------------------ los temas, en su orden
+# El orden de cada subsección nacional, del dueño (2026-11-13). `palabras` nombra una lista de
+# [palabras]; `regla`, una de [reglas] que, si el titular la cumple, decide el tema sin contar más;
+# `resto` marca el tema donde cae lo que no es de ningún otro; `maximo`, cuántas notas principales caben.
+
+[[tema]]
+categoria = "El Salvador – Fiscales"
+nombre = "Combustibles y petróleo"
+palabras = "combustibles"
+
+[[tema]]
+categoria = "El Salvador – Fiscales"
+nombre = "Deuda pública"
+palabras = "tema_deuda"
+
+[[tema]]
+categoria = "El Salvador – Fiscales"
+nombre = "Presupuesto"
+palabras = "tema_presupuesto"
+
+[[tema]]
+categoria = "El Salvador – Fiscales"
+nombre = "Otra materia fiscal"
+resto = true
+
+[[tema]]
+categoria = "El Salvador – Nacionales"
+nombre = "Sector real"
+palabras = "tema_real"
+
+[[tema]]
+categoria = "El Salvador – Nacionales"
+nombre = "Sector externo"
+palabras = "tema_externo"
+
+[[tema]]
+categoria = "El Salvador – Nacionales"
+nombre = "Sector monetario y financiero"
+palabras = "tema_monetario"
+
+[[tema]]
+categoria = "El Salvador – Nacionales"
+nombre = "Turismo"
+palabras = "tema_turismo"
+
+[[tema]]
+categoria = "El Salvador – Nacionales"
+nombre = "Agricultura y sector primario"
+palabras = "tema_agro"
+
+[[tema]]
+categoria = "El Salvador – Nacionales"
+nombre = "Otros: precio del bitcoin"
+regla = "precio_btc"
+maximo = 1
+
+[[tema]]
+categoria = "El Salvador – Nacionales"
+nombre = "Otros: investigación económica"
+palabras = "tema_investigacion"
+
+[[tema]]
+categoria = "El Salvador – Nacionales"
+nombre = "Otros: empresas"
+palabras = "tema_empresas"
+
+[[tema]]
+categoria = "El Salvador – Nacionales"
+nombre = "Otros"
+resto = true
+
+# ------------------------------------------------------------------ cuando el BCR publica
+# «Presta atención a cuando salen nuevos datos del BCR»: si el calendario (lago/plata/calendario.csv,
+# fechas anunciadas por el BCR) dice que una de estas series salió en los últimos `dias_dato_bcr` días,
+# la nota nacional que trae sus palabras suma `bono_dato_bcr`. `series` son claves de catalogo/series.toml.
+
+[[dato_bcr]]
+series = ["pib_trimestral", "pib_trimestral_volumen", "pib_trimestral_volumen_sa", "pib_anual", "pib_anual_volumen"]
+palabras = ["pib", "producto interno bruto", "crecimiento economico", "economia crecio"]
+
+[[dato_bcr]]
+series = ["ivae", "ivae_sa", "otros_indicadores"]
+palabras = ["ivae", "actividad economica"]
+
+[[dato_bcr]]
+series = ["ipc", "isi"]
+palabras = ["inflacion", "ipc", "precios al consumidor"]
+
+[[dato_bcr]]
+series = ["ipp"]
+palabras = ["ipp", "precios al productor"]
+
+[[dato_bcr]]
+series = ["remesas"]
+palabras = ["remesa*"]
+
+[[dato_bcr]]
+series = ["balanza_comercial"]
+palabras = ["exportac*", "importac*", "balanza comercial", "deficit comercial"]
+
+[[dato_bcr]]
+series = ["reservas"]
+palabras = ["reservas internacionales", "reservas"]
+
+[[dato_bcr]]
+series = ["balanza_pagos", "pii"]
+palabras = ["balanza de pagos", "cuenta corriente", "posicion de inversion"]
+
+[[dato_bcr]]
+series = ["ied", "ied_ciiu"]
+palabras = ["inversion extranjera", "ied"]

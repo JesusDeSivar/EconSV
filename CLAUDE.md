@@ -103,21 +103,50 @@ end if you must, never rename or reorder them without changing `EconSV.gs` and s
 for the sheet. Text that comes from outside (headlines, names) must land in columns set to plain text
 before writing, so nothing fetched can run as a formula.
 
-## What counts as a fiscal news note
+## The news taste: which notes enter, and in what order
 
-The owner writes a daily report from the news base, and its «Fiscales» section is the taste the search
-follows. Which Salvadoran note is «Fiscales» is the rule `fiscales` in `catalogo/noticias_fuentes.toml`
-(something fiscal, or a public-investment project, or a public actor next to money, or an international
-agreement being approved), decided by the note's words and never by the section it came from. One word
-alone lets in road closures and rescued dogs; too strict a rule throws out what he does include — his
-11 November report carried the visa-exemption agreement with Kuwait under Fiscales. The headlines of his
-reports are pinned in `pruebas/test_noticias.py` (`Fiscales`): change the lists against those tests, and
-look at what `noticias.al_dia` would drop from the stored base before committing. Rule and score are
-re-applied to the whole base on every run, so a change reaches the editions already stored.
+The owner dictated this on 2026-11-13; it lives in `catalogo/noticias_fuentes.toml` and its examples
+are pinned in `pruebas/test_noticias.py`. Change the catalogue against those tests, never around them.
+
+- **Sources.** `[medios] fuera` is his list of outlets that never enter, whatever feed brings them
+  (most came through Google News). `[pesos]` is his order: abroad, Bloomberg Línea first; at home,
+  elEconomista.net, Diario El Salvador, Diario El Mundo, La Prensa Gráfica, El Diario de Hoy. An
+  outlet not in `[pesos]` is «otra fuente»: only `otras_por_subseccion` of its notes stay among the
+  main ones of a subsection, so a new outlet turning up in Google News cannot fill it.
+- **Crypto.** Bitcoin, stablecoins and exchanges only; a note about another coin is dropped. The
+  bitcoin *price* goes to «El Salvador – Nacionales» from any source, one per edition.
+- **Fiscales is a rule, not a word.** `fiscales` in `[reglas]`: something fiscal, a public-investment
+  project, a public actor next to money, an international agreement being approved, or fuel and oil.
+  The headline rules: one loose fiscal word in the excerpt is not enough. One word alone lets in road
+  closures and rescued dogs; too strict a rule throws out what he does include — his 11 November
+  report carried the visa-exemption agreement with Kuwait under Fiscales.
+- **Order inside the two national subsections** (`[[tema]]`, in file order). Fiscales: fuel and oil,
+  public debt, budget, other fiscal matters. Nacionales: real sector, external sector, monetary and
+  financial, tourism, agriculture, then «otros» — bitcoin price, economic research, private companies.
+  A note that picks up a series the BCR has just released (`[[dato_bcr]]`, read from the calendar)
+  gets a bonus.
+- **One story, one note.** The same story in several outlets counts once, in the heaviest outlet.
+
+`noticias.priorizar` turns all of that into three columns, recomputed for the whole base on every run
+(so a rule change reaches the editions already stored; look at what `noticias.al_dia` would drop before
+committing): `puntaje` says which notes deserve to be picked (0 or less: a repeated story, an extra
+note from another source, or nothing of what is sought), `tema` names the theme, and `orden` is the
+note's place in its subsection — main notes first, theme by theme. The site and the Sheets script sort
+by `orden`; nothing else should re-derive the order. `tema` and `orden` were added at the end of the
+news files, as the column contract requires.
+
+elEconomista.net and laprensagrafica.com answer automated readers with an AWS WAF challenge (HTTP 202,
+empty body) and a closed robots.txt. That is a block and is not worked around: their headlines come
+through Google News `site:` searches, headline and link only.
 
 ## Schedules
 
-GitHub cron is UTC and El Salvador is UTC−6 all year (no daylight saving): 7:15 AM = `15 13 * * *`.
+GitHub cron is UTC and El Salvador is UTC−6 all year (no daylight saving): 7:07 AM = `7 13 * * *`.
+**GitHub does not keep the hour of a cron.** On 2026-11-13 the 7:15 news run never fired, and the only
+scheduled run this repository had seen (`datos.yml`) arrived 4 h 26 min late. So `noticias.yml` has
+four slots (7:07, 7:37, 8:17, 10:17) and a first step that ends the run when the day's edition is
+already stored; a manual dispatch always runs. If the morning edition is missing, look at Actions for
+a `schedule` run before looking for a bug: there may be none. Claude scheduled tasks do fire on time.
 Scheduled workflows only run from the default branch. A push made with `GITHUB_TOKEN` does not trigger
 other workflows, which is why `datos.yml` and `noticias.yml` call `pages.yml` directly.
 

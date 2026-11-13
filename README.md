@@ -17,7 +17,7 @@ Estados Unidos.
 | Turismo | Ingresos y gastos por viajes (balanza de pagos), entrada y salida de pasajeros, valor agregado de alojamiento y comidas |
 | Construcción | IVAE de la construcción, valor agregado de la construcción (real y nominal), consumo aparente de cemento |
 | Calendario | Cuándo se espera cada dato y hasta dónde llega cada serie |
-| Noticias | Tabla diaria en cinco categorías, descargable en CSV y Excel |
+| Noticias | Tabla diaria en cinco categorías, descargable en CSV y Excel; lo nacional va ordenado por tema |
 | Datos | Cada serie del BCR completa, en CSV y Excel |
 
 **En Google Sheets.** [`integraciones/google_sheets`](integraciones/google_sheets) tiene un script de
@@ -50,13 +50,14 @@ GitHub publica el sitio.
 3. **A mano**, cuando la página Calendario del sitio dice que algo toca:
    `python tuberias/actualizar.py` y `git push`.
 
-**Noticias.** Los feeds sí responden a los runners de GitHub: `noticias.yml` corre todos los días a
-las 7:15 AM de El Salvador (13:15 UTC). GitHub puede arrancar una corrida programada con algunos
-minutos de atraso.
+**Noticias.** Los feeds sí responden a los runners de GitHub: `noticias.yml` corre todos los días
+poco después de las 7:00 AM de El Salvador. GitHub no garantiza la hora de una corrida programada (ha
+llegado con horas de atraso, y alguna no ha llegado), así que el workflow tiene cuatro intentos, a las
+7:07, 7:37, 8:17 y 10:17: el primero que sale hace la edición y los demás terminan sin hacer nada.
 
 | Workflow | Cuándo | Qué hace |
 |---|---|---|
-| `noticias.yml` | 7:15 todos los días | feeds → categorías → edición del día → guardar → sitio |
+| `noticias.yml` | 7:07 todos los días, con tres intentos de respaldo | feeds → categorías → edición del día → guardar → sitio |
 | `pages.yml` | cuando cambia `lago/`, `sitio/` o `catalogo/` en `main`, y lo llaman los otros | arma `sitio/datos/` y publica en GitHub Pages |
 | `datos.yml` | apagado mientras no haya un runner propio (`RUNNER_DATOS`); con él, 10:10 y 16:10 lun–sáb y domingo 6:10 | la cadena de datos del BCR |
 | `pruebas.yml` | en cada push y pull request | pruebas sin red, compuerta, sitio |
@@ -99,6 +100,12 @@ Reglas que sostienen las cifras:
 - **Las noticias son contexto.** Solo titular, extracto y enlace, como los publica cada medio en su
   feed. Nunca texto completo, y nunca son la fuente de una cifra. El reparto en categorías es por
   coincidencia de palabras y se equivoca a veces.
+- **Las noticias tienen un orden.** `catalogo/noticias_fuentes.toml` dice qué medios entran y cuánto
+  pesa cada uno (en lo internacional manda Bloomberg Línea; en lo nacional, elEconomista.net, Diario El
+  Salvador, Diario El Mundo, La Prensa Gráfica y El Diario de Hoy), y en qué orden van los temas de las
+  dos categorías de El Salvador: en Fiscales, combustibles, deuda pública, presupuesto y otra materia
+  fiscal; en Nacionales, sector real, externo, monetario, turismo, agricultura y otros. De una misma
+  historia en varios medios queda arriba una sola. Cada nota lleva su `puntaje`, su `tema` y su `orden`.
 
 ## Correrlo en tu máquina
 
@@ -149,9 +156,18 @@ python tuberias/noticias.py excel             # el Excel de la última edición
 - La inversión extranjera en construcción es confidencial en casi todos los trimestres.
 - El feed del Ministerio de Hacienda y el de la Presidencia respondieron 403 al armar el catálogo;
   están marcados como opcionales y se prueban en cada corrida.
+- elEconomista.net y La Prensa Gráfica no dejan leer su sitio ni su feed a un lector automático: sus
+  notas llegan por Google News, solo con titular y enlace, sin extracto.
 - El portal del BCR responde 403 a los runners de GitHub: sus datos se traen desde otra máquina.
 - El portal del BCR responde 500 a pedidos grandes; por eso el lector pide por tramos de años y por
   lotes de variables. Si el BCR cambia su portal, el lector hay que ajustarlo.
+
+## Aviso
+
+EconSV es solo para fines informativos y se arma con información pública. No es asesoría financiera,
+de inversión, legal ni tributaria, y no nos hacemos responsables de las decisiones de inversión, ni de
+ninguna otra, que se tomen con base en lo que aquí se muestra. Las cifras y las noticias son de sus
+fuentes: antes de usarlas, compruébelas en la fuente original.
 
 ## Fuentes y licencia
 
