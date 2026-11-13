@@ -289,13 +289,14 @@ fiscal = ["presupuesto*", "deuda", "eurobono*", "bonos", "letes", "cetes", "fmi"
           "moody*", "fitch", "standard & poor*", "deficit", "politica fiscal", "reforma fiscal",
           "ajuste fiscal", "regla fiscal", "sostenibilidad fiscal", "consolidacion fiscal", "gasto publico",
           "financiamiento", "prestamo*", "aduana*", "evasion", "contribuyente*", "erario", "tesoreria",
-          "riesgo pais", "embi", "refinanciamiento", "endeudamiento", "recompra", "comision de hacienda",
+          "riesgo pais", "embi", "refinanciamiento", "endeudamiento", "recompra", "comision de hacienda", "bid", "bcie",
           "adjudic*", "licitacion*", "comprasal", "remuneracion*", "subsidio*", "corte de cuentas"]
 
 # Lo que tiene que traer una nota de Política para entrar: que hable de dinero público.
 dinero_publico = ["presupuesto*", "millones", "fondos", "financia*", "prestamo*", "adjudic*", "contrat*",
                   "licitacion*", "comprasal", "salario*", "bono*", "impuesto*", "deuda", "hacienda", "remuneracion*",
-                  "auditoria", "gasto*", "subsidio*", "pension*", "cooperacion", "recaudacion", "fodes"]
+                  "auditoria", "gasto*", "subsidio*", "pension*", "cooperacion", "recaudacion", "fodes", "bid",
+                  "bcie", "banco mundial", "ratific*", "convenio*", "acuerdo*", "comision de hacienda"]
 
 eua = ["estados unidos", "ee. uu.", "ee.uu.", "eeuu", "eua", "estadounidense*", "reserva federal", "la fed",
        "wall street", "casa blanca", "washington", "trump", "powell", "nasdaq", "dow jones", "s&p 500",
@@ -337,7 +338,7 @@ gusto_fiscal = ["presupuesto*", "comision de hacienda", "hacienda", "millones", 
                 "cetes", "fmi", "impuesto*", "recaudacion", "iva", "renta", "adjudic*", "contratacion", "comprasal",
                 "remuneracion*", "salario*", "pension*", "ministro", "ministra", "ministerio", "fondos", "financia*",
                 "cooperacion", "asamblea", "diputados", "2027", "fodes", "subsidio*", "gasto*", "auditoria",
-                "corte de cuentas"]
+                "corte de cuentas", "bid", "bcie", "banco mundial", "ratific*", "convenio*", "acuerdo*", "aprueba*"]
 
 gusto_economia_sv = ["bcr", "banco central de reserva", "inflacion", "reservas", "remesas", "exportacion*", "importacion*",
                      "pib", "ivae", "invers*", "turis*", "visitantes", "cepa", "aeropuerto", "puerto", "carga", "cafe",
@@ -349,7 +350,7 @@ gusto_economia_sv = ["bcr", "banco central de reserva", "inflacion", "reservas",
 evita = ["horoscopo", "loteria", "sorteo", "receta*", "futbol", "gol", "farandula", "pelicula", "netflix",
          "pronostico del tiempo", "homicidio*", "capturan", "descuento*", "ofertas", "black friday", "cupon*",
          "requisitos", "tramite*", "visa", "green card", "seguro de viaje", "estafa*", "fraudulent*", "consejos",
-         "tips", "amante*", "infidelidad*", "romance", "beca*", "cheque* de estimulo", "food stamps", "snap", "seguro social", "licencia de conducir"]
+         "tips", "amante*", "infidelidad*", "romance", "cheque* de estimulo", "food stamps", "snap", "seguro social", "licencia de conducir"]
 
 economia = ["econom*", "inflacion", "pib", "banco central", "tasa* de interes", "tipos de interes", "arancel*",
             "comerci*", "exportac*", "importac*", "deuda", "bono*", "mercado*", "bolsa*", "empleo*", "desempleo",
@@ -361,11 +362,12 @@ economia = ["econom*", "inflacion", "pib", "banco central", "tasa* de interes", 
             "puerto*", "cafe", "azucar", "maquila*", "zona franca"]
 
 # ------------------------------------------------------------------ el gusto
-# Qué notas se parecen a las que el dueño pone en sus reportes diarios (leídos el 2026-11-13 en su
-# edición del 10 de noviembre). Lo internacional es de corte financiero: mercados, la Fed, bonos del
+# Qué notas se parecen a las que el dueño pone en sus reportes diarios (leídos el 2026-11-13 en sus
+# ediciones del 10 y el 11 de noviembre). Lo internacional es de corte financiero: mercados, la Fed, bonos del
 # Tesoro, grandes operaciones de empresas, y en América Latina la deuda soberana, el FMI y los bancos
 # centrales. Lo nacional sale sobre todo de Diario El Mundo: en Fiscales, el presupuesto de cada
-# ministerio, los contratos y el gasto público; en lo económico, las cifras del BCR, CEPA, turismo,
+# ministerio, los contratos, el gasto público, los préstamos del BID y del BCIE y lo que ratifica la
+# Asamblea; en lo económico, las cifras del BCR, CEPA, turismo,
 # inversión, agro y empresas. tuberias/noticias.py (`puntaje`) suma 2 por cada palabra preferida en el
 # titular, 1 en el extracto y el `peso` de la fuente, y resta 3 por cada palabra de `evita` y otros 3 si
 # el titular empieza como una nota de servicio. El puntaje ordena dentro de cada categoría.
