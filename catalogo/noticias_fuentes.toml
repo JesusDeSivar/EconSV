@@ -212,6 +212,17 @@ peso = 3
 nota = "De Política solo entra lo que habla de dinero público: presupuestos por ministerio, contratos, préstamos, gasto."
 
 [[fuente]]
+clave = "el_mundo_nacionales"
+nombre = "Diario El Mundo"
+metodo = "elmundo"
+url = "https://diario.elmundo.sv/nacionales"
+paginas = 2
+categoria = "El Salvador – Fiscales"
+exige = "dinero_publico"
+peso = 3
+nota = "De Nacionales, lo mismo: obras, programas y servicios públicos con su dinero."
+
+[[fuente]]
 clave = "diario_el_salvador"
 nombre = "Diario El Salvador"
 metodo = "wp_api"
@@ -229,6 +240,17 @@ categoria = "El Salvador – Nacionales"
 peso = 2
 
 [[fuente]]
+clave = "el_diario_de_hoy_nacional"
+nombre = "El Diario de Hoy"
+metodo = "wp_api"
+url = "https://www.elsalvador.com"
+secciones = ["nacional"]
+categoria = "El Salvador – Fiscales"
+exige = "dinero_publico"
+peso = 2
+nota = "De Nacional, solo lo que habla de dinero público."
+
+[[fuente]]
 clave = "presidencia"
 nombre = "Presidencia de la República"
 metodo = "wp_api"
@@ -237,6 +259,16 @@ secciones = []
 categoria = "El Salvador – Nacionales"
 filtro = true
 opcional = true
+
+[[fuente]]
+clave = "gnews_inversion_publica"
+nombre = "Google News"
+metodo = "gnews"
+opcional = true
+exige = "el_salvador"
+url = "https://news.google.com/rss/search?q=%22El+Salvador%22+(MOP+OR+FOVIAL+OR+DOM+OR+BCIE+OR+BID+OR+CAF+OR+%22Banco+Mundial%22+OR+KfW+OR+%22cooperaci%C3%B3n%22)+(proyecto+OR+pr%C3%A9stamo+OR+obra+OR+carretera+OR+financiamiento)+when:2d&hl=es-419&gl=SV&ceid=SV:es-419"
+categoria = "El Salvador – Fiscales"
+nota = "Proyectos de inversión pública: quién los financia (multilaterales, cooperación) y quién los ejecuta (MOP, FOVIAL, DOM)."
 
 [[fuente]]
 clave = "gnews_sv_fiscal"
@@ -262,7 +294,7 @@ clave = "gnews_lpg"
 nombre = "Google News"
 metodo = "gnews"
 opcional = true
-url = "https://news.google.com/rss/search?q=site:laprensagrafica.com+econom%C3%ADa+when:2d&hl=es-419&gl=SV&ceid=SV:es-419"
+url = "https://news.google.com/rss/search?q=site:laprensagrafica.com+(econom%C3%ADa+OR+millones+OR+presupuesto+OR+alcald%C3%ADa+OR+BCIE+OR+BID+OR+MOP+OR+pr%C3%A9stamo)+when:2d&hl=es-419&gl=SV&ceid=SV:es-419"
 categoria = "El Salvador – Nacionales"
 filtro = true
 maximo = 30
@@ -292,11 +324,35 @@ fiscal = ["presupuesto*", "deuda", "eurobono*", "bonos", "letes", "cetes", "fmi"
           "riesgo pais", "embi", "refinanciamiento", "endeudamiento", "recompra", "comision de hacienda", "bid", "bcie",
           "adjudic*", "licitacion*", "comprasal", "remuneracion*", "subsidio*", "corte de cuentas"]
 
+# Proyectos de inversión pública: quién los financia (multilaterales y cooperación internacional) y
+# quién los ejecuta. Una nota salvadoreña con cualquiera de estas palabras es «Fiscales», entra aunque
+# venga de Política o Nacionales, y sube en el puntaje. La lista es del dueño (2026-11-13): no solo BCIE
+# y BID, sino cualquier proyecto de inversión pública.
+inversion_publica = ["bcie", "banco centroamericano de integracion economica", "bid", "banco interamericano de desarrollo",
+                     "caf", "banco de desarrollo de america latina", "banco mundial", "birf",
+                     "banco internacional de reconstruccion y fomento", "kfw", "cooperacion alemana", "giz",
+                     "cooperacion espanola", "aecid", "cooperacion italiana", "aics", "cooperacion japonesa", "jica",
+                     "cooperacion coreana", "koica", "cooperacion internacional", "cooperacion china", "union europea",
+                     "luxemburgo", "usaid", "fida", "ofid", "opep fund", "banco europeo de inversiones",
+                     "mop", "ministerio de obras publicas", "fovial", "fondo de conservacion vial", "dom",
+                     "direccion de obras municipales", "inversion publica", "obra* publica*", "proyecto* de inversion",
+                     "paip", "prestamo*", "desembols*", "financiamiento externo", "no reembolsable*", "donacion*"]
+
+# En un diario salvadoreño, una nota con estas palabras es del país aunque nombre a otro: la
+# cooperación siempre nombra al país que coopera («cooperación alemana», «italiana»). Solo vale para las
+# fuentes cuya categoría es salvadoreña; en un medio de fuera, JICA o KfW pueden estar en cualquier parte.
+ancla_sv = ["mop", "ministerio de obras publicas", "fovial", "dom", "direccion de obras municipales", "kfw", "giz",
+            "aecid", "aics", "jica", "koica", "cooperacion alemana", "cooperacion espanola", "cooperacion italiana",
+            "cooperacion japonesa", "cooperacion coreana", "asamblea legislativa", "ministerio de hacienda",
+            "alcaldia*", "diputados", "comision de hacienda"]
+
 # Lo que tiene que traer una nota de Política para entrar: que hable de dinero público.
 dinero_publico = ["presupuesto*", "millones", "fondos", "financia*", "prestamo*", "adjudic*", "contrat*",
                   "licitacion*", "comprasal", "salario*", "bono*", "impuesto*", "deuda", "hacienda", "remuneracion*",
                   "auditoria", "gasto*", "subsidio*", "pension*", "cooperacion", "recaudacion", "fodes", "bid",
-                  "bcie", "banco mundial", "ratific*", "convenio*", "acuerdo*", "comision de hacienda"]
+                  "bcie", "banco mundial", "ratific*", "convenio*", "acuerdo*", "comision de hacienda", "caf", "birf",
+                  "kfw", "aecid", "aics", "jica", "koica", "giz", "mop", "fovial", "dom", "obra*", "carretera*",
+                  "inversion publica", "no reembolsable*", "donacion*", "desembols*", "alcaldia*", "municip*", "tasas"]
 
 eua = ["estados unidos", "ee. uu.", "ee.uu.", "eeuu", "eua", "estadounidense*", "reserva federal", "la fed",
        "wall street", "casa blanca", "washington", "trump", "powell", "nasdaq", "dow jones", "s&p 500",
@@ -338,7 +394,13 @@ gusto_fiscal = ["presupuesto*", "comision de hacienda", "hacienda", "millones", 
                 "cetes", "fmi", "impuesto*", "recaudacion", "iva", "renta", "adjudic*", "contratacion", "comprasal",
                 "remuneracion*", "salario*", "pension*", "ministro", "ministra", "ministerio", "fondos", "financia*",
                 "cooperacion", "asamblea", "diputados", "2027", "fodes", "subsidio*", "gasto*", "auditoria",
-                "corte de cuentas", "bid", "bcie", "banco mundial", "ratific*", "convenio*", "acuerdo*", "aprueba*"]
+                "corte de cuentas", "bid", "bcie", "banco mundial", "ratific*", "convenio*", "acuerdo*", "aprueba*",
+                "caf", "birf", "kfw", "aecid", "aics", "jica", "koica", "giz", "cooperacion alemana",
+                "cooperacion espanola", "cooperacion italiana", "cooperacion japonesa", "cooperacion coreana",
+                "mop", "obras publicas", "fovial", "dom", "obras municipales", "inversion publica", "obra*",
+                "carretera*", "puente*", "bypass", "periferico", "viaducto", "paso a desnivel", "pavimentacion",
+                "desembols*", "no reembolsable*", "donacion*", "licitacion*", "alcaldia*", "municip*", "ingresos",
+                "erario", "condonacion", "tasas"]
 
 gusto_economia_sv = ["bcr", "banco central de reserva", "inflacion", "reservas", "remesas", "exportacion*", "importacion*",
                      "pib", "ivae", "invers*", "turis*", "visitantes", "cepa", "aeropuerto", "puerto", "carga", "cafe",
@@ -363,11 +425,12 @@ economia = ["econom*", "inflacion", "pib", "banco central", "tasa* de interes", 
 
 # ------------------------------------------------------------------ el gusto
 # Qué notas se parecen a las que el dueño pone en sus reportes diarios (leídos el 2026-11-13 en sus
-# ediciones del 10 y el 11 de noviembre). Lo internacional es de corte financiero: mercados, la Fed, bonos del
+# ediciones del 10, el 11 y el 12 de noviembre). Lo internacional es de corte financiero: mercados, la Fed, bonos del
 # Tesoro, grandes operaciones de empresas, y en América Latina la deuda soberana, el FMI y los bancos
 # centrales. Lo nacional sale sobre todo de Diario El Mundo: en Fiscales, el presupuesto de cada
-# ministerio, los contratos, el gasto público, los préstamos del BID y del BCIE y lo que ratifica la
-# Asamblea; en lo económico, las cifras del BCR, CEPA, turismo,
+# ministerio, los contratos, el gasto público (también el de las alcaldías), lo que ratifica la Asamblea
+# y, sobre todo, cualquier proyecto de inversión pública: quién lo financia y quién lo ejecuta (la
+# lista `inversion_publica`); en lo económico, las cifras del BCR, CEPA, turismo,
 # inversión, agro y empresas. tuberias/noticias.py (`puntaje`) suma 2 por cada palabra preferida en el
 # titular, 1 en el extracto y el `peso` de la fuente, y resta 3 por cada palabra de `evita` y otros 3 si
 # el titular empieza como una nota de servicio. El puntaje ordena dentro de cada categoría.

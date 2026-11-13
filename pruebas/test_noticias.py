@@ -57,6 +57,23 @@ class Gusto(unittest.TestCase):
         b = noticias.puntaje(self.nota(FIS, "Salinas Pliego dice que bitcoin es el mejor dinero"))
         self.assertGreater(a, b + 5)
 
+    def test_la_inversion_publica_es_fiscal_y_va_arriba(self):
+        """Lo que pidió el dueño: no solo BCIE y BID, cualquier proyecto de inversión pública."""
+        casos = ["CAF aprueba crédito para ampliar la carretera al puerto de La Libertad",
+                 "KfW financiará el saneamiento del lago de Ilopango con cooperación alemana",
+                 "El Banco Mundial desembolsa fondos para escuelas",
+                 "FOVIAL inicia la reparación de 40 kilómetros de la Panamericana",
+                 "La DOM entrega un mercado municipal en Usulután",
+                 "MOP adjudica el diseño del viaducto de Los Chorros",
+                 "Cooperación italiana financia rescate habitacional en el Centro Histórico",
+                 "JICA y el MOP firman convenio para un puente en San Miguel"]
+        comun = noticias.puntaje(self.nota(FIS, "Diputados discuten una reforma al reglamento interno"))
+        for t in casos:
+            self.assertEqual(noticias.clasificar(t, NAC), FIS, t)
+            self.assertTrue(noticias.cuenta("dinero_publico", t), t)
+            self.assertGreaterEqual(noticias.puntaje(self.nota(FIS, t)), comun + 3, t)
+        self.assertEqual(noticias.clasificar("Abren un nuevo centro comercial en Santa Tecla", NAC), NAC)
+
     def test_el_titular_pesa_el_doble_que_el_extracto(self):
         t = noticias.puntaje(self.nota(EUA, "La Fed sube las tasas"))
         r = noticias.puntaje(self.nota(EUA, "Una decisión esperada", "La Fed sube las tasas"))

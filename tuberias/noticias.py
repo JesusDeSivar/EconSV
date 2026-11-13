@@ -92,10 +92,12 @@ def menciona_sv(texto):
 
 def clasificar(texto, defecto):
     """La categoría de una nota por sus palabras; `defecto` es la de su fuente."""
-    if menciona_sv(texto) or (defecto.startswith("El Salvador") and not any(
-            cuenta(r, texto) for r in ("eua", "latam", "resto"))):
-        return "El Salvador – Fiscales" if cuenta("fiscal", texto) or defecto == "El Salvador – Fiscales" \
-            else "El Salvador – Nacionales"
+    # de un diario salvadoreño, una nota es del país si no nombra otra región, o si la nombra pero
+    # habla de algo de aquí (la cooperación alemana, el MOP, una alcaldía)
+    if menciona_sv(texto) or (defecto.startswith("El Salvador") and (
+            cuenta("ancla_sv", texto) or not any(cuenta(r, texto) for r in ("eua", "latam", "resto")))):
+        fiscal = cuenta("fiscal", texto) or cuenta("inversion_publica", texto) or defecto == "El Salvador – Fiscales"
+        return "El Salvador – Fiscales" if fiscal else "El Salvador – Nacionales"
     n = {"Internacional – EUA": cuenta("eua", texto), "Internacional – LATAM": cuenta("latam", texto),
          "Internacional – Resto del mundo": cuenta("resto", texto)}
     mejor = max(n.values())
@@ -108,11 +110,14 @@ def clasificar(texto, defecto):
 def puntaje(n):
     """Cuánto se parece una nota a lo que entra en los reportes: 2 por cada palabra preferida de su
     categoría en el titular y 1 en el extracto, más el peso de su fuente, menos 3 por cada palabra de
-    las que se evitan. Ordena dentro de una categoría; no compara categorías entre sí."""
+    las que se evitan. En Fiscales, las palabras de inversión pública suman aparte: 3 y 1. Ordena dentro de una categoría; no compara categorías entre sí."""
     g = cfg().get("gusto", {}).get(n["categoria"])
     if not g:
         return 0
     p = 2 * cuenta(g["prefiere"], n["titular"]) + cuenta(g["prefiere"], n["resumen"])
+    if n["categoria"] == "El Salvador – Fiscales":
+        # un proyecto de inversión pública (quién lo financia, quién lo ejecuta) es lo que más se busca
+        p += 3 * cuenta("inversion_publica", n["titular"]) + cuenta("inversion_publica", n["resumen"])
     p -= 3 * cuenta(g["evita"], n["titular"] + " " + n["resumen"])
     if plano(n["titular"]).lstrip("«\"'“ ").startswith(tuple(plano(x) for x in cfg()["gusto_listas"]["titular_de_servicio"])):
         p -= 3
