@@ -425,7 +425,7 @@
     buscar.addEventListener("input", () => { st.texto = buscar.value; paginaNoticias(); const b = document.getElementById("buscar"); b.focus(); b.setSelectionRange(b.value.length, b.value.length); });
     poner(vista, 
       h("h1", {}, "Resumen de noticias"),
-      h("p", { class: "bajada" }, "Cada mañana, poco después de las 7:00, los titulares de economía en cinco categorías. La edición de un día reúne lo publicado desde las " + corteH + ":00 del día anterior hasta las " + corteH + ":00 de ese día, hora de El Salvador. En las dos categorías de El Salvador las notas van por tema: en Fiscales, combustibles, deuda pública, presupuesto y otra materia fiscal; en Nacionales, sector real, externo, monetario, turismo, agricultura y otros. De una misma historia queda arriba la del medio que más pesa. De cada nota hay solo titular, extracto y enlace a su medio."),
+      h("p", { class: "bajada" }, "Cada mañana, poco después de las 7:00, los titulares de economía en cinco categorías. La edición de un día reúne lo publicado desde las " + corteH + ":00 del día anterior hasta las " + corteH + ":00 de ese día, hora de El Salvador. En las dos categorías de El Salvador las notas van por tema: en Fiscales, deuda pública, presupuesto y otra materia fiscal; en Nacionales, combustibles y petróleo, sector real, externo, monetario, turismo, agricultura y otros. De una misma historia queda arriba la del medio que más pesa. De cada nota hay solo titular, extracto y enlace a su medio."),
       h("div", { class: "filtros" },
         h("label", { for: "edicion" }, "Edición"),
         h("select", { id: "edicion", onchange: (ev) => { st.edicion = ev.target.value; paginaNoticias(); } },

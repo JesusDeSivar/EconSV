@@ -153,14 +153,19 @@ def cripto_ajena(texto):
 
 
 # ------------------------------------------------------------------ categoría, puntaje y tema
+def al_inicio(lista, titular, palabras=4):
+    """¿Una palabra de la lista está entre las primeras del titular, como su sujeto?"""
+    return cuenta(lista, " ".join(re.findall(r"\S+", titular)[:palabras])) > 0
+
+
 def _de_aqui(texto, titular):
     """En un medio salvadoreño, ¿la nota es del país? Lo es si no nombra otra región, o si la nombra pero
-    habla de algo de aquí (la cooperación alemana, el MOP, una alcaldía), o si es de combustibles o de
-    petróleo y eso manda en el titular: es lo primero de «Fiscales»."""
+    habla de algo de aquí (la cooperación alemana, el MOP, una alcaldía), o si el combustible o el petróleo
+    es el sujeto del titular («El petróleo sube…»): abre «Económicas». «ONU denuncia que carestía de
+    combustibles…» no lo es: el dueño la puso en lo internacional."""
     if cuenta("ancla_sv", texto) or not any(cuenta(r, texto) for r in ("eua", "latam", "resto")):
         return True
-    c = cuenta("combustibles", titular)
-    return c > 0 and c >= max(cuenta(r, titular) for r in ("eua", "latam", "resto"))
+    return al_inicio("combustibles", titular)
 
 
 def es_fiscal(texto, titular):
@@ -206,10 +211,14 @@ def puntaje(n, publicado=None):
         for lista in ("financiador", "ejecutor"):
             p += 3 * cuenta(lista, titular) + cuenta(lista, resumen)
     p -= 3 * cuenta(g["evita"], n["titular"] + " " + n["resumen"])
-    if plano(n["titular"]).lstrip("«\"'“ ").startswith(tuple(plano(x) for x in cfg()["gusto_listas"]["titular_de_servicio"])):
+    nacional = n["categoria"] in NACIONALES
+    servicio = cfg()["gusto_listas"]["titular_de_servicio_nacional" if nacional else "titular_de_servicio"]
+    if plano(n["titular"]).lstrip("«\"'“ ").startswith(tuple(plano(x) for x in servicio)):
         p -= 3
-    if publicado and n["categoria"] in NACIONALES and dato_reciente(n, publicado):
+    if nacional and publicado and dato_reciente(n, publicado):
         p += cfg()["general"]["bono_dato_bcr"]
+    if nacional and cuenta("cita_bcr", titular + " " + resumen):
+        p += cfg()["general"]["bono_bcr"]            # un dato oficial: en sus reportes va con su gráfica
     if p <= 0:
         return p                         # el peso del medio no rescata a la que no trae nada
     peso = peso_de(n["fuente"], n["categoria"])
@@ -266,6 +275,8 @@ def tema(n):
     for i, t in enumerate(ts):
         if t.get("regla") and cumple(t["regla"], titular):
             return i, t["nombre"]
+        if t.get("al_inicio") and al_inicio(t["al_inicio"], n["titular"]):
+            return i, t["nombre"]
         if t.get("palabras"):
             p = 2 * cuenta(t["palabras"], titular) + cuenta(t["palabras"], resumen)
             if p > puntos:
@@ -305,7 +316,7 @@ def repetida(hoy, antes, peso=None):
     """¿La nota de hoy cuenta otra vez una historia de una edición anterior? Si comparten una cifra («14 %»,
     «$860»), basta el umbral de siempre; si no, tienen que coincidir en la parte `repeticion_sin_cifra`. Así
     el petróleo de cada día («sube», «cae», con su precio) no pasa por repetido."""
-    if any(w[0].isdigit() for w in hoy & antes):
+    if any(w[0].isdigit() and not re.fullmatch(r"(19|20)\d\d", w) for w in hoy & antes):   # un año no es una cifra
         return misma_historia(hoy, antes, peso)
     comunes = hoy & antes
     if len(comunes) < 3:

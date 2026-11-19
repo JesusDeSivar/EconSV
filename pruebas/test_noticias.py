@@ -184,10 +184,13 @@ class Afinado(unittest.TestCase):
     def test_transito_y_relaciones_publicas_bajan_en_lo_nacional(self):
         for cat, t in [(FIS, "VMT anuncia cierre parcial en el redondel Naciones Unidas para este lunes"),
                        (NAC, "Restringirán paso vehicular en carretera Litoral este domingo por competencia ciclista"),
-                       (NAC, "Revista El Economista celebrará sus 19 años"),
-                       (NAC, "Banco Cuscatlán celebra la Navidad con «Un Año de Regalos»"),
+                       (NAC, "Credicomer celebra la primera rifa de su crédito MYPE"),
                        (NAC, "Estudiantes finalizan diplomado en gastronomía y turismo en La Unión")]:
             self.assertLessEqual(noticias.puntaje({"categoria": cat, "titular": t, "resumen": "", "fuente": "elEconomista.net"}), 0, t)
+        # pero los aniversarios y premios de empresas no: el 16 y el 17 eligió estos dos
+        for t in ["Opamss reconoce a empresas e instituciones públicas que impulsan la construcción",
+                  "Industria de la construcción celebra 25 años de inversiones en El Salvador"]:
+            self.assertGreater(noticias.puntaje({"categoria": NAC, "titular": t, "resumen": "", "fuente": "Diario El Mundo"}), 0, t)
         # lo internacional no cambia: «Wall Street celebra» es noticia
         self.assertGreater(noticias.puntaje({"categoria": EUA, "titular": "Wall Street celebra el recorte de tasas de la Fed",
                                              "resumen": "", "fuente": "Bloomberg Línea"}), 0)
@@ -208,6 +211,98 @@ class Afinado(unittest.TestCase):
                          "al principio cuenta si otro titular lo da como nombre")
         self.assertEqual(noticias.sujetos("Nvidia Eleva su Pronóstico de Ingresos y los Futuros Suben", frozenset({"nvidia"})),
                          {"nvidia"})
+
+
+class SusReportes(unittest.TestCase):
+    """Los titulares nacionales de sus reportes del 13, 16, 17 y 18 de noviembre, en la sección donde los
+    puso. Son los que se aciertan con el titular solo; los demás necesitan el extracto o son decisiones que
+    el titular no deja ver."""
+    FISCALES = [
+        '¿Es necesario reformar el Sistema de Pensiones en El Salvador?',
+        'Ocho de cada 10 abonados de ANDA continúan con el recibo físico pese a la opción digital',
+        'Ministerio pide a constructores un porcentaje de viviendas de $40,000 en sus proyectos',
+        'Carga en el Puerto de La Unión crece un 50 % impulsada por transporte de vehículos, fertilizantes y materiales de construcción',
+        'Cotizantes al sistema de pensiones crecieron más en 2025',
+        'Ministra de Educación omite rendir cuentas sobre ejecución de programas de inversión pública',
+        'Asamblea aprueba emisión de $860 millones en títulos valores: ¿cuál será el destino?',
+        'Educación destinará $134 millones a paquetes escolares en 2027 dentro de un presupuesto que crecerá 60 %',
+        'Diputados autorizan al Ejecutivo suscribir préstamo por $75 millones para Dos escuelas por día',
+        'Asamblea ratifica préstamo de $50 millones para censo económico',
+        'Acajutla iniciará la construcción de muelle de 610 metros en 2027',
+        'BCIE aprueba $42.3 millones para modernizar alertas tempranas salvadoreñas',
+        'Exonerarían de manera permanente los impuestos por la introducción de bienes por hasta $3,500 por los viajeros en época navideña',
+        'Asamblea extiende hasta 2027 exoneración de aranceles para inscribir empresas SAS',
+        'Conozca plazos, requisitos y beneficios de la amnistía fiscal vigente hasta el 11 de diciembre',
+    ]
+    ECONOMICAS = [
+        'Petróleo aumenta luego de declaraciones de Trump sobre Irán',
+        'El Salvador proyecta que el aporte económico del turismo al PIB pase del 10 % a un 14 %',
+        'Opamss reporta más de $7,888.5 millones en inversión liberada',
+        'Producción de la zafra 2026-2027 caería un 15 % debido al impacto de El Niño',
+        'Comerciantes reportan escasez de lechuga, brócoli y pepino debido al alza de precios',
+        'Zonas afectadas por sequía concentran el 40 % del maíz nacional',
+        'Advierten sobre falta de seguros agrícolas para pequeños productores de El Salvador',
+        'Grupo Palmetto invierte $251 millones en cuatro centros comerciales y tres hoteles',
+        '«El costo de la vida en el país está subestimado», señala economista',
+        'Las reservas internacionales netas de El Salvador bajan a $4,818.2 millones en octubre de 2026',
+        'Cartera de crédito creció 11.4 % a septiembre por mayor financiamiento a empresas',
+        'El 50 % de las micro y pequeñas empresarias utiliza su vivienda para operar el negocio',
+        'El 75.5 % de las MYPE prevé mejoras en sus negocios el último trimestre del año',
+        'Proyecto de $15,000 millones busca abrir una nueva ruta comercial para El Salvador',
+        'Más de 7.7 millones de personas han hecho turismo en sitios públicos a octubre',
+        'El Salvador se abre al comercio y a las inversiones con Belice y Argentina',
+        'Bitcoin Histórico destacó las oportunidades de inversión en El Salvador',
+        'Petróleo que compra El Salvador cae hasta los $85.72 por barril',
+        'Industria de la construcción prevé una década de crecimiento sostenido',
+        '2026 vs. 2022: ¿Por qué si la inflación hoy es «más baja» los precios están más altos?',
+        'La adopción de inteligencia artificial podría incrementar el PIB de El Salvador en 4.7 % en una década',
+        'Más de 16,000 salvadoreños han viajado con visas de empleo temporal, según Trabajo',
+        'La industria de seguros se abre paso a una nueva era',
+        'Fifty Doctors invertirá $200 millones para construir hasta nueve hospitales en El Salvador',
+        'Geocimtec celebra 25 años como referente en ingeniería geotécnica con 500 proyectos ejecutados',
+        'La productividad laboral creció 25 % en dos décadas, pero se redujo el peso de los salarios en la economía',
+        'El Salvador recurre a más energía térmica por poca lluvia',
+        'El Salvador tiene un déficit de 177,882 viviendas, ¿qué significa?',
+        'Salvadoreños acumulan ahorros por hasta $21,844 millones en los bancos privados del país',
+        'Atender los efectos provocados por El Niño podría costar hasta $73,000 millones',
+    ]
+
+    def test_cada_uno_en_su_seccion(self):
+        for t in self.FISCALES:
+            self.assertEqual(noticias.clasificar(t, NAC), FIS, t)
+        for t in self.ECONOMICAS:
+            self.assertEqual(noticias.clasificar(t, NAC), NAC, t)
+
+    def test_los_fiscales_entran_por_las_secciones_generales(self):
+        """Los de Política o Nacionales tienen que pasar `de_interes`."""
+        for t in self.FISCALES:
+            self.assertTrue(noticias.cumple("de_interes", t), t)
+
+    def test_con_el_extracto_tambien(self):
+        kriete = ("«El único modo de salir adelante es subiendo las tarifas» de los vuelos, afirma Roberto Kriete. El "
+                  "presidente de la Comisión Ejecutiva Portuaria Autónoma (CEPA) cuestionó el alza en los boletos aéreos")
+        turismo = ("Turismo pide $73.1 millones para 2027 y apuesta por obras en playas y parques del oriente. Autoridades "
+                   "del ramo solicitaron a la Comisión de Hacienda un presupuesto de $73.1 millones para 2027")
+        for t in (kriete, turismo):
+            self.assertEqual(noticias.clasificar(t, NAC, t.split(". ")[0]), FIS, t[:60])
+
+    def test_un_titular_que_pregunta_no_es_una_guia(self):
+        for t in ["¿Es necesario reformar el Sistema de Pensiones en El Salvador?",
+                  "Conozca plazos, requisitos y beneficios de la amnistía fiscal vigente hasta el 11 de diciembre"]:
+            self.assertGreater(noticias.puntaje({"categoria": FIS, "titular": t, "resumen": "", "fuente": "Diario El Mundo"}), 0, t)
+        self.assertLessEqual(noticias.puntaje({"categoria": FIS, "titular": "¿Cómo comprar casas recuperadas del FSV?",
+                                                "resumen": "", "fuente": "Otra"}), 0)
+
+    def test_citar_al_bcr_suma(self):
+        n = {"categoria": NAC, "fuente": "La Prensa Gráfica", "titular": "Las reservas internacionales bajan a $4,818.2 millones en octubre"}
+        con = noticias.puntaje(dict(n, resumen="según datos del Banco Central de Reserva (BCR)"))
+        sin = noticias.puntaje(dict(n, resumen="según datos oficiales"))
+        self.assertGreaterEqual(con, sin + noticias.cfg()["general"]["bono_bcr"])     # y además el BCR es palabra preferida
+
+    def test_un_anio_no_es_una_cifra_compartida(self):
+        a = noticias.fichas("El 27.5 % del presupuesto 2027 de la nación será para educación")
+        b = noticias.fichas("Educación destinará $134 millones a paquetes escolares en 2027 dentro de un presupuesto que crecerá 60 %")
+        self.assertFalse(noticias.repetida(b, a))
 
 
 class AlDia(unittest.TestCase):
@@ -273,11 +368,15 @@ class Fuentes(unittest.TestCase):
             self.assertFalse(noticias.fuera(f.get("medio") or f["nombre"]), f["clave"])
 
     def test_el_orden_de_los_pesos(self):
-        nac = [noticias.peso_de(f, NAC) for f in ["elEconomista.net", "Diario El Salvador", "Diario El Mundo",
-                                                  "La Prensa Gráfica (vía Google News)", "El Diario de Hoy",
-                                                  "Bloomberg Línea", "Yahoo (vía Google News)"]]
+        """El orden nacional sale de lo que eligió en sus reportes del 13 al 18 de noviembre: de cada medio, qué
+        parte de lo publicado. El Mundo 26 de 47, El Diario de Hoy 12 de 27, La Prensa Gráfica 9 de 24, Diario
+        El Salvador 5 de 52, elEconomista.net 0 de 8."""
+        nac = [noticias.peso_de(f, NAC) for f in ["Diario El Mundo", "El Diario de Hoy", "La Prensa Gráfica (vía Google News)",
+                                                  "elEconomista.net", "Diario El Salvador", "Bloomberg Línea",
+                                                  "Yahoo (vía Google News)"]]
         self.assertEqual(nac, sorted(nac, reverse=True))
-        self.assertEqual(len(set(nac[:5])), 5, "los cinco medios nacionales pesan distinto")
+        self.assertGreater(nac[0], nac[1])
+        self.assertGreater(nac[2], nac[4], "Diario El Salvador, que es lo que más publica, no llena los primeros lugares")
         self.assertEqual(nac[-1], 0)
         inter = noticias.cfg()["pesos"]["internacional"]
         self.assertTrue(all(inter["Bloomberg Línea"] > v for k, v in inter.items() if k != "Bloomberg Línea"))
@@ -285,9 +384,9 @@ class Fuentes(unittest.TestCase):
         self.assertLess(noticias.peso_de("Diario El Salvador", EUA), noticias.peso_de("Bloomberg Línea", EUA))
 
     def test_el_peso_no_rescata_a_una_nota_que_no_dice_nada(self):
-        n = {"categoria": NAC, "fuente": "elEconomista.net", "resumen": ""}
+        n = {"categoria": NAC, "fuente": "Diario El Mundo", "resumen": ""}
         self.assertEqual(noticias.puntaje(dict(n, titular="Fallece reconocido locutor de radio")), 0)
-        self.assertGreater(noticias.puntaje(dict(n, titular="Las remesas crecieron 9 % en octubre")), 6)
+        self.assertGreater(noticias.puntaje(dict(n, titular="Las remesas crecieron 9 % en octubre")), noticias.peso_de("Diario El Mundo", NAC))
 
     def test_una_busqueda_de_un_solo_sitio_nombra_su_medio(self):
         for f in noticias.cfg()["fuente"]:
@@ -323,18 +422,15 @@ class Temas(unittest.TestCase):
         return noticias.tema({"categoria": categoria, "titular": titular, "resumen": resumen})[1]
 
     def test_el_orden_de_los_temas(self):
-        self.assertEqual([t["nombre"] for t in noticias.temas_de(FIS)],
-                         ["Combustibles y petróleo", "Deuda pública", "Presupuesto", "Otra materia fiscal"])
+        self.assertEqual([t["nombre"] for t in noticias.temas_de(FIS)], ["Deuda pública", "Presupuesto", "Otra materia fiscal"])
         self.assertEqual([t["nombre"] for t in noticias.temas_de(NAC)],
-                         ["Sector real", "Sector externo", "Sector monetario y financiero", "Turismo",
+                         ["Combustibles y petróleo", "Sector real", "Sector externo", "Sector monetario y financiero", "Turismo",
                           "Agricultura y sector primario", "Otros: precio del bitcoin", "Otros: investigación económica",
                           "Otros: empresas", "Otros"])
         self.assertEqual(noticias.temas_de(EUA), [])
 
     def test_fiscales(self):
         for titular, esperado in [
-                ("Precios de los combustibles bajarán hasta $0.10 esta quincena", "Combustibles y petróleo"),
-                ("El barril de Brent baja de 90 dólares por primera vez desde agosto", "Combustibles y petróleo"),
                 ("Gobierno pide ratificar préstamo del BID por $50 millones para censo económico", "Deuda pública"),
                 ("El Salvador coloca bonos por $1,000 millones en los mercados internacionales", "Deuda pública"),
                 ("Asamblea aprueba refuerzo presupuestario de $30 millones para Salud", "Presupuesto"),
@@ -346,6 +442,9 @@ class Temas(unittest.TestCase):
 
     def test_economicas(self):
         for titular, esperado in [
+                ("Petróleo aumenta luego de declaraciones de Trump sobre Irán", "Combustibles y petróleo"),
+                ("Precios de los combustibles bajarán hasta $0.10 esta quincena", "Combustibles y petróleo"),
+                ("El barril de Brent baja de 90 dólares por primera vez desde agosto", "Combustibles y petróleo"),
                 ("El PIB creció 3.1 % en el tercer trimestre, impulsado por la construcción", "Sector real"),
                 ("La inflación repunta a 3.91 % en octubre", "Sector real"),
                 ("Las remesas suman $8,000 millones a octubre", "Sector externo"),
@@ -359,10 +458,17 @@ class Temas(unittest.TestCase):
                 ("Fallece reconocido locutor de radio", "Otros")]:
             self.assertEqual(self.tema(NAC, titular), esperado, titular)
 
-    def test_el_petroleo_es_de_aqui_solo_en_un_medio_de_aqui_y_si_manda_en_el_titular(self):
-        brent = "El barril de Brent baja de 90 dólares por primera vez desde agosto"
-        self.assertEqual(noticias.clasificar(brent, NAC), FIS)
-        self.assertEqual(noticias.clasificar(brent, LATAM), RESTO)            # en Bloomberg Línea sigue siendo internacional
+    def test_el_petroleo_abre_economicas_si_es_el_sujeto_y_el_medio_es_de_aqui(self):
+        """El 13 y el 17 de noviembre el precio del petróleo abre Económicas; la nota de la ONU sobre las
+        ganancias de las petroleras la puso en lo internacional."""
+        for t in ["El barril de Brent baja de 90 dólares por primera vez desde agosto",
+                  "Petróleo aumenta luego de declaraciones de Trump sobre Irán"]:
+            self.assertEqual(noticias.clasificar(t, NAC), NAC, t)
+        self.assertEqual(noticias.clasificar("Petróleo que compra El Salvador cae hasta los $85.72 por barril", NAC), NAC)
+        self.assertEqual(noticias.clasificar("El barril de Brent baja de 90 dólares", LATAM), RESTO)    # en Bloomberg Línea, internacional
+        onu = ("ONU denuncia que carestía de combustibles ha dejado excesivas ganancias a petroleras. El secretario general "
+               "de la ONU, António Guterres, consideró moralmente inaceptable el aumento de los beneficios")
+        self.assertFalse(noticias.clasificar(onu, NAC).startswith("El Salvador"))
         mercados = "Wall Street se recupera en medio del escándalo de Nvidia y el repunte del petróleo"
         self.assertEqual(noticias.clasificar(mercados, NAC), EUA)
 
@@ -382,7 +488,8 @@ class Temas(unittest.TestCase):
         c = noticias.cfg()
         for t in c["tema"]:
             self.assertIn(t["categoria"], noticias.NACIONALES)
-            self.assertTrue(t.get("resto") or t.get("regla") in c["reglas"] or t.get("palabras") in c["palabras"], t["nombre"])
+            self.assertTrue(t.get("resto") or t.get("regla") in c["reglas"] or t.get("palabras") in c["palabras"]
+                            or t.get("al_inicio") in c["palabras"], t["nombre"])
         for cat in noticias.NACIONALES:
             self.assertEqual(sum(1 for t in noticias.temas_de(cat) if t.get("resto")), 1, cat)
         import rutas

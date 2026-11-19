@@ -105,29 +105,38 @@ before writing, so nothing fetched can run as a formula.
 
 ## The news taste: which notes enter, and in what order
 
-The owner dictated this on 2026-11-13; it lives in `catalogo/noticias_fuentes.toml` and its examples
-are pinned in `pruebas/test_noticias.py`. Change the catalogue against those tests, never around them.
+The owner dictated this on 2026-11-13 and then sent the news he chose for his reports of 13, 16, 17 and
+18 November; where the two disagree, the catalogue follows what he chose. It lives in
+`catalogo/noticias_fuentes.toml`, and his headlines are pinned in `pruebas/test_noticias.py`
+(`SusReportes`). Change the catalogue against those tests, never around them. To measure a change, his
+picks of those days can be compared with what the system would mark (top `puntaje` in each subsection
+between 9:00 of one report and 9:00 of the next): on 2026-11-19 it went from 20 to 32 of his 52 national
+notes.
 
 - **Sources.** `[medios] fuera` is his list of outlets that never enter, whatever feed brings them
-  (most came through Google News). `[pesos]` is his order: abroad, Bloomberg Línea first; at home,
-  elEconomista.net, Diario El Salvador, Diario El Mundo, La Prensa Gráfica, El Diario de Hoy. An
+  (most came through Google News). `[pesos]`: abroad, Bloomberg Línea first (his words); at home, what he
+  actually picks — Diario El Mundo, then El Diario de Hoy and La Prensa Gráfica, then elEconomista.net
+  and Diario El Salvador, which publishes the most and he uses the least. An
   outlet not in `[pesos]` is «otra fuente»: only `otras_por_subseccion` of its notes stay among the
   main ones of a subsection, so a new outlet turning up in Google News cannot fill it.
 - **Crypto.** Bitcoin, stablecoins and exchanges only; a note about another coin is dropped. The
   bitcoin *price* goes to «El Salvador – Nacionales» from any source, one per edition.
 - **Fiscales is a rule, not a word.** `fiscales` in `[reglas]`: something fiscal, a public-investment
-  project, a public actor next to money, an international agreement being approved, or fuel and oil.
-  For investment, whoever executes it counts alone (`ejecutor`: MOP, FOVIAL, DOM), but whoever funds it
+  project, a public actor next to money, or an international agreement being approved.
+  For investment, whoever executes it counts alone (`ejecutor`: MOP, FOVIAL, DOM, the ports and CEPA,
+  ANDA), but whoever funds it
   (`financiador`: BCIE, BID, cooperations) only next to money (`financiamiento`) — «el BCIE acompaña un
   foro» is not fiscal, «el BCIE aprueba US$42 millones» is.
   The headline rules: one loose fiscal word in the excerpt is not enough. One word alone lets in road
   closures and rescued dogs; too strict a rule throws out what he does include — his 11 November
   report carried the visa-exemption agreement with Kuwait under Fiscales.
-- **Order inside the two national subsections** (`[[tema]]`, in file order). Fiscales: fuel and oil,
-  public debt, budget, other fiscal matters. Nacionales: real sector, external sector, monetary and
-  financial, tourism, agriculture, then «otros» — bitcoin price, economic research, private companies.
-  A note that picks up a series the BCR has just released (`[[dato_bcr]]`, read from the calendar)
-  gets a bonus.
+- **Order inside the two national subsections** (`[[tema]]`, in file order). Fiscales: public debt,
+  budget, other fiscal matters. Nacionales: fuel and oil (when it is the subject of the headline — he
+  dictated it first in Fiscales, but his reports open Económicas with it), real sector, external sector,
+  monetary and financial, tourism, agriculture, then «otros» — bitcoin price, economic research, private
+  companies. A note that picks up a series the BCR has just released (`[[dato_bcr]]`, read from the
+  calendar) or simply cites the BCR gets a bonus. There is no penalty for several notes of one theme:
+  on 13 November he took four on agriculture.
 - **One story, one note.** The same story in several outlets counts once, in the heaviest outlet.
   Headlines are compared word by word with each word weighted by how rare it is in the base («wall
   street» is in a hundred headlines, «$860 millones» in two). At home, a story that was a main note in
@@ -136,8 +145,10 @@ are pinned in `pruebas/test_noticias.py`. Change the catalogue against those tes
   company or person gets at most `por_sujeto` main notes (the 18 November US section was eight Nvidia).
 - **Other sources weigh little.** An outlet with no weight scores half and only `otras_por_subseccion`
   of its notes stay main. The multilaterals' own sites (BCIE, BID…) weigh 1: they are the primary source.
-- **National noise** (`evita_nacional`, national categories only): traffic notices and PR events —
-  anniversaries, raffles, prizes, graduations. «Wall Street celebra» abroad is still news.
+- **National noise** (`evita_nacional`, national categories only): traffic notices, raffles,
+  graduations, trainings. Not company anniversaries or prizes, and not headlines that ask a question or
+  say «conozca»: he picked «Geocimtec celebra 25 años», «Opamss reconoce…» and «Conozca plazos… de la
+  amnistía fiscal». Only how-to guides are penalised as service notes at home.
 
 `noticias.priorizar` turns all of that into three columns, recomputed for the whole base on every run
 (so a rule change reaches the editions already stored; look at what `noticias.al_dia` would drop before
@@ -150,6 +161,15 @@ news files, as the column contract requires.
 elEconomista.net and laprensagrafica.com answer automated readers with an AWS WAF challenge (HTTP 202,
 empty body) and a closed robots.txt. That is a block and is not worked around: their headlines come
 through Google News `site:` searches, headline and link only.
+
+## The scheduled news run (a Claude Code cloud task)
+
+Because GitHub fires `noticias.yml` 5 to 9 hours late, the task «EconSV: noticias 7:05 AM» (created
+2026-11-19, approved in the plan of 2026-11-13) publishes the edition at 7:05 El Salvador time: it runs
+`python tuberias/noticias.py` and `verificar.py` and pushes only `lago/plata/noticias.csv` and
+`lago/oro/noticias/`. Its prompt is self-contained. Like the BCR task, it can only push if the owner has
+attached the repository to it. The GitHub slots remain as a fallback and end at once when the day's
+edition is already there.
 
 ## Schedules
 

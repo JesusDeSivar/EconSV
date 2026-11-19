@@ -101,10 +101,10 @@ Reglas que sostienen las cifras:
   feed. Nunca texto completo, y nunca son la fuente de una cifra. El reparto en categorías es por
   coincidencia de palabras y se equivoca a veces.
 - **Las noticias tienen un orden.** `catalogo/noticias_fuentes.toml` dice qué medios entran y cuánto
-  pesa cada uno (en lo internacional manda Bloomberg Línea; en lo nacional, elEconomista.net, Diario El
-  Salvador, Diario El Mundo, La Prensa Gráfica y El Diario de Hoy), y en qué orden van los temas de las
-  dos categorías de El Salvador: en Fiscales, combustibles, deuda pública, presupuesto y otra materia
-  fiscal; en Nacionales, sector real, externo, monetario, turismo, agricultura y otros. De una misma
+  pesa cada uno (en lo internacional manda Bloomberg Línea; en lo nacional, Diario El Mundo, El Diario
+  de Hoy, La Prensa Gráfica, elEconomista.net y Diario El Salvador), y en qué orden van los temas de las
+  dos categorías de El Salvador: en Fiscales, deuda pública, presupuesto y otra materia fiscal; en
+  Nacionales, combustibles y petróleo, sector real, externo, monetario, turismo, agricultura y otros. De una misma
   historia en varios medios queda arriba una sola. Cada nota lleva su `puntaje`, su `tema` y su `orden`.
 
 ## Correrlo en tu máquina
