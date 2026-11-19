@@ -40,7 +40,10 @@ conservar_dias = 120        # las ediciones más viejas salen del lago (quedan e
 hora_de_corte = 7           # la edición del día D reúne lo publicado de las 7:00 de D−1 a las 7:00 de D
 otras_por_subseccion = 2    # en cada subsección, cuántas notas de medios sin peso ([pesos]) quedan entre las principales
 paso_mismo_tema = 3         # puntos que pierde la segunda nota de un mismo tema (la tercera, el doble…): así las elegidas cubren todos los temas
-misma_historia = 0.6        # dos titulares son la misma historia si comparten esta parte de las palabras del más corto
+misma_historia = 0.5        # dos titulares son la misma historia si comparten esta parte de lo que dice el más corto (cada palabra pesa según lo rara que es)
+repeticion_ediciones = 3    # en lo nacional, una historia que fue principal en una de estas ediciones anteriores no vuelve a serlo
+repeticion_sin_cifra = 0.75 # … y si no comparten una cifra, tienen que coincidir en esta parte (el petróleo de cada día no es repetido)
+por_sujeto = 3              # en lo internacional, cuántas notas principales puede tener un mismo sujeto (Nvidia, Milei…)
 bono_dato_bcr = 6           # puntos que suma una nota nacional que recoge un dato que el BCR acaba de publicar
 dias_dato_bcr = 2           # … durante cuántos días después de la fecha del calendario del BCR
 
@@ -354,6 +357,12 @@ fuera = ["clarin", "comercio tv", "comerciotv", "debate", "diario digital cronio
 "Ministerio de Hacienda" = 1
 "Banco Central de Reserva" = 1
 "Presidencia de la República" = 1
+# El sitio de quien financia es la fuente primaria de un préstamo o una donación: no es «otra fuente».
+"BCIE" = 1
+"BID" = 1
+"Banco Mundial" = 1
+"CAF" = 1
+"FMI" = 1
 
 # ------------------------------------------------------------------ palabras
 # Sin mayúsculas ni tildes, por palabra entera. Un * vale por el resto de la palabra: «prestamo*» es
@@ -369,29 +378,36 @@ fiscal = ["presupuesto*", "deuda", "eurobono*", "bonos", "letes", "cetes", "fmi"
           "moody*", "fitch", "standard & poor*", "deficit fiscal", "deficit presupuestario", "politica fiscal", "reforma fiscal",
           "ajuste fiscal", "regla fiscal", "sostenibilidad fiscal", "consolidacion fiscal", "gasto publico",
           "prestamo*", "aduana*", "evasion", "contribuyente*", "erario", "tesoreria",
-          "riesgo pais", "embi", "refinanciamiento", "endeudamiento", "recompra", "comision de hacienda", "bid", "bcie",
+          "riesgo pais", "embi", "refinanciamiento", "endeudamiento publico", "recompra", "comision de hacienda",
           "adjudic*", "licitacion*", "comprasal", "remuneracion*", "subsidio*", "condonacion",
-          "tasas municipales", "amnistia fiscal"]
+          "tasas municipales", "amnistia fiscal", "exonera*", "exencion*", "titulos valores"]
 
 # Giros en que una palabra fiscal no lo es: se quitan del texto antes de repartir y de puntuar.
 figurado = ["deuda con la justicia", "deuda historica", "deuda social", "deuda moral", "deuda pendiente con",
             "saldar su deuda", "saldar la deuda", "en deuda con", "deficit de lluvia*", "deficit habitacional",
-            "deficit hidrico", "deficit de atencion"]
+            "deficit hidrico", "deficit de atencion", "endeudamiento para consumo", "endeudamiento de los hogares",
+            "deuda* de los hogares", "deuda* personal*", "deuda* de consumo", "deuda* de tarjeta*"]
 
-# Proyectos de inversión pública: quién los financia (multilaterales y cooperación internacional) y
-# quién los ejecuta. Una nota salvadoreña con cualquiera de estas palabras es «Fiscales», entra aunque
-# venga de Política o Nacionales, y sube en el puntaje. La lista es del dueño (2026-11-13): no solo BCIE
-# y BID, sino cualquier proyecto de inversión pública.
-inversion_publica = ["bcie", "banco centroamericano de integracion economica", "bid", "banco interamericano de desarrollo",
-                     "caf", "banco de desarrollo de america latina", "banco mundial", "birf",
-                     "banco internacional de reconstruccion y fomento", "kfw", "cooperacion alemana", "giz",
-                     "cooperacion espanola", "aecid", "cooperacion italiana", "aics", "cooperacion japonesa", "jica",
-                     "cooperacion coreana", "koica", "cooperacion internacional", "cooperacion china", "cooperacion estadounidense",
-                     "cooperacion francesa", "cooperacion suiza", "cooperacion canadiense", "cooperacion europea", "union europea",
-                     "luxemburgo", "usaid", "fida", "ofid", "opep fund", "banco europeo de inversiones",
-                     "mop", "ministerio de obras publicas", "fovial", "fondo de conservacion vial", "dom",
-                     "direccion de obras municipales", "inversion publica", "obra* publica*", "proyecto* de inversion",
-                     "paip", "prestamo*", "desembols*", "financiamiento externo", "no reembolsable*"]
+# Proyectos de inversión pública (lista del dueño, 2026-11-13: no solo BCIE y BID, cualquier proyecto). Quien
+# la ejecuta basta para que una nota salvadoreña sea «Fiscales»: el MOP, FOVIAL, la DOM. Quien la financia
+# no basta solo: tiene que haber dinero de por medio (`financiamiento`). «El BCIE acompaña un foro» o «la IA
+# elevaría el PIB, según el BID» no son fiscales; «BCIE aprueba US$42 millones» o «becas con apoyo del BCIE»,
+# sí. Las dos listas suben el puntaje en Fiscales.
+financiador = ["bcie", "banco centroamericano de integracion economica", "bid", "banco interamericano de desarrollo",
+               "caf", "banco de desarrollo de america latina", "banco mundial", "birf",
+               "banco internacional de reconstruccion y fomento", "kfw", "cooperacion alemana", "giz",
+               "cooperacion espanola", "aecid", "cooperacion italiana", "aics", "cooperacion japonesa", "jica",
+               "cooperacion coreana", "koica", "cooperacion internacional", "cooperacion china", "cooperacion estadounidense",
+               "cooperacion francesa", "cooperacion suiza", "cooperacion canadiense", "cooperacion europea", "union europea",
+               "luxemburgo", "usaid", "fida", "ofid", "opep fund", "banco europeo de inversiones"]
+
+ejecutor = ["mop", "ministerio de obras publicas", "fovial", "fondo de conservacion vial", "dom",
+            "direccion de obras municipales", "inversion publica", "obra* publica*", "proyecto* de inversion", "paip",
+            "financiamiento externo"]
+
+financiamiento = ["$cifra", "millones de dolares", "prestamo*", "credito*", "financia*", "desembols*", "fondos",
+                  "no reembolsable*", "donacion*", "donativo*", "dona", "donan", "dono", "aprueba*", "aprobo", "aprobad*",
+                  "con apoyo de*", "apoyo financiero", "recursos"]
 
 # En un diario salvadoreño, una nota con estas palabras es del país aunque nombre a otro: la
 # cooperación siempre nombra al país que coopera («cooperación alemana», «italiana»). Solo vale para las
@@ -440,7 +456,7 @@ combustibles = ["combustible*", "gasolina*", "diesel", "petroleo", "crudo", "bar
 economia_nacional = ["economia", "economic*", "pib", "producto interno bruto", "ivae", "actividad economica", "inflacion",
                      "ipc", "canasta basica", "costo de vida", "remesa*", "exportac*", "importac*", "inversion extranjera",
                      "ied", "balanza comercial", "comercio exterior", "arancel*", "reservas internacionales", "migrante*",
-                     "migratori*", "emigra*", "diaspora", "deportad*", "deportacion*", "turis*", "visitantes", "hoteler*",
+                     "migratori*", "emigra*", "deportad*", "deportacion*", "turis*", "visitantes", "hoteler*",
                      "cosecha*", "agricultor*", "agropecuari*",
                      "granos basicos", "maiz", "frijol", "cafetaler*", "banca", "bancos", "credito*", "sistema financiero",
                      "empleo*", "desempleo", "salario minimo", "construccion", "zona* franca*", "incentivo* fiscal*",
@@ -468,13 +484,14 @@ tema_deuda = ["deuda", "bonos", "eurobono*", "letes", "cetes", "titulos valores"
               "moody*", "fitch", "standard & poor*", "riesgo pais", "embi", "recompra", "canje", "emision", "colocacion",
               "endeudamiento", "refinanciamiento", "desembols*", "no reembolsable*"]
 
-tema_presupuesto = ["presupuest*", "transferencia*",
-                    "asignacion*", "reorientacion", "comision de hacienda", "fondo general", "partida*", "2027"]
+tema_presupuesto = ["presupuest*", "transferencia*", "asignacion*", "reorientacion", "comision de hacienda",
+                    "fondo general", "partida*"]
 
 tema_real = ["pib", "producto interno bruto", "ivae", "actividad economica", "crecimiento", "crecio", "construccion",
-             "constructor*", "cemento", "vivienda*", "inmobiliari*", "industria*", "manufactur*", "empleo*", "desempleo",
-             "salario minimo", "laboral*", "productividad", "inflacion", "ipc", "canasta basica", "costo de vida",
-             "precios", "energia electrica", "electricidad", "consumo", "ventas", "opamss"]
+             "constructor*", "cemento", "vivienda*", "inmobiliari*", "industrial*", "manufactur*", "maquila*", "empleo*",
+             "desempleo", "salario minimo", "laboral*", "productividad", "inflacion", "ipc", "canasta basica",
+             "costo de vida", "precios", "energia", "energetic*", "electricidad", "termica", "hidroelectric*",
+             "geotermi*", "consumo", "ventas", "opamss"]
 
 tema_externo = ["remesa*", "migrante*", "migratori*", "emigra*", "deportad*", "deportacion*", "diaspora", "tps",
                 "exportac*", "importac*",
@@ -574,6 +591,21 @@ evita = ["horoscopo", "loteria", "sorteo", "receta*", "futbol", "gol", "farandul
          "requisitos", "tramite*", "visa", "green card", "seguro de viaje", "estafa*", "fraudulent*", "consejos",
          "tips", "amante*", "infidelidad*", "romance", "cheque* de estimulo", "food stamps", "snap", "seguro social", "licencia de conducir"]
 
+# En lo nacional se evita además lo que no es noticia económica aunque nombre una carretera, un banco o
+# una empresa: los cierres de calles y los avisos de tránsito, y los actos de relaciones públicas
+# (aniversarios, rifas, premios, graduaciones, capacitaciones). Visto en las ediciones del 13 al 18 de
+# noviembre: «VMT anuncia cierre parcial en el redondel Naciones Unidas» en Fiscales, «Revista El Economista
+# celebrará sus 19 años» entre las elegidas de Nacionales.
+evita_nacional = ["horoscopo", "loteria", "sorteo*", "receta*", "futbol", "gol", "farandula", "pelicula", "netflix",
+                  "pronostico del tiempo", "homicidio*", "capturan", "descuento*", "ofertas", "black friday", "cupon*",
+                  "requisitos", "tramite*", "visa", "green card", "seguro de viaje", "estafa*", "fraudulent*", "consejos",
+                  "tips", "amante*", "infidelidad*", "romance", "licencia de conducir",
+                  "paso vehicular", "cierre parcial", "cierre total", "cierre de tramo", "cierre de calle*",
+                  "circulacion controlada", "restring* el paso", "restring* paso", "restriccion* vehicular*", "desvio*",
+                  "vmt", "viceministerio de transporte", "aniversario", "celebra", "celebran", "celebro", "celebrara",
+                  "celebrar", "rifa*", "premio*", "premia*", "galardon*", "reconoce a", "gradua", "graduan", "graduo",
+                  "graduad*", "diplomado*", "capacita*", "taller", "talleres"]
+
 economia = ["econom*", "inflacion", "pib", "banco central", "tasa* de interes", "tipos de interes", "arancel*",
             "comerci*", "exportac*", "importac*", "deuda", "bono*", "mercado*", "bolsa*", "empleo*", "desempleo",
             "salario*", "dolar*", "peso", "euro", "petroleo", "crudo", "fmi", "banco mundial", "bid", "recesion",
@@ -595,8 +627,11 @@ economia = ["econom*", "inflacion", "pib", "banco central", "tasa* de interes", 
 #                medio ([pesos], si la nota ya suma algo) y el bono de un dato recién publicado por el BCR ([[dato_bcr]]); menos 3
 #                por cada palabra de `evita` y otros 3 si el titular es de servicio.
 #   una historia La misma noticia en varios medios cuenta una vez: queda la del medio que más pesa y las
-#                demás bajan al final, con puntaje 0 o menos. Lo mismo las notas de «otras fuentes» que
-#                pasan de `otras_por_subseccion` y las que pasan del `maximo` de su tema.
+#                demás bajan al final, con puntaje 0 o menos. En lo nacional, tampoco vuelve la que ya fue
+#                principal en una de las `repeticion_ediciones` ediciones anteriores. Bajan también las
+#                notas de «otras fuentes» que pasan de `otras_por_subseccion`, las que pasan del `maximo`
+#                de su tema y, en lo internacional, las que pasan de `por_sujeto` sobre una misma empresa
+#                o persona ([sujetos]).
 #   `tema`       En Fiscales y en Nacionales, el tema de la nota ([[tema]]): gana el que más palabras
 #                suyas tiene (el titular vale doble) y, si empatan, el que va antes. La segunda nota de
 #                un tema pierde `paso_mismo_tema` puntos, la tercera el doble: quien toma las de más
@@ -611,16 +646,18 @@ economia = ["econom*", "inflacion", "pib", "banco central", "tasa* de interes", 
 # Una regla se cumple por cualquiera de sus vías, y una vía, cuando la nota trae palabras de todas sus
 # listas. `fiscales` es lo que hace «Fiscales» a una nota salvadoreña, y lo que se le exige a las
 # secciones Política y Nacional de un diario: algo fiscal, o un proyecto de inversión pública, o un actor
-# público junto a dinero, o un acuerdo internacional que se aprueba o ratifica, o combustibles y petróleo.
+# público junto a dinero, o un acuerdo internacional que se aprueba o ratifica, o combustibles y petróleo. Un
+# proyecto de inversión pública cuenta si lo nombra quien lo ejecuta, o quien lo financia junto a dinero.
 # Manda el titular: si la regla solo se cumple contando el extracto y por una única palabra de la lista
 # `fiscal` («…generó ingresos tributarios»), la nota no es fiscal.
 # Como el puntaje, se vuelve a aplicar a toda la base en cada corrida: depende solo de este archivo.
-fiscales = [["fiscal"], ["inversion_publica"], ["actor_publico", "dinero"], ["acuerdo", "aprobacion"], ["combustibles"]]
+fiscales = [["fiscal"], ["ejecutor"], ["financiador", "financiamiento"], ["actor_publico", "dinero"], ["acuerdo", "aprobacion"],
+            ["combustibles"]]
 
 # Lo que se le exige a una sección general de un diario (DePaís, Política, Nacionales, Social): que la
 # nota sea fiscal o que sea de economía.
-de_interes = [["fiscal"], ["inversion_publica"], ["actor_publico", "dinero"], ["acuerdo", "aprobacion"], ["combustibles"],
-              ["economia_nacional"]]
+de_interes = [["fiscal"], ["ejecutor"], ["financiador", "financiamiento"], ["actor_publico", "dinero"], ["acuerdo", "aprobacion"],
+              ["combustibles"], ["economia_nacional"]]
 
 # El precio del bitcoin (se mira solo el titular).
 precio_btc = [["bitcoin", "precio"]]
@@ -629,14 +666,33 @@ precio_btc = [["bitcoin", "precio"]]
 "Internacional – EUA" = { prefiere = "gusto_mercados", evita = "evita" }
 "Internacional – LATAM" = { prefiere = "gusto_soberano", evita = "evita" }
 "Internacional – Resto del mundo" = { prefiere = "gusto_mundo", evita = "evita" }
-"El Salvador – Fiscales" = { prefiere = "gusto_fiscal", evita = "evita" }
-"El Salvador – Nacionales" = { prefiere = "gusto_economia_sv", evita = "evita" }
+"El Salvador – Fiscales" = { prefiere = "gusto_fiscal", evita = "evita_nacional" }
+"El Salvador – Nacionales" = { prefiere = "gusto_economia_sv", evita = "evita_nacional" }
 
 [gusto_listas]
 # Un titular que empieza así es una nota de servicio o una explicación, no una noticia.
 titular_de_servicio = ["¿", "como ", "que es ", "que son ", "cuanto ", "cuando ", "donde ", "estos son ", "estas son ",
                        "asi puedes ", "paso a paso", "conoce ", "conozca ", "guia "]
 
+
+[sujetos]
+# En lo internacional, de un mismo sujeto no hay más de `por_sujeto` notas principales: el 18 de noviembre
+# los ocho primeros lugares de EUA eran Nvidia. Con dos, la nota de sus resultados quedaba fuera porque las
+# dos primeras la nombraban de pasada; con tres, entra. Un sujeto es un nombre propio del titular (una empresa, una
+# persona); estos no cuentan como sujeto porque son lugares o nombres que están en todas partes. La Fed
+# tampoco: es el centro de lo que se busca de Estados Unidos, y cada declaración suya es otra noticia.
+comunes = ["estados", "unidos", "eeuu", "ee.uu", "eua", "washington", "nueva", "york", "california", "texas", "florida",
+           "wall", "street", "america", "americas", "latina", "latinoamerica", "centroamerica", "sudamerica", "caribe",
+           "norteamerica", "europa", "asia", "africa", "oriente", "medio", "golfo", "pacifico", "atlantico", "china",
+           "japon", "india", "rusia", "ucrania", "alemania", "francia", "espana", "italia", "reino", "unido", "canada",
+           "mexico", "brasil", "argentina", "chile", "colombia", "peru", "venezuela", "ecuador", "bolivia", "paraguay",
+           "uruguay", "guatemala", "honduras", "nicaragua", "costa", "rica", "panama", "cuba", "republica", "dominicana",
+           "haiti", "puerto", "salvador", "san", "israel", "iran", "arabia", "saudita", "corea", "taiwan", "turquia",
+           "australia", "suiza", "londres", "pekin", "tokio", "bruselas", "gobierno", "congreso", "senado", "casa",
+           "blanca", "tesoro", "asamblea", "ministerio", "presidente", "presidenta", "banco", "central", "bolsa", "bolsas",
+           "dow", "jones", "nasdaq", "mercado", "mercados", "reserva", "federal", "fed", "hoy", "enero", "febrero", "marzo",
+           "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre", "lunes",
+           "martes", "miercoles", "jueves", "viernes", "sabado", "domingo", "the"]
 
 # ------------------------------------------------------------------ los temas, en su orden
 # El orden de cada subsección nacional, del dueño (2026-11-13). `palabras` nombra una lista de

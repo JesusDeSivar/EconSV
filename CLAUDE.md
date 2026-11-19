@@ -117,6 +117,9 @@ are pinned in `pruebas/test_noticias.py`. Change the catalogue against those tes
   bitcoin *price* goes to «El Salvador – Nacionales» from any source, one per edition.
 - **Fiscales is a rule, not a word.** `fiscales` in `[reglas]`: something fiscal, a public-investment
   project, a public actor next to money, an international agreement being approved, or fuel and oil.
+  For investment, whoever executes it counts alone (`ejecutor`: MOP, FOVIAL, DOM), but whoever funds it
+  (`financiador`: BCIE, BID, cooperations) only next to money (`financiamiento`) — «el BCIE acompaña un
+  foro» is not fiscal, «el BCIE aprueba US$42 millones» is.
   The headline rules: one loose fiscal word in the excerpt is not enough. One word alone lets in road
   closures and rescued dogs; too strict a rule throws out what he does include — his 11 November
   report carried the visa-exemption agreement with Kuwait under Fiscales.
@@ -126,6 +129,15 @@ are pinned in `pruebas/test_noticias.py`. Change the catalogue against those tes
   A note that picks up a series the BCR has just released (`[[dato_bcr]]`, read from the calendar)
   gets a bonus.
 - **One story, one note.** The same story in several outlets counts once, in the heaviest outlet.
+  Headlines are compared word by word with each word weighted by how rare it is in the base («wall
+  street» is in a hundred headlines, «$860 millones» in two). At home, a story that was a main note in
+  one of the previous `repeticion_ediciones` editions does not come back; without a shared figure they
+  must overlap more (`repeticion_sin_cifra`), so the daily oil price is not a repeat. Abroad, one
+  company or person gets at most `por_sujeto` main notes (the 18 November US section was eight Nvidia).
+- **Other sources weigh little.** An outlet with no weight scores half and only `otras_por_subseccion`
+  of its notes stay main. The multilaterals' own sites (BCIE, BID…) weigh 1: they are the primary source.
+- **National noise** (`evita_nacional`, national categories only): traffic notices and PR events —
+  anniversaries, raffles, prizes, graduations. «Wall Street celebra» abroad is still news.
 
 `noticias.priorizar` turns all of that into three columns, recomputed for the whole base on every run
 (so a rule change reaches the editions already stored; look at what `noticias.al_dia` would drop before

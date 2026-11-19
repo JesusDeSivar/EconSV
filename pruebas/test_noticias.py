@@ -67,11 +67,11 @@ class Gusto(unittest.TestCase):
                  "MOP adjudica el diseño del viaducto de Los Chorros",
                  "Cooperación italiana financia rescate habitacional en el Centro Histórico",
                  "JICA y el MOP firman convenio para un puente en San Miguel"]
-        comun = noticias.puntaje(self.nota(FIS, "Diputados discuten una reforma al reglamento interno"))
+        comun = noticias.puntaje(self.nota(FIS, "Diputados discuten una reforma al reglamento interno", fuente="Diario El Mundo"))
         for t in casos:
             self.assertEqual(noticias.clasificar(t, NAC), FIS, t)
             self.assertTrue(noticias.cumple("fiscales", t), t)
-            self.assertGreaterEqual(noticias.puntaje(self.nota(FIS, t)), comun + 3, t)
+            self.assertGreaterEqual(noticias.puntaje(self.nota(FIS, t, fuente="Diario El Mundo")), comun + 3, t)
         self.assertEqual(noticias.clasificar("Abren un nuevo centro comercial en Santa Tecla", NAC), NAC)
 
     def test_el_titular_pesa_el_doble_que_el_extracto(self):
@@ -143,6 +143,71 @@ class Fiscales(unittest.TestCase):
         self.assertTrue(noticias.cumple(["el_salvador", "fiscales"], "El Salvador coloca bonos por $500 millones"))
         self.assertFalse(noticias.cumple(["el_salvador", "fiscales"], "Honduras coloca bonos por $500 millones"))
         self.assertFalse(noticias.cumple(["el_salvador", "fiscales"], "El Salvador gana en el fútbol playa"))
+
+
+class Afinado(unittest.TestCase):
+    """Lo que se corrigió el 2026-11-19 mirando las ediciones del 13 al 18 de noviembre."""
+
+    def test_quien_financia_cuenta_solo_con_dinero_de_por_medio(self):
+        for t in ["El BCIE acompaña la CIED 2026 en El Salvador, un espacio de diálogo sobre Estado, democracia y desarrollo",
+                  "La adopción de inteligencia artificial podría incrementar el PIB de El Salvador en 4.7 %, según el BID",
+                  "Ecuador y El Salvador fortalecen cooperación. La Agencia de El Salvador para la Cooperación Internacional "
+                  "y la embajada de Ecuador desarrollaron un taller técnico"]:
+            self.assertFalse(noticias.cumple("fiscales", t), t)
+            self.assertEqual(noticias.clasificar(t, FIS), NAC, t)
+        for t in ["BCIE aprueba US$42.3 millones para fortalecer la resiliencia de El Salvador ante amenazas climáticas",
+                  "Unos 5,000 jóvenes salvadoreños continuarán estudios superiores con apoyo del BCIE",
+                  "BCIE financiará becas para más de 5,000 jóvenes salvadoreños",
+                  "La DOM entrega nuevo polideportivo en Tonacatepeque"]:
+            self.assertEqual(noticias.clasificar(t, NAC), FIS, t)
+
+    def test_la_deuda_de_los_hogares_no_es_deuda_publica(self):
+        t = "Bajos salarios profundizan endeudamiento para consumo, según estudio de la UCA"
+        self.assertEqual(noticias.clasificar(t, FIS), NAC)
+        self.assertEqual(noticias.clasificar("Asamblea aprueba emisión de $860 millones en títulos valores", NAC), FIS)
+
+    def test_una_exoneracion_es_materia_fiscal_y_no_presupuesto(self):
+        t = "Asamblea extiende hasta 2027 exoneración de aranceles para inscribir empresas SAS"
+        self.assertEqual(noticias.clasificar(t, NAC), FIS)
+        self.assertEqual(noticias.tema({"categoria": FIS, "titular": t, "resumen": ""})[1], "Otra materia fiscal")
+
+    def test_temas_que_estaban_mal(self):
+        tema = lambda t: noticias.tema({"categoria": NAC, "titular": t, "resumen": ""})[1]
+        self.assertEqual(tema("El Salvador recurre a más energía térmica por poca lluvia"), "Sector real")
+        self.assertEqual(tema("La industria de seguros se abre paso a una nueva era"), "Sector monetario y financiero")
+
+    def test_la_diaspora_de_la_politica_no_es_economia(self):
+        t = "PCN pide inscripción de candidatos a diputados de la diáspora, La Libertad, Usulután y Sonsonate"
+        self.assertFalse(noticias.cumple("de_interes", t))
+        self.assertTrue(noticias.cumple("de_interes", "Las remesas de la diáspora crecen 9 % en octubre"))
+
+    def test_transito_y_relaciones_publicas_bajan_en_lo_nacional(self):
+        for cat, t in [(FIS, "VMT anuncia cierre parcial en el redondel Naciones Unidas para este lunes"),
+                       (NAC, "Restringirán paso vehicular en carretera Litoral este domingo por competencia ciclista"),
+                       (NAC, "Revista El Economista celebrará sus 19 años"),
+                       (NAC, "Banco Cuscatlán celebra la Navidad con «Un Año de Regalos»"),
+                       (NAC, "Estudiantes finalizan diplomado en gastronomía y turismo en La Unión")]:
+            self.assertLessEqual(noticias.puntaje({"categoria": cat, "titular": t, "resumen": "", "fuente": "elEconomista.net"}), 0, t)
+        # lo internacional no cambia: «Wall Street celebra» es noticia
+        self.assertGreater(noticias.puntaje({"categoria": EUA, "titular": "Wall Street celebra el recorte de tasas de la Fed",
+                                             "resumen": "", "fuente": "Bloomberg Línea"}), 0)
+
+    def test_otra_fuente_vale_la_mitad(self):
+        n = {"categoria": EUA, "titular": "Nvidia eleva su pronóstico de ingresos y los futuros de Wall Street suben", "resumen": ""}
+        bl, otra = noticias.puntaje(dict(n, fuente="Bloomberg Línea")), noticias.puntaje(dict(n, fuente="Yahoo (vía Google News)"))
+        self.assertGreater(bl, 2 * otra)
+
+    def test_los_sujetos_de_un_titular(self):
+        self.assertEqual(noticias.sujetos("Nvidia supera las expectativas de Wall Street tras la salida de Jensen Huang"),
+                         {"jensen", "huang"})
+        self.assertEqual(noticias.sujetos("Acciones de Nvidia caen en Wall Street"), {"nvidia"})
+        self.assertEqual(noticias.sujetos("Toyota invierte US$1.300 millones en Argentina"), set(), "la primera palabra no cuenta")
+        self.assertEqual(noticias.sujetos("Nvidia Eleva su Pronóstico de Ingresos y los Futuros Suben"), set(), "titular a la inglesa")
+        self.assertEqual(noticias.sujetos("El FMI y la Fed en Estados Unidos"), set(), "siglas y lugares no son sujetos")
+        self.assertEqual(noticias.sujetos("Nvidia duplicó sus ingresos", frozenset({"nvidia"})), {"nvidia"},
+                         "al principio cuenta si otro titular lo da como nombre")
+        self.assertEqual(noticias.sujetos("Nvidia Eleva su Pronóstico de Ingresos y los Futuros Suben", frozenset({"nvidia"})),
+                         {"nvidia"})
 
 
 class AlDia(unittest.TestCase):
@@ -401,6 +466,46 @@ class Prioridad(unittest.TestCase):
         bono = noticias.cfg()["general"]["bono_dato_bcr"]
         self.assertEqual(noticias.puntaje(dia, publicado), noticias.puntaje(antes, publicado) + bono)
         self.assertEqual(noticias.puntaje(otra, publicado), noticias.puntaje(otra))
+
+    def test_la_misma_historia_con_otras_palabras(self):
+        """Pasaron por separado el 18 y el 14 de noviembre: comparten pocas palabras, pero raras."""
+        a = self.nota(FIS, "Asamblea aprueba emisión de $860 millones en títulos valores: ¿cuál será el destino?")
+        b = self.nota(FIS, "Diputados oficialistas autorizan emisión de títulos valores por hasta $860 millones con dispensa de trámite",
+                      "El Diario de Hoy")
+        c = self.nota(NAC, "Carga en el Puerto de La Unión crece un 50 % impulsada por transporte de vehículos y fertilizantes")
+        d = self.nota(NAC, "Puerto de La Unión crece más del 50 % y se consolida como hub regional", "El Diario de Hoy")
+        relleno = ([self.nota(NAC, f"La Asamblea aprueba el dictamen {k} de la comisión") for k in range(20)] +
+                   [self.nota(NAC, f"Las remesas suman {k} millones en el año") for k in range(20)])   # palabras comunes
+        noticias.priorizar([a, b, c, d] + relleno)
+        self.assertEqual([a["puntaje"] > 0, b["puntaje"] > 0], [True, False])
+        self.assertEqual([c["puntaje"] > 0, d["puntaje"] > 0], [True, False])
+
+    def test_lo_que_ya_salio_no_vuelve_en_lo_nacional(self):
+        t = "El Salvador proyecta que el aporte económico del turismo al PIB pase del 10 % a un 14 %"
+        ayer = self.nota(NAC, t, edicion="2026-11-13")
+        hoy = self.nota(NAC, "Turismo prevé aportar el 14 % del PIB de El Salvador en 2027", "La Prensa Gráfica", edicion="2026-11-14")
+        luego = self.nota(NAC, "Turismo prevé aportar el 14 % del PIB de El Salvador en 2027", "La Prensa Gráfica", edicion="2026-11-20")
+        afuera = [self.nota(EUA, "Nvidia supera las expectativas en sus resultados", "Bloomberg Línea", edicion=e)
+                  for e in ("2026-11-13", "2026-11-14")]
+        petroleo = [self.nota(FIS, "Petróleo cae con fuerza ante perspectiva de exceso de oferta pese a tensiones en Oriente Medio",
+                              "Diario El Salvador", edicion="2026-11-17"),
+                    self.nota(FIS, "El petróleo sube ligeramente en medio de tensiones geopolíticas y temores de exceso de oferta",
+                              "Diario El Salvador", edicion="2026-11-18")]
+        noticias.priorizar([hoy, luego, ayer] + afuera + petroleo)          # el orden de entrada no importa
+        self.assertTrue(all(n["puntaje"] > 0 for n in petroleo), "el precio del petróleo de cada día no es repetido")
+        self.assertGreater(ayer["puntaje"], 0)
+        self.assertLessEqual(hoy["puntaje"], 0, "salió ayer: no vuelve")
+        self.assertGreater(luego["puntaje"], 0, "seis días después ya no cuenta como repetida")
+        self.assertTrue(all(n["puntaje"] > 0 for n in afuera), "lo internacional de cada día es otra jornada")
+
+    def test_de_un_mismo_sujeto_pocas_en_lo_internacional(self):
+        titulares = ["Las acciones de Nvidia caen tras la renuncia de su director", "Nvidia supera las expectativas del mercado",
+                     "Cómo afecta a los fondos la caída de Nvidia", "Nvidia Eleva su Pronóstico de Ingresos y los Futuros Suben",
+                     "La Fed mantiene las tasas sin cambios"]
+        notas = [self.nota(EUA, t, "Bloomberg Línea", hora=f"0{6 - i}:00") for i, t in enumerate(titulares)]
+        noticias.priorizar(notas)
+        self.assertEqual(sum(1 for n in notas[:4] if n["puntaje"] > 0), noticias.cfg()["general"]["por_sujeto"])
+        self.assertGreater(notas[4]["puntaje"], 0)
 
     def test_cada_subseccion_se_numera_desde_uno_y_no_quedan_marcas(self):
         notas = [self.nota(EUA, "La Fed sube las tasas", "Bloomberg Línea"), self.nota(EUA, "Wall Street cae 2 %", "Bloomberg Línea"),

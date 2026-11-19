@@ -26,6 +26,7 @@ catálogo, de las otras notas de su edición y del calendario del BCR, no de cu�
 Una noticia es contexto, nunca la fuente de una cifra.
 """
 import argparse
+import collections
 import csv
 import datetime as dt
 import email.utils
@@ -33,6 +34,7 @@ import hashlib
 import html
 import io
 import json
+import math
 import re
 import sys
 import time
@@ -190,9 +192,10 @@ def clasificar(texto, defecto, titular=None):
 def puntaje(n, publicado=None):
     """Cuánto merece una nota estar entre las elegidas de su subsección: 2 por cada palabra preferida de
     su categoría en el titular y 1 en el extracto, menos 3 por cada palabra de las que se evitan. En
-    Fiscales, las palabras de inversión pública suman aparte: 3 y 1. Una nota nacional que recoge un dato
-    que el BCR acaba de publicar (`publicado`, de `publicaciones()`) suma el bono. Si con eso queda en
-    positivo, suma el peso de su medio. No compara categorías entre sí."""
+    Fiscales, las palabras de inversión pública (quién la financia, quién la ejecuta) suman aparte: 3 y 1.
+    Una nota nacional que recoge un dato que el BCR acaba de publicar (`publicado`, de `publicaciones()`)
+    suma el bono. Si con eso queda en positivo, suma el peso de su medio; la de un medio sin peso («otra
+    fuente») vale la mitad. No compara categorías entre sí."""
     g = cfg().get("gusto", {}).get(n["categoria"])
     if not g:
         return 0
@@ -200,14 +203,17 @@ def puntaje(n, publicado=None):
     p = 2 * cuenta(g["prefiere"], titular) + cuenta(g["prefiere"], resumen)
     if n["categoria"] == "El Salvador – Fiscales":
         # un proyecto de inversión pública (quién lo financia, quién lo ejecuta) es lo que más se busca
-        p += 3 * cuenta("inversion_publica", titular) + cuenta("inversion_publica", resumen)
+        for lista in ("financiador", "ejecutor"):
+            p += 3 * cuenta(lista, titular) + cuenta(lista, resumen)
     p -= 3 * cuenta(g["evita"], n["titular"] + " " + n["resumen"])
     if plano(n["titular"]).lstrip("«\"'“ ").startswith(tuple(plano(x) for x in cfg()["gusto_listas"]["titular_de_servicio"])):
         p -= 3
     if publicado and n["categoria"] in NACIONALES and dato_reciente(n, publicado):
         p += cfg()["general"]["bono_dato_bcr"]
-    # el peso del medio ordena entre notas que ya dicen algo: no rescata a la que no trae nada
-    return p + peso_de(n["fuente"], n["categoria"]) if p > 0 else p
+    if p <= 0:
+        return p                         # el peso del medio no rescata a la que no trae nada
+    peso = peso_de(n["fuente"], n["categoria"])
+    return p + peso if peso else (p + 1) // 2      # «otra fuente» pesa tan poco que entra solo si falta
 
 
 def publicaciones(filas=None):
@@ -284,64 +290,148 @@ def fichas(titular):
                      if (len(w) >= 3 or w[0].isdigit()) and w not in VACIAS)
 
 
-def misma_historia(a, b):
-    """Dos juegos de fichas son la misma historia si comparten al menos tres y la parte `misma_historia`
-    de las del titular más corto."""
-    comunes = len(a & b)
-    return comunes >= 3 and comunes >= cfg()["general"]["misma_historia"] * min(len(a), len(b))
+def rareza(notas):
+    """Cuánto dice cada palabra de un titular: poco si está en muchos («wall», «stree», «millo»), mucho si
+    está en pocos («860», «union»). Se cuenta sobre los titulares que se van a comparar; el 50 suaviza
+    para que con pocas notas todas pesen casi igual."""
+    df = collections.Counter()
+    for n in notas:
+        df.update(fichas(n["titular"]))
+    total = len(notas) + 50
+    return lambda w: math.log(total / (df[w] + 1))
+
+
+def repetida(hoy, antes, peso=None):
+    """¿La nota de hoy cuenta otra vez una historia de una edición anterior? Si comparten una cifra («14 %»,
+    «$860»), basta el umbral de siempre; si no, tienen que coincidir en la parte `repeticion_sin_cifra`. Así
+    el petróleo de cada día («sube», «cae», con su precio) no pasa por repetido."""
+    if any(w[0].isdigit() for w in hoy & antes):
+        return misma_historia(hoy, antes, peso)
+    comunes = hoy & antes
+    if len(comunes) < 3:
+        return False
+    peso = peso or (lambda w: 1.0)
+    suma = lambda fs: sum(peso(w) for w in fs)
+    return suma(comunes) >= cfg()["general"]["repeticion_sin_cifra"] * min(suma(hoy), suma(antes))
+
+
+def misma_historia(a, b, peso=None):
+    """Dos juegos de fichas son la misma historia si comparten al menos tres y lo que comparten es la
+    parte `misma_historia` de lo que dice el titular más corto, con cada palabra pesada por su rareza
+    (`peso`, de `rareza()`; sin él, todas pesan igual)."""
+    comunes = a & b
+    if len(comunes) < 3:
+        return False
+    peso = peso or (lambda w: 1.0)
+    suma = lambda fs: sum(peso(w) for w in fs)
+    return suma(comunes) >= cfg()["general"]["misma_historia"] * min(suma(a), suma(b))
+
+
+def sujetos(titular, conocidos=frozenset()):
+    """Los nombres propios de un titular —empresas y personas: «Nvidia», «Huang», «Toyota»—, sin siglas y
+    sin lugares ni nombres comunes ([sujetos] comunes). La primera palabra va con mayúscula aunque no sea
+    un nombre, y en un titular escrito a la inglesa van todas: esas cuentan solo si están entre los
+    `conocidos`, los nombres que otros titulares de la misma subsección dan sin duda."""
+    comunes = _comunes()
+    limpia = lambda w: plano(w).strip(".'’-")
+    palabras = re.findall(r"[^\W\d_][\w&.'’-]*", titular)
+    nombre = lambda w: w[0].isupper() and any(c.islower() for c in w) and len(w) >= 3 and limpia(w) not in comunes
+    largas = [w for w in palabras[1:] if len(w) >= 4 and limpia(w) not in comunes]
+    a_la_inglesa = len(largas) >= 3 and sum(w[0].isupper() for w in largas) > 0.6 * len(largas)
+    seguros = frozenset() if a_la_inglesa else frozenset(limpia(w) for w in palabras[1:] if nombre(w))
+    return seguros | (frozenset(limpia(w) for w in palabras if nombre(w)) & conocidos)
+
+
+_COMUNES = None
+
+
+def _comunes():
+    global _COMUNES
+    if _COMUNES is None:
+        _COMUNES = frozenset(plano(w) for w in cfg()["sujetos"]["comunes"])
+    return _COMUNES
 
 
 def priorizar(notas, publicado=None):
     """Pone en cada nota su `puntaje`, su `tema` y su `orden` dentro de (edición, categoría).
 
     Principales son las notas que traen algo de lo que se busca (puntaje sobre 0) y cuentan una historia
-    por primera vez —de varias con la misma, la del medio que más pesa—, sin pasar de
-    `otras_por_subseccion` notas de medios sin peso en cada subsección ni del `maximo` de su tema. Van primero, por tema y dentro del tema por puntaje; la segunda
-    de un tema pierde `paso_mismo_tema` puntos y la tercera el doble, para que las de más puntaje cubran
-    todos los temas. Las demás bajan al final con puntaje 0 o menos, y nadie las elige sin mirarlas:
-    en cada subsección, las de puntaje sobre 0 son las principales y van juntas arriba."""
+    por primera vez:
+      · de varias notas con la misma historia en una edición, queda la del medio que más pesa;
+      · en lo nacional, la historia que ya fue principal en una de las `repeticion_ediciones` ediciones
+        anteriores no vuelve («ya salió»);
+      · en lo internacional, de un mismo sujeto (una empresa, una persona) no más de `por_sujeto` notas;
+      · de medios sin peso, no más de `otras_por_subseccion`, y de un tema, no más de su `maximo`.
+    Van primero, por tema y dentro del tema por puntaje; la segunda de un tema pierde `paso_mismo_tema`
+    puntos y la tercera el doble, para que las de más puntaje cubran todos los temas. Las demás bajan al
+    final con puntaje 0 o menos, y nadie las elige sin mirarlas: en cada subsección, las de puntaje sobre 0
+    son las principales y van juntas arriba. Las ediciones se recorren de la más vieja a la más nueva,
+    porque lo que fue principal ayer decide qué es repetido hoy."""
     g_ = cfg()["general"]
-    ambitos, grupos = {}, {}
+    peso = rareza(notas)
+    por_edicion = {}
     for n in notas:
         n["puntaje"] = puntaje(n, publicado)
         n["_tema"], n["tema"] = tema(n)
-        ambitos.setdefault((n["edicion"], n["categoria"] in NACIONALES), []).append(n)
-        grupos.setdefault((n["edicion"], n["categoria"]), []).append(n)
+        n["_f"] = fichas(n["titular"])
+        por_edicion.setdefault(n["edicion"], []).append(n)
     reciente = lambda n: [-ord(c) for c in n["fecha_hora"]]
     bajan = {n["id"] for n in notas if n["puntaje"] <= 0}        # la que no trae nada de lo que se busca
-    for g in ambitos.values():          # la misma historia en otro medio, esté en la subsección que esté
-        cabezas = []
-        for n in sorted(g, key=lambda n: (n["id"] in bajan, -peso_de(n["fuente"], n["categoria"]), -n["puntaje"],
-                                          reciente(n), n["id"])):
-            f = fichas(n["titular"])
-            if n["id"] in bajan:
-                continue
-            if any(misma_historia(f, c) for c in cabezas):
-                bajan.add(n["id"])
-            else:
-                cabezas.append(f)
-    for (_, categoria), g in grupos.items():
-        mejores = sorted((n for n in g if n["id"] not in bajan), key=lambda n: (-n["puntaje"], reciente(n), n["id"]))
-        otras = [n for n in mejores if peso_de(n["fuente"], categoria) == 0]      # de otras fuentes, solo unas pocas
-        bajan.update(n["id"] for n in otras[g_["otras_por_subseccion"]:])
-        for i, t in enumerate(temas_de(categoria)):
-            suyas = [n for n in mejores if n["_tema"] == i and n["id"] not in bajan]
-            if t.get("maximo"):                                  # de un tema, no más de su máximo
-                bajan.update(n["id"] for n in suyas[t["maximo"]:])
-                suyas = suyas[:t["maximo"]]
-            for k, n in enumerate(suyas):                        # y cada nota más del mismo tema vale menos
-                n["_puesto"] = k
-        clave = lambda n: (n["id"] in bajan, n["_tema"], n.get("_puesto", 0), -n["puntaje"], reciente(n), n["id"])
-        for lugar, n in enumerate(sorted(g, key=clave), 1):
-            n["orden"] = lugar
-        for n in g:
-            if n["id"] in bajan:
-                n["puntaje"] = min(n["puntaje"], 0)
-            elif n["puntaje"] > 0:                               # nunca por debajo de 1: sigue siendo principal
-                n["puntaje"] = max(n["puntaje"] - g_["paso_mismo_tema"] * n.get("_puesto", 0), 1)
+    salieron = []                                                # (edición, fichas) de las principales nacionales
+    for edicion in sorted(por_edicion):
+        dia = dt.date.fromisoformat(edicion)
+        antes = [f for e, f in salieron if 0 < (dia - e).days <= g_["repeticion_ediciones"]]
+        ambitos, grupos = {}, {}
+        for n in por_edicion[edicion]:
+            ambitos.setdefault(n["categoria"] in NACIONALES, []).append(n)
+            grupos.setdefault(n["categoria"], []).append(n)
+        for nacional, g in ambitos.items():      # la misma historia en otro medio, esté en la subsección que esté
+            cabezas = []
+            for n in sorted(g, key=lambda n: (n["id"] in bajan, -peso_de(n["fuente"], n["categoria"]), -n["puntaje"],
+                                              reciente(n), n["id"])):
+                if n["id"] in bajan:
+                    continue
+                if nacional and any(repetida(n["_f"], f, peso) for f in antes):
+                    bajan.add(n["id"])                           # ya salió en una edición anterior
+                elif any(misma_historia(n["_f"], c, peso) for c in cabezas):
+                    bajan.add(n["id"])
+                else:
+                    cabezas.append(n["_f"])
+        for categoria, g in grupos.items():
+            mejores = sorted((n for n in g if n["id"] not in bajan), key=lambda n: (-n["puntaje"], reciente(n), n["id"]))
+            otras = [n for n in mejores if peso_de(n["fuente"], categoria) == 0]   # de otras fuentes, solo unas pocas
+            bajan.update(n["id"] for n in otras[g_["otras_por_subseccion"]:])
+            if categoria not in NACIONALES:                      # de un mismo sujeto, no más de `por_sujeto`
+                conocidos = frozenset().union(*(sujetos(n["titular"]) for n in g))
+                cuantas = collections.Counter()
+                for n in mejores:
+                    if n["id"] in bajan:
+                        continue
+                    s_ = sujetos(n["titular"], conocidos)
+                    if any(cuantas[x] >= g_["por_sujeto"] for x in s_):
+                        bajan.add(n["id"])
+                    else:
+                        cuantas.update(s_)
+            for i, t in enumerate(temas_de(categoria)):
+                suyas = [n for n in mejores if n["_tema"] == i and n["id"] not in bajan]
+                if t.get("maximo"):                              # de un tema, no más de su máximo
+                    bajan.update(n["id"] for n in suyas[t["maximo"]:])
+                    suyas = suyas[:t["maximo"]]
+                for k, n in enumerate(suyas):                    # y cada nota más del mismo tema vale menos
+                    n["_puesto"] = k
+            clave = lambda n: (n["id"] in bajan, n["_tema"], n.get("_puesto", 0), -n["puntaje"], reciente(n), n["id"])
+            for lugar, n in enumerate(sorted(g, key=clave), 1):
+                n["orden"] = lugar
+            for n in g:
+                if n["id"] in bajan:
+                    n["puntaje"] = min(n["puntaje"], 0)
+                elif n["puntaje"] > 0:                           # nunca por debajo de 1: sigue siendo principal
+                    n["puntaje"] = max(n["puntaje"] - g_["paso_mismo_tema"] * n.get("_puesto", 0), 1)
+                    if categoria in NACIONALES:
+                        salieron.append((dia, n["_f"]))
     for n in notas:
         n.pop("_puesto", None)
-        del n["_tema"]
+        del n["_tema"], n["_f"]
     return notas
 
 
