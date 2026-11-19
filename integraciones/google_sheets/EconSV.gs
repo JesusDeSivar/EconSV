@@ -7,8 +7,10 @@
  * Qué escribe (cada hoja se reemplaza entera en cada actualización: el trabajo propio va en otras hojas):
  *
  *   Mensual, Trimestral, Anual   una fila por período y una columna por serie, lista para graficar
- *   Oro                          la tabla larga tal como está en el lago: indicador, linea, vista,
- *                                fecha, periodo, valor (para tablas dinámicas y QUERY)
+ *   Formato largo                la tabla larga tal como está en el lago: indicador, linea, vista,
+ *                                fecha, periodo, valor (para tablas dinámicas y QUERY). Antes se
+ *                                llamaba «Oro»: si la hoja tiene una «Oro», se renombra, y las
+ *                                fórmulas que la citan siguen apuntándole
  *   Diccionario                  qué es cada serie: título, unidad, frecuencia, variable del BCR,
  *                                tramo que cubre, último valor, y en qué hoja y columna está
  *   Calendario                   cuándo se espera el próximo dato de cada serie
@@ -29,8 +31,10 @@ const CONFIG = {
   DIAS_DE_NOTICIAS: 7,              // cuántas ediciones hacia atrás se traen
   HORAS_AUTOMATICAS: [8, 17],       // la actualización automática corre a estas horas (El Salvador)
   ZONA: "America/El_Salvador",
-  HOJAS: { M: "Mensual", T: "Trimestral", A: "Anual", larga: "Oro", diccionario: "Diccionario",
+  HOJAS: { M: "Mensual", T: "Trimestral", A: "Anual", larga: "Formato largo", diccionario: "Diccionario",
            calendario: "Calendario", noticias: "Noticias", estado: "EconSV" },
+  // el nombre que una hoja tuvo antes: si la hoja está con ese nombre, se renombra en vez de crear otra
+  ANTES: { "Formato largo": "Oro" },
 };
 
 const VISTAS = {
@@ -75,7 +79,7 @@ function actualizarTodo() {
   if (fallas.length && !hecho.length) throw new Error(fallas.join(" · "));
 }
 
-/** Las hojas Mensual, Trimestral, Anual, Oro y Diccionario. */
+/** Las hojas Mensual, Trimestral, Anual, Formato largo y Diccionario. */
 function actualizarIndicadores() {
   const oro = traerCsv_("oro/indicadores.csv");
   if (!oro) throw new Error("no se pudo leer lago/oro/indicadores.csv");
@@ -281,7 +285,7 @@ function traerCsv_(ruta) {
 function escribirHoja_(nombre, filas, opciones) {
   opciones = opciones || {};
   const libro = SpreadsheetApp.getActiveSpreadsheet();
-  const hoja = libro.getSheetByName(nombre) || libro.insertSheet(nombre);
+  const hoja = libro.getSheetByName(nombre) || renombrada_(libro, nombre) || libro.insertSheet(nombre);
   const nf = filas.length, nc = filas[0].length;
   hoja.clearContents();
   if (hoja.getMaxRows() < nf) hoja.insertRowsAfter(hoja.getMaxRows(), nf - hoja.getMaxRows());
@@ -301,6 +305,14 @@ function escribirHoja_(nombre, filas, opciones) {
   return hoja;
 }
 
+/** La hoja que se llamaba como dice CONFIG.ANTES, ya con su nombre nuevo; null si no está. */
+function renombrada_(libro, nombre) {
+  const antes = CONFIG.ANTES[nombre];
+  const hoja = antes ? libro.getSheetByName(antes) : null;
+  if (hoja) hoja.setName(nombre);
+  return hoja;
+}
+
 function escribirEstado_(hecho, fallas) {
   const ahora = Utilities.formatDate(new Date(), CONFIG.ZONA, "yyyy-MM-dd HH:mm");
   const filas = [
@@ -311,8 +323,8 @@ function escribirEstado_(hecho, fallas) {
   fallas.forEach(function (f) { filas.push(["No llegó", f]); });
   filas.push(["Origen", CONFIG.ORIGEN]);
   filas.push(["Fuente de las cifras", "Banco Central de Reserva de El Salvador (estadisticas.bcr.gob.sv). Las variaciones, sumas y porcentajes del PIB los calcula EconSV."]);
-  filas.push(["Cómo usar", "Las hojas Mensual, Trimestral, Anual, Oro, Diccionario, Calendario y Noticias se reemplazan enteras en cada actualización. El trabajo propio va en otras hojas, con referencias a estas."]);
-  filas.push(["Ejemplo", "En una celda de otra hoja:   =QUERY(Oro!A:F; \"select D, F where A = 'remesas' and C = 'suma_anual' order by D\"; 0)   (con coma en vez de punto y coma si la hoja está en inglés)"]);
+  filas.push(["Cómo usar", "Las hojas Mensual, Trimestral, Anual, Formato largo, Diccionario, Calendario y Noticias se reemplazan enteras en cada actualización. El trabajo propio va en otras hojas, con referencias a estas."]);
+  filas.push(["Ejemplo", "En una celda de otra hoja:   =QUERY('Formato largo'!A:F; \"select D, F where A = 'remesas' and C = 'suma_anual' order by D\"; 0)   (con coma en vez de punto y coma si la hoja está en inglés)"]);
   const hoja = escribirHoja_(CONFIG.HOJAS.estado, filas, { texto: [1, 2] });
   hoja.setColumnWidth(1, 190);
   hoja.setColumnWidth(2, 760);

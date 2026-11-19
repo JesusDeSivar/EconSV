@@ -52,6 +52,7 @@ function entorno(opciones) {
     h.setFrozenRows = (n) => { h.fijas[0] = n; };
     h.setFrozenColumns = (n) => { h.fijas[1] = n; };
     h.setColumnWidth = () => h;
+    h.setName = (n) => { assert(!hojas[n], `ya hay una hoja «${n}»`); delete hojas[h.nombre]; h.nombre = n; hojas[n] = h; return h; };
     h.getRange = (f, c, nf, nc) => {
       assert(f >= 1 && c >= 1 && nf >= 1 && nc >= 1, `${nombre}: rango vacío o fuera de la hoja (${f},${c},${nf},${nc})`);
       assert(f + nf - 1 <= h.filas && c + nc - 1 <= h.columnas, `${nombre}: el rango se sale de la hoja`);
@@ -86,6 +87,7 @@ function entorno(opciones) {
     };
     return h;
   }
+  (opciones.previas || []).forEach((n) => { hojas[n] = Hoja(n); });
   const libro = {
     getSheetByName: (n) => hojas[n] || null,
     insertSheet: (n) => (hojas[n] = Hoja(n)),
@@ -141,11 +143,11 @@ e.ctx.actualizarTodo();
 const oro = leer("oro/indicadores.csv"), cat = leer("oro/indicadores_catalogo.csv");
 
 prueba("crea las ocho hojas", () => {
-  assert.deepStrictEqual(Object.keys(e.hojas).sort(), ["Anual", "Calendario", "Diccionario", "EconSV", "Mensual", "Noticias", "Oro", "Trimestral"]);
+  assert.deepStrictEqual(Object.keys(e.hojas).sort(), ["Anual", "Calendario", "Diccionario", "EconSV", "Formato largo", "Mensual", "Noticias", "Trimestral"]);
 });
 
-prueba("Oro es la tabla del lago, con fecha y número", () => {
-  const h = e.hojas.Oro.valores;
+prueba("Formato largo es la tabla del lago, con fecha y número", () => {
+  const h = e.hojas["Formato largo"].valores;
   assert.strictEqual(h.length, oro.length);
   assert.deepStrictEqual(Array.from(h[0]), oro[0]);
   const i = oro.findIndex((f) => f[0] === "reservas" && f[2] === "nivel" && f[4] === "2026-10");
@@ -234,7 +236,16 @@ prueba("si el lago no responde, lo dice y no borra nada", () => {
   assert.strictEqual(Object.keys(x.hojas).length, 0);
   x.ctx.actualizarTodo();                      // lo demás sí llega, y la falla queda anotada
   assert(x.hojas.EconSV.valores.some((f) => f[0] === "No llegó" && /indicadores/.test(f[1])));
-  assert(x.hojas.Noticias && x.hojas.Calendario && !x.hojas.Oro);
+  assert(x.hojas.Noticias && x.hojas.Calendario && !x.hojas["Formato largo"]);
+});
+
+prueba("la hoja que se llamaba «Oro» se renombra, no se duplica", () => {
+  const x = entorno({ previas: ["Oro"] });
+  const antes = x.hojas.Oro;
+  x.ctx.actualizarIndicadores();
+  assert(!x.hojas.Oro, "quedó una hoja «Oro»");
+  assert.strictEqual(x.hojas["Formato largo"], antes);   // la misma hoja: las fórmulas que la citan siguen
+  assert.strictEqual(antes.valores.length, oro.length);
 });
 
 prueba("un titular que parece fórmula se escribe como texto", () => {

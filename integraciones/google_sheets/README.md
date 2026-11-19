@@ -27,7 +27,7 @@ contenido.
 | Hoja | Qué tiene |
 |---|---|
 | **Mensual**, **Trimestral**, **Anual** | Una fila por período y una columna por serie, de la más antigua a la más reciente. Las dos primeras columnas son la fecha y el período. Listas para graficar. |
-| **Oro** | La tabla larga tal como está en el lago: `indicador`, `linea`, `vista`, `fecha`, `periodo`, `valor`. Para tablas dinámicas y `QUERY`. |
+| **Formato largo** | La tabla larga tal como está en el lago: `indicador`, `linea`, `vista`, `fecha`, `periodo`, `valor`. Para tablas dinámicas y `QUERY`. Antes se llamaba **Oro**: si tu hoja tiene una «Oro», la actualización la renombra, y las fórmulas que la citan siguen apuntándole. |
 | **Diccionario** | Qué es cada serie: título, unidad, frecuencia, de qué variable del BCR sale, qué tramo cubre, su último valor, y en qué hoja y columna está. |
 | **Calendario** | Cuándo se espera el próximo dato de cada serie. |
 | **Noticias** | Las ediciones de los últimos siete días del resumen de noticias: categoría, fuente, titular, extracto, enlace, relevancia, tema y orden (el lugar de cada nota dentro de su categoría). |
@@ -48,7 +48,7 @@ en otras hojas que apunten a estas; así una actualización nunca te borra nada.
 - Una serie por nombre, sin depender de en qué columna cayó:
 
   ```
-  =QUERY(Oro!A:F; "select D, F where A = 'remesas' and C = 'suma_anual' order by D"; 0)
+  =QUERY('Formato largo'!A:F; "select D, F where A = 'remesas' and C = 'suma_anual' order by D"; 0)
   ```
 
   (Con coma en lugar de punto y coma si tu hoja está en inglés.) Las claves de `indicador` y `vista`
