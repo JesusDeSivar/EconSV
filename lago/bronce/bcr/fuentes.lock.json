@@ -17,7 +17,7 @@
   "balanza_pagos": {
    "url": "https://estadisticas.bcr.gob.sv/serie/ii-8-a-balanza-de-pagos-trimestral",
    "archivo": "balanza_pagos.json",
-   "sha256": "ae5aee31aa0ea444c72201598b014d5fab24b3f029c99d89515d5de4039a98cc",
+   "sha256": "196491f7ac0c10aab2d0f130ba87970db8d4bc07d60017f6fb5a661afc54d37d",
    "bytes": 258302,
    "modo": "grafica",
    "variables": 158,
@@ -25,7 +25,7 @@
    "observaciones": 16640,
    "desde": "1999-T1",
    "hasta": "2026-T2",
-   "tomado": "2026-11-12"
+   "tomado": "2026-11-22"
   },
   "ied": {
    "url": "https://estadisticas.bcr.gob.sv/serie/ii-6-1-a-2-flujos-de-inversion-extranjera-directa-por-sector-economico-receptor-desde-trimestre-i-2010",
@@ -43,7 +43,7 @@
   "ied_ciiu": {
    "url": "https://estadisticas.bcr.gob.sv/serie/ii-6-1-a-4-cuadro-de-ampliacion-de-flujos-netos-de-ied-por-sector-economico-receptor-segun-ciiu-rev-4-a-dos-digitos-desde-2012",
    "archivo": "ied_ciiu.json",
-   "sha256": "e3fe6e28c82841e813ab83be93dbb25fb2f3990c16cef43615c4f0f1afbeb50b",
+   "sha256": "62c37796693a2311d959e812fb999ec293caaf1b8265acf46ae214d1b5327489",
    "bytes": 68746,
    "modo": "grafica",
    "variables": 87,
@@ -51,7 +51,7 @@
    "observaciones": 3470,
    "desde": "2012-T1",
    "hasta": "2026-T2",
-   "tomado": "2026-11-12"
+   "tomado": "2026-11-22"
   },
   "ipc": {
    "url": "https://estadisticas.bcr.gob.sv/serie/indice-de-precios-al-consumidor-ipc",
