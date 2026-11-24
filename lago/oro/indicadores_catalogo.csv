@@ -47,18 +47,18 @@ ipp,IPP general,nivel,precios,Inflación al productor,M,Índice,indice,lineas,ip
 ipp,Industrias manufactureras,var_anual,precios,Inflación al productor,M,%,indice,lineas,ipp,7372,2010-12,2026-10,3.2801,"Índice de Precios al Productor (IPP), base diciembre 2009 = 100."
 ipp,Industrias manufactureras,var_periodo,precios,Inflación al productor,M,%,indice,lineas,ipp,7372,2010-01,2026-10,0.2214,"Índice de Precios al Productor (IPP), base diciembre 2009 = 100."
 ipp,Industrias manufactureras,nivel,precios,Inflación al productor,M,Índice,indice,lineas,ipp,7372,2009-12,2026-10,144.84,"Índice de Precios al Productor (IPP), base diciembre 2009 = 100."
-remesas,Remesas,suma_anual,externo,Remesas familiares,M,"Millones de US$, suma de 12 meses",flujo,lineas,remesas,7607,1991-12,2026-09,10248.85,
-remesas,Remesas,nivel,externo,Remesas familiares,M,Millones de US$,flujo,lineas,remesas,7607,1991-01,2026-09,831.64,
-remesas,Remesas,var_anual,externo,Remesas familiares,M,%,flujo,lineas,remesas,7607,1992-01,2026-09,1.4517,
+remesas,Remesas,suma_anual,externo,Remesas familiares,M,"Millones de US$, suma de 12 meses",flujo,lineas,remesas,7607,1991-12,2026-10,10260.86,
+remesas,Remesas,nivel,externo,Remesas familiares,M,Millones de US$,flujo,lineas,remesas,7607,1991-01,2026-10,865,
+remesas,Remesas,var_anual,externo,Remesas familiares,M,%,flujo,lineas,remesas,7607,1992-01,2026-10,1.408,
 remesas,Remesas,pct_pib,externo,Remesas familiares,T,% del PIB,flujo,lineas,remesas,7607,2005-T4,2026-T2,26.6951,
-comercio,Exportaciones (FOB),suma_anual,externo,Exportaciones e importaciones de mercancías,M,"Millones de US$, suma de 12 meses",flujo,lineas,balanza_comercial,8618,1994-12,2026-09,6610.81,Exportaciones FOB e importaciones CIF.
-comercio,Exportaciones (FOB),nivel,externo,Exportaciones e importaciones de mercancías,M,Millones de US$,flujo,lineas,balanza_comercial,8618,1994-01,2026-09,563.74,Exportaciones FOB e importaciones CIF.
-comercio,Exportaciones (FOB),var_anual,externo,Exportaciones e importaciones de mercancías,M,%,flujo,lineas,balanza_comercial,8618,1995-01,2026-09,8.1806,Exportaciones FOB e importaciones CIF.
-comercio,Importaciones (CIF),suma_anual,externo,Exportaciones e importaciones de mercancías,M,"Millones de US$, suma de 12 meses",flujo,lineas,balanza_comercial,8628,1994-12,2026-09,19164.46,Exportaciones FOB e importaciones CIF.
-comercio,Importaciones (CIF),nivel,externo,Exportaciones e importaciones de mercancías,M,Millones de US$,flujo,lineas,balanza_comercial,8628,1994-01,2026-09,1697.17,Exportaciones FOB e importaciones CIF.
-comercio,Importaciones (CIF),var_anual,externo,Exportaciones e importaciones de mercancías,M,%,flujo,lineas,balanza_comercial,8628,1995-01,2026-09,13.1681,Exportaciones FOB e importaciones CIF.
-balanza_comercial,Saldo comercial,suma_anual,externo,Balanza comercial de mercancías,M,"Millones de US$, suma de 12 meses",flujo,lineas,balanza_comercial,8632,1994-12,2026-09,-12553.66,Exportaciones FOB menos importaciones CIF.
-balanza_comercial,Saldo comercial,nivel,externo,Balanza comercial de mercancías,M,Millones de US$,flujo,lineas,balanza_comercial,8632,1994-01,2026-09,-1133.43,Exportaciones FOB menos importaciones CIF.
+comercio,Exportaciones (FOB),suma_anual,externo,Exportaciones e importaciones de mercancías,M,"Millones de US$, suma de 12 meses",flujo,lineas,balanza_comercial,8618,1994-12,2026-10,6646.76,Exportaciones FOB e importaciones CIF.
+comercio,Exportaciones (FOB),nivel,externo,Exportaciones e importaciones de mercancías,M,Millones de US$,flujo,lineas,balanza_comercial,8618,1994-01,2026-10,577.16,Exportaciones FOB e importaciones CIF.
+comercio,Exportaciones (FOB),var_anual,externo,Exportaciones e importaciones de mercancías,M,%,flujo,lineas,balanza_comercial,8618,1995-01,2026-10,6.6425,Exportaciones FOB e importaciones CIF.
+comercio,Importaciones (CIF),suma_anual,externo,Exportaciones e importaciones de mercancías,M,"Millones de US$, suma de 12 meses",flujo,lineas,balanza_comercial,8628,1994-12,2026-10,19463.29,Exportaciones FOB e importaciones CIF.
+comercio,Importaciones (CIF),nivel,externo,Exportaciones e importaciones de mercancías,M,Millones de US$,flujo,lineas,balanza_comercial,8628,1994-01,2026-10,1884.71,Exportaciones FOB e importaciones CIF.
+comercio,Importaciones (CIF),var_anual,externo,Exportaciones e importaciones de mercancías,M,%,flujo,lineas,balanza_comercial,8628,1995-01,2026-10,18.8432,Exportaciones FOB e importaciones CIF.
+balanza_comercial,Saldo comercial,suma_anual,externo,Balanza comercial de mercancías,M,"Millones de US$, suma de 12 meses",flujo,lineas,balanza_comercial,8632,1994-12,2026-10,-12816.54,Exportaciones FOB menos importaciones CIF.
+balanza_comercial,Saldo comercial,nivel,externo,Balanza comercial de mercancías,M,Millones de US$,flujo,lineas,balanza_comercial,8632,1994-01,2026-10,-1307.55,Exportaciones FOB menos importaciones CIF.
 balanza_comercial,Saldo comercial,pct_pib,externo,Balanza comercial de mercancías,T,% del PIB,flujo,lineas,balanza_comercial,8632,2005-T4,2026-T2,-31.4796,Exportaciones FOB menos importaciones CIF.
 cuenta_corriente,Cuenta corriente,pct_pib,externo,Cuenta corriente de la balanza de pagos,T,% del PIB,flujo,lineas,balanza_pagos,15167,2005-T4,2026-T2,-4.8416,
 cuenta_corriente,Cuenta corriente,suma_anual,externo,Cuenta corriente de la balanza de pagos,T,"Millones de US$, suma de 4 trimestres",flujo,lineas,balanza_pagos,15167,1999-T4,2026-T2,-1851.24,
@@ -83,7 +83,7 @@ pii_activos_pasivos,Activos,pct_pib,externo,Activos y pasivos externos,T,% del P
 pii_activos_pasivos,Pasivos,nivel,externo,Activos y pasivos externos,T,Millones de US$,saldo,lineas,pii,8784,2002-T1,2026-T2,42001.65,Las dos caras de la posición de inversión internacional.
 pii_activos_pasivos,Pasivos,pct_pib,externo,Activos y pasivos externos,T,% del PIB,saldo,lineas,pii,8784,2005-T4,2026-T2,109.8488,Las dos caras de la posición de inversión internacional.
 reservas,Reservas internacionales netas,nivel,externo,Reservas internacionales netas,M,Millones de US$,saldo,lineas,reservas,18089,1997-12,2026-10,4818.22,"Activos de reserva del BCR menos sus pasivos externos de corto plazo, a fin de mes."
-reservas,Reservas internacionales netas,meses_importacion,externo,Reservas internacionales netas,M,Meses de importación de mercancías,saldo,lineas,reservas,18089,1997-12,2026-09,3.1508,"Activos de reserva del BCR menos sus pasivos externos de corto plazo, a fin de mes."
+reservas,Reservas internacionales netas,meses_importacion,externo,Reservas internacionales netas,M,Meses de importación de mercancías,saldo,lineas,reservas,18089,1997-12,2026-10,2.9707,"Activos de reserva del BCR menos sus pasivos externos de corto plazo, a fin de mes."
 reservas,Reservas internacionales netas,var_anual,externo,Reservas internacionales netas,M,%,saldo,lineas,reservas,18089,1998-12,2026-10,3.623,"Activos de reserva del BCR menos sus pasivos externos de corto plazo, a fin de mes."
 viajes,Ingresos por viajes (crédito),suma_anual,turismo,Ingresos y gastos por viajes,T,"Millones de US$, suma de 4 trimestres",flujo,lineas,balanza_pagos,15195,1999-T4,2026-T2,3941.61,"Balanza de pagos, servicios de viajes: el crédito es lo que gastan en el país los visitantes no residentes; el débito, lo que gastan fuera los residentes."
 viajes,Ingresos por viajes (crédito),nivel,turismo,Ingresos y gastos por viajes,T,Millones de US$,flujo,lineas,balanza_pagos,15195,1999-T1,2026-T2,1263.75,"Balanza de pagos, servicios de viajes: el crédito es lo que gastan en el país los visitantes no residentes; el débito, lo que gastan fuera los residentes."

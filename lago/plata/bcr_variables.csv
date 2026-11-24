@@ -234,10 +234,10 @@ ipp,11,7381,,Enseñanza,Enseñanza,Indice Diciembre 2009=100,M,2009-12,2026-10,2
 ipp,12,7382,,Actividades de atención a la salud humana y de asistencia social,Actividades de atención a la salud humana y de asistencia social,Indice Diciembre 2009=100,M,2009-12,2026-10,203
 ipp,13,7383,,"Actividades artísticas, de entretenimiento y recreativas","Actividades artísticas, de entretenimiento y recreativas",Indice Diciembre 2009=100,M,2009-12,2026-10,203
 ipp,14,7384,,Otras actividades de servicio,Otras actividades de servicio,Indice Diciembre 2009=100,M,2009-12,2026-10,203
-remesas,1,7607,,Ingresos mensuales de remesas familiares,Ingresos mensuales de remesas familiares,Millones de US$,M,1991-01,2026-09,429
-balanza_comercial,1,8618,1,Exportaciones (FOB),Exportaciones (FOB),Millones de US$,M,1994-01,2026-09,393
-balanza_comercial,2,8628,2,Importaciones (CIF),Importaciones (CIF),Millones de US$,M,1994-01,2026-09,393
-balanza_comercial,3,8632,3,Balanza Comercial,Balanza Comercial,Millones de US$,M,1994-01,2026-09,393
+remesas,1,7607,,Ingresos mensuales de remesas familiares,Ingresos mensuales de remesas familiares,Millones de US$,M,1991-01,2026-10,430
+balanza_comercial,1,8618,1,Exportaciones (FOB),Exportaciones (FOB),Millones de US$,M,1994-01,2026-10,394
+balanza_comercial,2,8628,2,Importaciones (CIF),Importaciones (CIF),Millones de US$,M,1994-01,2026-10,394
+balanza_comercial,3,8632,3,Balanza Comercial,Balanza Comercial,Millones de US$,M,1994-01,2026-10,394
 reservas,1,18089,1,Reservas Internacionales Netas,Reservas Internacionales Netas,Millones de US$,M,1997-12,2026-10,347
 reservas,2,18090,1.1,Activos de Reserva,Reservas Internacionales Netas › Activos de Reserva,Millones de US$,M,1997-12,2026-10,347
 reservas,3,18091,1.1.1,Reservas en moneda extranjera,Reservas Internacionales Netas › Activos de Reserva › Reservas en moneda extranjera,Millones de US$,M,1997-12,2026-10,347

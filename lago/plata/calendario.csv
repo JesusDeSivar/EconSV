@@ -42,13 +42,13 @@ ipp,Índice de Precios al Productor (IPP),M,2026-12,2027-01-12,bcr,no
 ipp,Índice de Precios al Productor (IPP),M,2027-01,2027-02-09,bcr,no
 remesas,Ingresos mensuales de remesas familiares,M,2026-08,2026-09-24,bcr,si
 remesas,Ingresos mensuales de remesas familiares,M,2026-09,2026-10-23,bcr,si
-remesas,Ingresos mensuales de remesas familiares,M,2026-10,2026-11-24,bcr,no
+remesas,Ingresos mensuales de remesas familiares,M,2026-10,2026-11-24,bcr,si
 remesas,Ingresos mensuales de remesas familiares,M,2026-11,2026-12-23,bcr,no
 remesas,Ingresos mensuales de remesas familiares,M,2026-12,2027-01-28,bcr,no
 remesas,Ingresos mensuales de remesas familiares,M,2027-01,2027-02-25,bcr,no
 balanza_comercial,"Balanza comercial de mercancías, valores",M,2026-08,2026-09-24,bcr,si
 balanza_comercial,"Balanza comercial de mercancías, valores",M,2026-09,2026-10-23,bcr,si
-balanza_comercial,"Balanza comercial de mercancías, valores",M,2026-10,2026-11-24,bcr,no
+balanza_comercial,"Balanza comercial de mercancías, valores",M,2026-10,2026-11-24,bcr,si
 balanza_comercial,"Balanza comercial de mercancías, valores",M,2026-11,2026-12-23,bcr,no
 balanza_comercial,"Balanza comercial de mercancías, valores",M,2026-12,2027-01-28,bcr,no
 balanza_comercial,"Balanza comercial de mercancías, valores",M,2027-01,2027-02-25,bcr,no

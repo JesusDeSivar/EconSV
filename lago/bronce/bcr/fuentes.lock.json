@@ -4,15 +4,15 @@
   "balanza_comercial": {
    "url": "https://estadisticas.bcr.gob.sv/serie/balanza-comercial",
    "archivo": "balanza_comercial.json",
-   "sha256": "85f3d13a5ee5c267ecf455159c7b9e4d72c3efaa96984e083245d8d752278bfb",
-   "bytes": 26225,
+   "sha256": "5979f10d0ef62d58fd4b12e2ce5c518bbd77ac5482a6242fb5ad2794583a0be9",
+   "bytes": 26296,
    "modo": "grafica",
    "variables": 3,
-   "periodos": 393,
-   "observaciones": 1179,
+   "periodos": 394,
+   "observaciones": 1182,
    "desde": "1994-01",
-   "hasta": "2026-09",
-   "tomado": "2026-11-12"
+   "hasta": "2026-10",
+   "tomado": "2026-11-24"
   },
   "balanza_pagos": {
    "url": "https://estadisticas.bcr.gob.sv/serie/ii-8-a-balanza-de-pagos-trimestral",
@@ -212,15 +212,15 @@
   "remesas": {
    "url": "https://estadisticas.bcr.gob.sv/serie/ingresos-mensuales-de-remesas-familiares",
    "archivo": "remesas.json",
-   "sha256": "571ccb90e2a9a42d0381fbcf882010661106fb3bd9ecc2bad533c9980054222e",
-   "bytes": 12301,
+   "sha256": "febd27f639bd23e46602e010f057a8c8a9884c29bdc292e24b8c2d44cbcb72e5",
+   "bytes": 12325,
    "modo": "grafica",
    "variables": 1,
-   "periodos": 429,
-   "observaciones": 429,
+   "periodos": 430,
+   "observaciones": 430,
    "desde": "1991-01",
-   "hasta": "2026-09",
-   "tomado": "2026-11-12"
+   "hasta": "2026-10",
+   "tomado": "2026-11-24"
   },
   "reservas": {
    "url": "https://estadisticas.bcr.gob.sv/serie/reservas-internacionales-netas-bcr",

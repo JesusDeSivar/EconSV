@@ -8949,6 +8949,7 @@ remesas,Remesas,suma_anual,2026-06-01,2026-06,10207.12
 remesas,Remesas,suma_anual,2026-07-01,2026-07,10198.48
 remesas,Remesas,suma_anual,2026-08-01,2026-08,10236.95
 remesas,Remesas,suma_anual,2026-09-01,2026-09,10248.85
+remesas,Remesas,suma_anual,2026-10-01,2026-10,10260.86
 remesas,Remesas,nivel,1991-01-01,1991-01,63.1
 remesas,Remesas,nivel,1991-02-01,1991-02,58.4
 remesas,Remesas,nivel,1991-03-01,1991-03,67.6
@@ -9378,6 +9379,7 @@ remesas,Remesas,nivel,2026-06-01,2026-06,850.83
 remesas,Remesas,nivel,2026-07-01,2026-07,864.25
 remesas,Remesas,nivel,2026-08-01,2026-08,863.43
 remesas,Remesas,nivel,2026-09-01,2026-09,831.64
+remesas,Remesas,nivel,2026-10-01,2026-10,865
 remesas,Remesas,var_anual,1992-01-01,1992-01,3.0111
 remesas,Remesas,var_anual,1992-02-01,1992-02,13.0137
 remesas,Remesas,var_anual,1992-03-01,1992-03,11.8343
@@ -9795,6 +9797,7 @@ remesas,Remesas,var_anual,2026-06-01,2026-06,-1.6813
 remesas,Remesas,var_anual,2026-07-01,2026-07,-0.9898
 remesas,Remesas,var_anual,2026-08-01,2026-08,4.6633
 remesas,Remesas,var_anual,2026-09-01,2026-09,1.4517
+remesas,Remesas,var_anual,2026-10-01,2026-10,1.408
 remesas,Remesas,pct_pib,2005-10-01,2005-T4,20.5278
 remesas,Remesas,pct_pib,2006-01-01,2006-T1,21.058
 remesas,Remesas,pct_pib,2006-04-01,2006-T2,21.6658
@@ -10260,6 +10263,7 @@ comercio,Exportaciones (FOB),suma_anual,2026-06-01,2026-06,6563.43
 comercio,Exportaciones (FOB),suma_anual,2026-07-01,2026-07,6599.39
 comercio,Exportaciones (FOB),suma_anual,2026-08-01,2026-08,6568.18
 comercio,Exportaciones (FOB),suma_anual,2026-09-01,2026-09,6610.81
+comercio,Exportaciones (FOB),suma_anual,2026-10-01,2026-10,6646.76
 comercio,Exportaciones (FOB),nivel,1994-01-01,1994-01,81.72
 comercio,Exportaciones (FOB),nivel,1994-02-01,1994-02,97.68
 comercio,Exportaciones (FOB),nivel,1994-03-01,1994-03,101.77
@@ -10653,6 +10657,7 @@ comercio,Exportaciones (FOB),nivel,2026-06-01,2026-06,597.18
 comercio,Exportaciones (FOB),nivel,2026-07-01,2026-07,636.14
 comercio,Exportaciones (FOB),nivel,2026-08-01,2026-08,492.6
 comercio,Exportaciones (FOB),nivel,2026-09-01,2026-09,563.74
+comercio,Exportaciones (FOB),nivel,2026-10-01,2026-10,577.16
 comercio,Exportaciones (FOB),var_anual,1995-01-01,1995-01,73.3725
 comercio,Exportaciones (FOB),var_anual,1995-02-01,1995-02,46.3247
 comercio,Exportaciones (FOB),var_anual,1995-03-01,1995-03,38.9211
@@ -11034,6 +11039,7 @@ comercio,Exportaciones (FOB),var_anual,2026-06-01,2026-06,10.4539
 comercio,Exportaciones (FOB),var_anual,2026-07-01,2026-07,5.9915
 comercio,Exportaciones (FOB),var_anual,2026-08-01,2026-08,-5.9583
 comercio,Exportaciones (FOB),var_anual,2026-09-01,2026-09,8.1806
+comercio,Exportaciones (FOB),var_anual,2026-10-01,2026-10,6.6425
 comercio,Importaciones (CIF),suma_anual,1994-12-01,1994-12,2575.44
 comercio,Importaciones (CIF),suma_anual,1995-01-01,1995-01,2654.83
 comercio,Importaciones (CIF),suma_anual,1995-02-01,1995-02,2743.76
@@ -11416,6 +11422,7 @@ comercio,Importaciones (CIF),suma_anual,2026-06-01,2026-06,18599.95
 comercio,Importaciones (CIF),suma_anual,2026-07-01,2026-07,18722.37
 comercio,Importaciones (CIF),suma_anual,2026-08-01,2026-08,18966.98
 comercio,Importaciones (CIF),suma_anual,2026-09-01,2026-09,19164.46
+comercio,Importaciones (CIF),suma_anual,2026-10-01,2026-10,19463.29
 comercio,Importaciones (CIF),nivel,1994-01-01,1994-01,170.98
 comercio,Importaciones (CIF),nivel,1994-02-01,1994-02,170.71
 comercio,Importaciones (CIF),nivel,1994-03-01,1994-03,183.73
@@ -11809,6 +11816,7 @@ comercio,Importaciones (CIF),nivel,2026-06-01,2026-06,1628.14
 comercio,Importaciones (CIF),nivel,2026-07-01,2026-07,1825.77
 comercio,Importaciones (CIF),nivel,2026-08-01,2026-08,1643.78
 comercio,Importaciones (CIF),nivel,2026-09-01,2026-09,1697.17
+comercio,Importaciones (CIF),nivel,2026-10-01,2026-10,1884.71
 comercio,Importaciones (CIF),var_anual,1995-01-01,1995-01,46.4323
 comercio,Importaciones (CIF),var_anual,1995-02-01,1995-02,52.0942
 comercio,Importaciones (CIF),var_anual,1995-03-01,1995-03,40.5595
@@ -12190,6 +12198,7 @@ comercio,Importaciones (CIF),var_anual,2026-06-01,2026-06,16.4938
 comercio,Importaciones (CIF),var_anual,2026-07-01,2026-07,7.187
 comercio,Importaciones (CIF),var_anual,2026-08-01,2026-08,17.4825
 comercio,Importaciones (CIF),var_anual,2026-09-01,2026-09,13.1681
+comercio,Importaciones (CIF),var_anual,2026-10-01,2026-10,18.8432
 balanza_comercial,Saldo comercial,suma_anual,1994-12-01,1994-12,-1325.91
 balanza_comercial,Saldo comercial,suma_anual,1995-01-01,1995-01,-1345.33
 balanza_comercial,Saldo comercial,suma_anual,1995-02-01,1995-02,-1389.02
@@ -12572,6 +12581,7 @@ balanza_comercial,Saldo comercial,suma_anual,2026-06-01,2026-06,-12036.52
 balanza_comercial,Saldo comercial,suma_anual,2026-07-01,2026-07,-12123
 balanza_comercial,Saldo comercial,suma_anual,2026-08-01,2026-08,-12398.81
 balanza_comercial,Saldo comercial,suma_anual,2026-09-01,2026-09,-12553.66
+balanza_comercial,Saldo comercial,suma_anual,2026-10-01,2026-10,-12816.54
 balanza_comercial,Saldo comercial,nivel,1994-01-01,1994-01,-89.27
 balanza_comercial,Saldo comercial,nivel,1994-02-01,1994-02,-73.02
 balanza_comercial,Saldo comercial,nivel,1994-03-01,1994-03,-81.96
@@ -12965,6 +12975,7 @@ balanza_comercial,Saldo comercial,nivel,2026-06-01,2026-06,-1030.96
 balanza_comercial,Saldo comercial,nivel,2026-07-01,2026-07,-1189.64
 balanza_comercial,Saldo comercial,nivel,2026-08-01,2026-08,-1151.18
 balanza_comercial,Saldo comercial,nivel,2026-09-01,2026-09,-1133.43
+balanza_comercial,Saldo comercial,nivel,2026-10-01,2026-10,-1307.55
 balanza_comercial,Saldo comercial,pct_pib,2005-10-01,2005-T4,-22.9465
 balanza_comercial,Saldo comercial,pct_pib,2006-01-01,2006-T1,-23.1211
 balanza_comercial,Saldo comercial,pct_pib,2006-04-01,2006-T2,-24.2034
@@ -15265,6 +15276,7 @@ reservas,Reservas internacionales netas,meses_importacion,2026-06-01,2026-06,3.3
 reservas,Reservas internacionales netas,meses_importacion,2026-07-01,2026-07,3.2674
 reservas,Reservas internacionales netas,meses_importacion,2026-08-01,2026-08,3.2535
 reservas,Reservas internacionales netas,meses_importacion,2026-09-01,2026-09,3.1508
+reservas,Reservas internacionales netas,meses_importacion,2026-10-01,2026-10,2.9707
 reservas,Reservas internacionales netas,var_anual,1998-12-01,1998-12,20.7373
 reservas,Reservas internacionales netas,var_anual,1999-01-01,1999-01,21.4154
 reservas,Reservas internacionales netas,var_anual,1999-02-01,1999-02,-2.5268
